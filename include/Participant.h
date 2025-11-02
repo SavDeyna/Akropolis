@@ -8,21 +8,28 @@ class Participant {
 private:
     string pseudo;
 public:
-    Participant(const string& p) : pseudo(p) {}
-    string getPseudo() const { return pseudo; }
-    void setPseudo(string p) { pseudo = p; }
+    explicit Participant(const string& p) : pseudo(move(p)) {}
+    virtual ~Participant() = default;
+    const string& getPseudo() const { return pseudo; }
+    void setPseudo(string p) { pseudo = move(p); }
 };
 
 class Joueur : public Participant {
 private:
-    bool victoire;
+    bool victoire{ false };
 public:
-    Joueur(const string&) : Participant(p) {}
+    explicit Joueur(const string&, bool v = false) : Participant(p), victoire(v) {}
+    bool aGagne() const noexcept { return victoire; }
+    void setVictoire(bool v) noexcept { victoire = v; }
 };
+
+enum class Difficulte { Facile = 0, Moyen = 1, Difficile = 2 };
 
 class IA : public Participant {
 private:
-    int difficulte;
+    Difficulte difficulte{ Difficulte::Facile };
 public:
-    IA(const string&) : Participant(p) {}
+    explicit IA(std::string p, Difficulte d = Difficulte::Facile): Participant(move(pseudo)), difficulte(d) {}
+    Difficulte getDifficulte() const { return difficulte; }
+    void setDifficulte(Difficulte d) { difficulte = d; }
 };
