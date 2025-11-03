@@ -1,0 +1,10 @@
+{
+    "nbr" : 1 ,
+    "modes":{
+        "solo":{
+            "nbrJoueur" : 1,
+            "nbrIA":0,
+            "description" : "mode solo"
+        }
+    }
+}
