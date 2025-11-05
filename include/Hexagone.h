@@ -14,7 +14,7 @@ enum class TypeHexagone {
     Marche
 };
 
-class Coordonnees {
+class Hexagone {
     int q;
     int r;
     int s;
