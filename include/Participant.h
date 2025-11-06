@@ -1,8 +1,13 @@
+#ifndef PARTICIPANT_H
+#define PARTICIPANT_H
+
 #pragma once
 #include <iostream>
 #include <string>
 
+#include "Plateau.h"
 using namespace std;
+
 
 class Participant {
 private:
@@ -33,3 +38,5 @@ public:
     Difficulte getDifficulte() const { return difficulte; }
     void setDifficulte(Difficulte d) { difficulte = d; }
 };
+
+#endif
