@@ -19,7 +19,7 @@ private:
     bool formeValide() const;
     // en coordonnées cubiques (pour un hexagone) la distance est calculée comme le nb de pas entre deux hexas : ( |distance_q| + |distance_r| + |distance_s| ) / 2
     int distance(const Hexagone& a, const Hexagone& b) const {
-        return (abs(a.q - b.q) + abs(a.r - b.r) + abs(a.s - b.s)) / 2;
+        return (abs(a.getQ() - b.getQ()) + abs(a.getR() - b.getR()) + abs(a.getS() - b.getS())) / 2;
     }
 public:
     Tuile(int id, const vector<Hexagone>& d) : id_tuile(id), disposition(d), hauteur(0) {

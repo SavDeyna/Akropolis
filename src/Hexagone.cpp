@@ -8,7 +8,7 @@
 using namespace std;
 
 bool Hexagone::operator<(const Hexagone& other) const {
-        if (q != other.q) return q < other.q;
-        else if (r != other.r) return r < other.r;
-        else return s < other.s;
+        if (q != other.getQ()) return q < other.getQ();
+        else if (r != other.getR()) return r < other.getR();
+        else return getS() < other.getS();
 }
