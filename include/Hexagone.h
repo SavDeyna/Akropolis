@@ -22,8 +22,9 @@ class Hexagone {
     int r;
     int s;
     TypeHexagone typehexagone ;
+    unsigned int etoiles ;
     public :
-        Hexagone(int q, int r, int s): q(q), r(r), s(s) {
+        Hexagone(int q, int r, int s, unsigned int e): q(q), r(r), s(s), etoiles(e) {
             if ((q + r + s) != 0)
                 throw invalid_argument("q+r+s n'est pas égal à 0");
         }
