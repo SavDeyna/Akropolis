@@ -20,14 +20,15 @@ enum class TypeHexagone {
 class Hexagone {
     int q;
     int r;
-    int s;
     TypeHexagone typehexagone ;
+    unsigned int etoiles ;
+
     public :
-        Hexagone(int q, int r, int s): q(q), r(r), s(s) {
-            if ((q + r + s) != 0)
-                throw invalid_argument("q+r+s n'est pas égal à 0");
-        }
+        Hexagone(int q, int r, unsigned int e): q(q), r(r),  etoiles(e) {}
         bool operator<(const Hexagone& other) const;
+        int getQ() const{return q;};
+        int getR() const{return r;};
+        int getS() const{return -getQ()-getR();};
 };
 
 #endif

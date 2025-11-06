@@ -1,10 +1,9 @@
-#pragma once
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Plateau.h"
+
 #include "Tuile.h"
-#include "Coordonnees.h"
 
 using namespace std;
 

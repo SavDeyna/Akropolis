@@ -12,18 +12,22 @@ using namespace std;
 class Participant {
 private:
     string pseudo;
+    unsigned int pierres;
+
 public:
     explicit Participant(const string& p) : pseudo(move(p)) {}
     virtual ~Participant() = default;
     const string& getPseudo() const { return pseudo; }
     void setPseudo(string p) { pseudo = move(p); }
+
+    //Méthode d'ajout/enlever/obtenir les pierres
 };
 
 class Joueur : public Participant {
 private:
     bool victoire{ false };
 public:
-    explicit Joueur(const string&, bool v = false) : Participant(p), victoire(v) {}
+    explicit Joueur(const string& p, bool v = false) : Participant(p), victoire(v) {}
     bool aGagne() const noexcept { return victoire; }
     void setVictoire(bool v) noexcept { victoire = v; }
 };
@@ -34,7 +38,7 @@ class IA : public Participant {
 private:
     Difficulte difficulte{ Difficulte::Facile };
 public:
-    explicit IA(std::string p, Difficulte d = Difficulte::Facile): Participant(move(pseudo)), difficulte(d) {}
+    explicit IA(std::string p, Difficulte d = Difficulte::Facile): Participant(move(p)), difficulte(d) {}
     Difficulte getDifficulte() const { return difficulte; }
     void setDifficulte(Difficulte d) { difficulte = d; }
 };

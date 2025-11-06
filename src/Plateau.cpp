@@ -1,19 +1,18 @@
-#pragma once
+
 #include <iostream>
 #include <string>
 #include <vector>
 #include <set>
 #include "Plateau.h"
-#include "Tuile.h"
-#include "Coordonnees.h"
+
 
 using namespace std;
 
 // si au moins une coordonnée d'une tuile correspond à la coordonnée du paramètre alors on renvoie la tuile trouvée
-const Tuile* Plateau::getTuile(const Coordonnees& coord) const {
+const Tuile* Plateau::getTuile(const Hexagone& coord) const {
     for (const auto& t : matrice_hexa) {
         for (const auto& c : t.getDisposition()) {
-            if (c.q == coord.q && c.r == coord.r && c.s == coord.s) {
+            if (c.getQ() == coord.getQ() && c.getR() == coord.getR() && c.getS() == coord.getS()) {
                 return &t;
             }
         }
@@ -21,14 +20,14 @@ const Tuile* Plateau::getTuile(const Coordonnees& coord) const {
     return nullptr;
 }
 
-vector<Coordonnees> Plateau::getVoisins(const Coordonnees& c) const {
+vector<Hexagone> Plateau::getVoisins(const Hexagone& c) const {
     return {
-        Coordonnees(c.q+1, c.r-1, c.s),
-        Coordonnees(c.q+1, c.r, c.s-1),
-        Coordonnees(c.q, c.r+1, c.s-1),
-        Coordonnees(c.q-1, c.r+1, c.s),
-        Coordonnees(c.q-1, c.r, c.s+1),
-        Coordonnees(c.q, c.r-1, c.s+1)
+        Hexagone(c.getQ()+1, c.getR()-1, c.getS()),
+        Hexagone(c.getQ()+1, c.getR(), c.getS()-1),
+        Hexagone(c.getQ(), c.getR()+1, c.getS()-1),
+        Hexagone(c.getQ()-1, c.getR()+1, c.getS()),
+        Hexagone(c.getQ()-1, c.getR(), c.getS()+1),
+        Hexagone(c.getQ(), c.getR()-1, c.getS()+1)
     };
 }
 
@@ -52,7 +51,7 @@ bool Plateau::placerTuile(Tuile& tuile, const string& nom_joueur) {
     if (coveredTuiles.empty()) {
         bool touche = false;
         for (const auto& c : coords) {
-            vector<Coordonnees> voisins = getVoisins(c);
+            vector<Hexagone> voisins = getVoisins(c);
             for (auto& v : voisins) {
                 const Tuile* t = getTuile(v);
                 if (t && t->getNomJoueur() == nom_joueur) {

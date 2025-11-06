@@ -1,2 +1,2 @@
-#include "../Headers/Partie.h"
+#include <Partie.h>
 

@@ -1,4 +1,4 @@
-#include <Partie.h>
+#include "Partie.h"
 
 #include <iostream>
 #include <fstream>
@@ -11,28 +11,28 @@ using json = nlohmann::json;
 int main(){
     
     std::cout<<"Lancement du jeu\n";
-
+    
     std::cout<<"Création des objets :\n";
-
+    Partie partie;
     std::cout<<"    Mode de jeu\n";
     
     // Besoin d'une fonction qui va me créer des objets modedejeu pour chaque mode de jeu. Créer les méthodes associées nécesssaires
-    GameMode mode = ;
+    //GameMode mode = ;
 
     //Boucle pour choisir le mode de jeu, détruire les autres mdj non utilisés
 
     std::cout<<"    Participant(s)\n";
 
     //Construire les objets participants en fonction du nbr de joueurs dans objet mode de jeu 
-    partie.initParticipants();
+    //partie.initParticipants();
 
     //Mettre leur plateau associé, initié avec 1 case neutre à définir, 3 cases cailloux
 
     std::cout<<"    Partie\n";
-    Partie partie(mode);
+    //Partie partie(mode);
 
     //Méthode pour choisir au hasard l'ordre des participants: les joueurs réels commencent toujours, donner l'ordre des participants actuels, changer de 1 l'ordre des participants(le premier devient le dernier)
-    partie.computeTurnOrder();
+    //partie.computeTurnOrder();
     //créer méthode tour suivant
     //méthode initialisation : 
         //donne un ordre de passage
