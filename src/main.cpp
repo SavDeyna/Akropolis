@@ -1,4 +1,4 @@
-#include <Partie.h>
+#include "Partie.h"
 
 #include <iostream>
 #include <fstream>
