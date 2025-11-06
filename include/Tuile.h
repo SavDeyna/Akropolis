@@ -1,8 +1,12 @@
+#ifndef TUILE_H
+#define TUILE_H
+
 #pragma once
 #include <iostream>
 #include <string>
 #include <map>
 #include <vector>
+
 #include <Hexagone.h>
 using namespace std;
 
@@ -18,7 +22,7 @@ private:
         return (abs(a.q - b.q) + abs(a.r - b.r) + abs(a.s - b.s)) / 2;
     }
 public:
-    Tuile(int id, const vector<Hexagone& d) : id_tuile(id), disposition(d), hauteur(0) {
+    Tuile(int id, const vector<Hexagone>& d) : id_tuile(id), disposition(d), hauteur(0) {
         if (disposition.size() != 3)
             throw invalid_argument("Une tuile doit avoir 3 hexagones");
         if (!formeValide())
@@ -29,3 +33,5 @@ public:
     void setHauteur(int h) { hauteur = h; }
     string getNomJoueur() const { return nom_joueur; }
 };
+
+#endif
