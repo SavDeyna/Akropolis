@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "Hexagone.h"
+#include <Hexagone.h>
 
 using namespace std;
 

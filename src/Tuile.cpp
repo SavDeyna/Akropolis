@@ -2,9 +2,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Plateau.h"
-#include "Tuile.h"
-#include "Coordonnees.h"
+
+#include <Tuile.h>
 
 using namespace std;
 
