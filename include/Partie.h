@@ -7,11 +7,11 @@ class Partie{
     public:
         ~Partie(){};
 
-        //Fonction qui charge les tuiles du fichier json Tom s'en occupe
-        vector<Tuile> ChargerTuiles();
+        //Fonction qui charge les tuiles du fichier json
+        void ChargerTuiles();
 
         //Méthode pour mélanger les tuiles d'une partie Tom s'en occupe
-        void melangeTuile();
+        void melangePioche();
 
         //Méthode pour choisir l'ordre de passage 
 
@@ -21,6 +21,7 @@ class Partie{
 
     private:
         vector<Tuile> pioche ;
+        vector<Tuile> jeu;
         vector<Tuile> defausse ;
 
 

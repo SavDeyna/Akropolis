@@ -21,14 +21,14 @@ const Tuile* Plateau::getTuile(const Hexagone& coord) const {
 }
 
 vector<Hexagone> Plateau::getVoisins(const Hexagone& c) const {
-    return {
-        Hexagone(c.getQ()+1, c.getR()-1, c.getS()),
-        Hexagone(c.getQ()+1, c.getR(), c.getS()-1),
-        Hexagone(c.getQ(), c.getR()+1, c.getS()-1),
-        Hexagone(c.getQ()-1, c.getR()+1, c.getS()),
-        Hexagone(c.getQ()-1, c.getR(), c.getS()+1),
-        Hexagone(c.getQ(), c.getR()-1, c.getS()+1)
-    };
+    //return {
+    //    Hexagone(c.getQ()+1, c.getR()-1, c.getS()),
+    //    Hexagone(c.getQ()+1, c.getR(), c.getS()-1),
+    //    Hexagone(c.getQ(), c.getR()+1, c.getS()-1),
+    //    Hexagone(c.getQ()-1, c.getR()+1, c.getS()),
+    //    Hexagone(c.getQ()-1, c.getR(), c.getS()+1),
+    //    Hexagone(c.getQ(), c.getR()-1, c.getS()+1)
+    //};
 }
 
 bool Plateau::placerTuile(Tuile& tuile, const string& nom_joueur) {

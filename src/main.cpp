@@ -14,6 +14,8 @@ int main(){
     
     std::cout<<"Création des objets :\n";
     Partie partie;
+    partie.ChargerTuiles();
+    partie.melangePioche();
     std::cout<<"    Mode de jeu\n";
     
     // Besoin d'une fonction qui va me créer des objets modedejeu pour chaque mode de jeu. Créer les méthodes associées nécesssaires
