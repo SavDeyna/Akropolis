@@ -1,31 +1,30 @@
-# Nom de l'exécutable final
-EXEC = programme
 
-# Liste des fichiers sources
+EXEC =  build/Akropolis
+
+# fichiers sources
 SRC = src/Hexagone.cpp src/main.cpp src/Participant.cpp src/Partie.cpp src/Plateau.cpp src/Tuile.cpp
 
+OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 
-OBJ = $(SRC:.cpp=.o)
-
-# Options du compilateur
+# Options
 CFLAGS = -Wall -Wextra -g -Iinclude
 
 CC = g++
 
+all: build $(EXEC)
 
-all: $(EXEC)
-
-src/%.o: src/%.cpp
+build/%.o: src/%.cpp | build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Lier les objets pour créer l'exécutable
+# Création executable
 $(EXEC): $(OBJ)
 	$(CC) $(OBJ) -o $(EXEC)
 
-# Nettoyer les fichiers objets
-clean:
-	rm -f $(OBJ)
 
-# Nettoyer tout (objets + exécutable)
-mrproper: clean
-	rm -f $(EXEC)
+build :
+	mkdir -p build
+
+#Nettoyer fichies objets
+clean :
+	rm -rf build
+
