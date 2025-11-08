@@ -31,6 +31,10 @@ class Partie{
         int nbJoueurs{ 0 };
         int tour{ 0 };
 
+        vector<Tuile> pioche ;
+        vector<Tuile> jeu;
+        vector<Tuile> defausse ;
+
 
 };
 
