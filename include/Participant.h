@@ -33,3 +33,4 @@ public:
     Difficulte getDifficulte() const { return difficulte; }
     void setDifficulte(Difficulte d) { difficulte = d; }
 };
+
