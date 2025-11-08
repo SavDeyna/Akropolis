@@ -72,3 +72,37 @@ bool Plateau::placerTuile(Tuile& tuile, const string& nom_joueur) {
     return true;
 }
 
+void Plateau::afficherPlateau() {
+    cout << "=== État actuel du plateau ===" << endl;
+
+    if (matrice_hexa.empty()) { // si le plateau est vide
+        cout << "Aucune tuile placée." << endl;
+        return;
+    }
+
+    for (const auto& tuile : matrice_hexa) {
+        cout << "Tuile #" << tuile.getHauteur()
+             << " du joueur " << tuile.getNomJoueur()
+             << " : " << endl;
+
+        for (const auto& hex : tuile.getDisposition()) {
+            cout << "  → Hex (" 
+                 << hex.getQ() << ", " << hex.getR() << ", " << hex.getS() << ")"
+                 << " | Type: ";
+
+            switch (hex.typehexagone) {
+                case TypeHexagone::Carriere: cout << "Carriere"; break;
+                case TypeHexagone::Caserne:  cout << "Caserne"; break;
+                case TypeHexagone::Jardin:   cout << "Jardin"; break;
+                case TypeHexagone::Temple:   cout << "Temple"; break;
+                case TypeHexagone::Quartier: cout << "Quartier"; break;
+                case TypeHexagone::Marche:   cout << "Marche"; break;
+            }
+
+            //les étoiles aussi
+
+            cout << endl;
+        }
+        cout << endl;
+    }
+}

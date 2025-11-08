@@ -55,5 +55,8 @@ int main(){
         //méthode de chargement des 61 pièces stockées
 
         //non prioritaire : création aléatoire des 61 tuiles (proba à déterminer)
+    cout << endl;
 
+    system("pause");
+    return 0;
 }

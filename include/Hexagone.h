@@ -29,6 +29,7 @@ class Hexagone {
         int getQ() const{return q;};
         int getR() const{return r;};
         int getS() const{return -getQ()-getR();};
+        TypeHexagone getTypeHexagone() const{return typehexagone;};
 };
 
 #endif

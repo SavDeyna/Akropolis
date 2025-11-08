@@ -19,6 +19,7 @@ public:
     const Tuile* getTuile(const Hexagone& coord) const; // renvoie un pointeur vers la tuile qui recouvre l'hexagone donné le cas échéant
     bool placerTuile(Tuile& tuile, const string& nom_joueur);
     vector<Hexagone> getVoisins(const Hexagone& c) const;
+    void afficherPlateau();
 };
 
 #endif
