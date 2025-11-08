@@ -13,12 +13,14 @@ class Participant {
 private:
     string pseudo;
     unsigned int pierres;
+    Plateau& plateau{ Plateau() }
 
 public:
     explicit Participant(const string& p) : pseudo(move(p)) {}
     virtual ~Participant() = default;
     const string& getPseudo() const { return pseudo; }
     void setPseudo(string p) { pseudo = move(p); }
+    Plateau& getPlateau() { return Plateau; }
 
     //Méthode d'ajout/enlever/obtenir les pierres
 };

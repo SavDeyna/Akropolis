@@ -25,12 +25,13 @@ class Partie{
         std::size_t getNbJoueurs() const noexcept { return nbJoueurs; }
         void incTour() { tour += 1; }
         Variante getVariante() { return variante; }
+        
     private:
         Variante variante;
         std::array<const Joueur*, 4> joueurs{};
         int nbJoueurs{ 0 };
         int tour{ 0 };
-
+        
         vector<Tuile> pioche ;
         vector<Tuile> jeu;
         vector<Tuile> defausse ;

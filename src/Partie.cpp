@@ -8,7 +8,6 @@
 using json = nlohmann::json;
 using namespace std ;
 
-
 //fonction locale de mélange de vecteur. 
 //Méthode trouvée sur un forum : fisher_yates_shuffle (https://stackoverflow.com/questions/6127503/shuffle-array-in-c/6128209#6128209)
 void Partie::melangePioche() {
@@ -18,7 +17,6 @@ void Partie::melangePioche() {
         swap(pioche[i], pioche[j]); 
     } 
 }
-
 
 void Partie::ChargerTuiles(){
     ifstream file("data/tuiles.json");
@@ -46,10 +44,16 @@ void Partie::ChargerTuiles(){
             v.push_back(a);
             v.push_back(b);
             v.push_back(c);
+            Tuile t(i, v);
+            pioche.push_back(t);
+        }
+    }
+    else {
+        std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
+    }
+}
 
-Partie::Partie(std::initializer_list<const Joueur*> js, Variante v)
-    : variante(v)
-{
+Partie::Partie(std::initializer_list<const Joueur*> js, Variante v): variante(v) {
     if (js.size() == 0 || js.size() > 4)
         throw std::invalid_argument("Une partie doit avoir entre 1 et 4 joueurs.");
 
@@ -61,13 +65,5 @@ Partie::Partie(std::initializer_list<const Joueur*> js, Variante v)
     // Pad le reste avec nullptr
     for (std::size_t i = nbJoueurs; i < joueurs.size(); ++i) {
         joueurs[i] = nullptr;
-    }
-}
-            Tuile t( i,v);
-            pioche.push_back(t);
-        }
-    }
-    else{
-        std::cout<<"Erreur dans l'ouverture du fichier tuiles.json";
     }
 }
