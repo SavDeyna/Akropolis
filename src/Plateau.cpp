@@ -1,9 +1,11 @@
-
 #include <iostream>
 #include <string>
 #include <vector>
 #include <set>
 #include "Plateau.h"
+#include "Tuile.h"
+
+#include <algorithm>
 
 
 using namespace std;
@@ -21,88 +23,52 @@ const Tuile* Plateau::getTuile(const Hexagone& coord) const {
 }
 
 vector<Hexagone> Plateau::getVoisins(const Hexagone& c) const {
-    //return {
-    //    Hexagone(c.getQ()+1, c.getR()-1, c.getS()),
-    //    Hexagone(c.getQ()+1, c.getR(), c.getS()-1),
-    //    Hexagone(c.getQ(), c.getR()+1, c.getS()-1),
-    //    Hexagone(c.getQ()-1, c.getR()+1, c.getS()),
-    //    Hexagone(c.getQ()-1, c.getR(), c.getS()+1),
-    //    Hexagone(c.getQ(), c.getR()-1, c.getS()+1)
-    //};
-}
+    // Déplacements pour les 6 voisins dans un système axial (q,r)
+    static const int dq[6] = { +1, +1,  0, -1, -1,  0 };
+    static const int dr[6] = {  0, -1, -1,  0, +1, +1 };
 
-bool Plateau::placerTuile(Tuile& tuile, const string& nom_joueur) {
-    const auto& coords = tuile.getDisposition();
-    set<const Tuile*> coveredTuiles;
-    int maxHauteur = 0;
+    vector<Hexagone> voisins;
+    voisins.reserve(6);
 
-    // on vérifie si la nouvelle tuile chevauche d'autres tuiles (leurs hexas)
-    for (const auto& c : coords) {
-        const Tuile* t = getTuile(c);
-        if (t) {
-            coveredTuiles.insert(t);
-            maxHauteur = max(maxHauteur, t->getHauteur());
-        }
-    }
+    for (int i = 0; i < 6; ++i) {
+        int nq = c.getQ() + dq[i];
+        int nr = c.getR() + dr[i];
 
-    // si finalement la nouvelle tuile chevauche d'autres tuiles on doit vérifier si les règles du jeu sont satisfaites
-    if (coveredTuiles.size() == 1) return false; // on ne peut pas recouvrir une seule tuile complètement, il faut recouvrir au moins 2 tuiles différentes
-    // sinon on vérifie qu'au moins un hexa de la nouvelle tuile touche une tuile du même joueur
-    if (coveredTuiles.empty()) {
-        bool touche = false;
-        for (const auto& c : coords) {
-            vector<Hexagone> voisins = getVoisins(c);
-            for (auto& v : voisins) {
-                const Tuile* t = getTuile(v);
-                if (t && t->getNomJoueur() == nom_joueur) {
-                    touche = true;
-                    break;
-                }
+        // Crée un hexagone qui permet de rechercher la tuile
+        // Les valeurs type et étoiles sont factices ici
+        Hexagone probe(nq, nr, 0u, TypeHexagone::Carriere);
+
+        const Tuile* tuile = getTuile(probe); // renvoie nullptr si pas de tuile
+        if (tuile != nullptr) {
+            // Cherche l’hexagone exact dans la tuile
+            const auto& disposition = tuile->getDisposition();
+            auto it = std::find_if(disposition.begin(), disposition.end(),
+                [nq, nr](const Hexagone& h) { return h.getQ() == nq && h.getR() == nr; });
+
+            if (it != disposition.end()) {
+                voisins.push_back(*it);
             }
         }
-        if (!touche) return false;
-    } else {
-        // on vérifie que toutes les tuiles chevauchées appartiennent au même joueur
-        for (auto t : coveredTuiles) {
-            if (t->getNomJoueur() != nom_joueur) return false;
-        }
     }
-    tuile.setHauteur(maxHauteur + 1);
+
+    return voisins;
+}
+
+void Plateau::placerTuile(const Tuile& tuile) {
     matrice_hexa.push_back(tuile);
-    return true;
 }
 
 void Plateau::afficherPlateau() {
-    cout << "=== État actuel du plateau ===" << endl;
+    std::cout << "=== État actuel du plateau ===" << std::endl;
 
-    if (matrice_hexa.empty()) { // si le plateau est vide
-        cout << "Aucune tuile placée." << endl;
+    if (matrice_hexa.empty()) { 
+        std::cout << "Aucune tuile placée." << std::endl;
         return;
     }
 
     for (const auto& tuile : matrice_hexa) {
-        cout << "Tuile #" << tuile.getHauteur()
-             << " du joueur " << tuile.getNomJoueur()
-             << " : " << endl;
-
-        for (const auto& hex : tuile.getDisposition()) {
-            cout << "  → Hex (" 
-                 << hex.getQ() << ", " << hex.getR() << ", " << hex.getS() << ")"
-                 << " | Type: ";
-
-            switch (hex.typehexagone) {
-                case TypeHexagone::Carriere: cout << "Carriere"; break;
-                case TypeHexagone::Caserne:  cout << "Caserne"; break;
-                case TypeHexagone::Jardin:   cout << "Jardin"; break;
-                case TypeHexagone::Temple:   cout << "Temple"; break;
-                case TypeHexagone::Quartier: cout << "Quartier"; break;
-                case TypeHexagone::Marche:   cout << "Marche"; break;
-            }
-
-            //les étoiles aussi
-
-            cout << endl;
-        }
-        cout << endl;
+        // On utilise directement la méthode d'affichage de la tuile
+        tuile.afficherTuile();
     }
 }
+

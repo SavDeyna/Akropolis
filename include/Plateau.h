@@ -1,6 +1,3 @@
-#ifndef PLATEAU_H
-#define PLATEAU_H
-
 #pragma once
 #include <iostream>
 #include <string>
@@ -12,14 +9,17 @@ using namespace std;
 
 class Plateau {
 private:
-    int id; // inutile à mon avis car on a un seul plateau pour tous les joueurs
-    vector<Tuile> matrice_hexa; // first(key) : Hexagone ; second(value) : Tuile
+    std::vector<Tuile> matrice_hexa; // first(key) : Hexagone ; second(value) : Tuile
 public:
-    Plateau(int id) : id(id) {}
-    const Tuile* getTuile(const Hexagone& coord) const; // renvoie un pointeur vers la tuile qui recouvre l'hexagone donné le cas échéant
-    bool placerTuile(Tuile& tuile, const string& nom_joueur);
-    vector<Hexagone> getVoisins(const Hexagone& c) const;
+    Plateau() {
+        Tuile tuile_depart(0, true); // tuile de départ automatique
+        matrice_hexa.push_back(tuile_depart);
+    }
+
+    // Méthode pour ajouter une tuile (ne fait aucune vérification)
+    void placerTuile(const Tuile& tuile);
+
+    const Tuile* getTuile(const Hexagone& coord) const; // renvoie un pointeur vers la tuile qui recouvre l'hexagone donné
+    std::vector<Hexagone> getVoisins(const Hexagone& c) const;
     void afficherPlateau();
 };
-
-#endif
