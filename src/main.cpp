@@ -24,7 +24,9 @@ int main(){
     
     std::cout<<"Création des objets :\n";
     Partie partie;
+    std::cout<<"Partie créée\n";
     partie.ChargerTuiles();
+    std::cout<<"Tuiles chargées\n";
     partie.melangePioche();
     std::cout<<"    Mode de jeu\n";
     
@@ -66,38 +68,57 @@ int main(){
 
         //non prioritaire : création aléatoire des 61 tuiles (proba à déterminer)
     
-    try {
-        // --- Création du plateau ---
-        Plateau plateau(1);
 
-        // --- Création de quelques hexagones ---
-        // (coordonnées cubiques q, r, s = -q-r)
-        Hexagone h1(0, 0, 1, TypeHexagone::Caserne);
-        Hexagone h2(1, -1, 1, TypeHexagone::Jardin);
-        Hexagone h3(1, 0, 1, TypeHexagone::Temple);
+    //script de test, généré par IA, utilisé pour débogger les méthodes
 
-        // --- Création d'une tuile (3 hexagones contigus) ---
-        vector<Hexagone> dispo1 = { h1, h2, h3 };
-        Tuile tuile1(1, dispo1);
+    Joueur alice("Alice");
 
-        // --- Création d’une autre tuile pour tester le placement multiple ---
-        Hexagone h4(2, -1, 1, TypeHexagone::Carriere);
-        Hexagone h5(2, 0, 1, TypeHexagone::Quartier);
-        Hexagone h6(3, -1, 1, TypeHexagone::Jardin);
-        vector<Hexagone> dispo2 = { h4, h5, h6 };
-        Tuile tuile2(2, dispo2);
+    // Création de tuiles normales
+    Hexagone h1(1, 0,-1, TypeHexagone::Caserne);
+    Hexagone h2(2, -1, 0, TypeHexagone::Jardin);
+    Hexagone h3(1, -1, 1, TypeHexagone::Temple);
+    std::vector<Hexagone> dispo1 = {h1, h2, h3};
+    Tuile tuile1(1, dispo1);
 
-        // --- Placement des tuiles sur le plateau ---
-        plateau.placerTuile(tuile1, "Alice");
-        plateau.placerTuile(tuile2, "Bob");
+    std::cout << "Tuile 1 créée\n";
 
-        // --- Affichage du plateau ---
-        plateau.afficherPlateau();
-    }
-    catch (const exception& e) {
-        cerr << "Erreur : " << e.what() << endl;
-    }
+    Hexagone h4(2, -1, 1, TypeHexagone::Carriere);
+    Hexagone h5(2, 0, 1, TypeHexagone::Marche);
+    Hexagone h6(3, -1, 1, TypeHexagone::Habitation);
+    std::vector<Hexagone> dispo2 = {h4, h5, h6};
+    Tuile tuile2(2, dispo2);
 
+    std::cout << "Tuile 2 créée\n";
+
+    Hexagone h7(1,1,-2, TypeHexagone::Temple);
+    Hexagone h8(2,0,-2, TypeHexagone::Jardin);
+    Hexagone h9(2,1,-3, TypeHexagone::Caserne);
+    std::vector<Hexagone> dispo3 = {h7, h8, h9};
+    Tuile tuile3(3, dispo3);
+
+    std::cout << "Tuile 3 créée\n";
+
+    std::cout << "Tuiles créées\n";
+
+    alice.getPlateau().afficherPlateau();
+
+    if (alice.placerTuile(tuile1))
+        std::cout << "Tuile 1 placée avec succès.\n";
+    else
+        std::cout << "Placement de la tuile 1 impossible.\n";
+
+    if (alice.placerTuile(tuile2))
+        std::cout << "Tuile 2 placée avec succès.\n";
+    else
+        std::cout << "Placement de la tuile 2 impossible.\n";
+    
+    if (alice.placerTuile(tuile3))
+        std::cout << "Tuile 3 placée avec succès.\n";
+    else
+        std::cout << "Placement de la tuile 3 impossible.\n";
+
+    std::cout << "\nPlateau du joueur " << alice.getPseudo() << " :" << std::endl;
+    alice.getPlateau().afficherPlateau();
 
     system("pause");
     return 0;
