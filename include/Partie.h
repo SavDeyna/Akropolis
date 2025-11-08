@@ -1,5 +1,4 @@
-#ifndef PARTIE_H
-#define PARTIE_H
+#pragma once
 
 #include "Participant.h"
 
@@ -16,7 +15,7 @@ class Partie{
         //Méthode pour choisir l'ordre de passage 
 
         //Méthode pour mettre à jour les ordres de passage
-
+    
 
 
     private:
@@ -24,7 +23,4 @@ class Partie{
         vector<Tuile> jeu;
         vector<Tuile> defausse ;
 
-
 };
-
-#endif
