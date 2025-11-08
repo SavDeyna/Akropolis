@@ -7,7 +7,7 @@ SRC = src/Hexagone.cpp src/main.cpp src/Participant.cpp src/Partie.cpp src/Plate
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 
 # Options
-CFLAGS = -Wall -Wextra -g -Iinclude
+CFLAGS = -Wall -Wextra -g -Iinclude -finput-charset=UTF-8 -fexec-charset=UTF-8
 
 CC = g++
 
