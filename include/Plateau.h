@@ -20,5 +20,5 @@ public:
     bool placerTuile(Tuile& tuile, const string& nom_joueur);
     vector<Hexagone> getVoisins(const Hexagone& c) const;
 };
-
+//bonjour
 #endif
