@@ -20,7 +20,7 @@ public:
     virtual ~Participant() = default;
     const string& getPseudo() const { return pseudo; }
     void setPseudo(string p) { pseudo = move(p); }
-    Plateau& getPlateau() { return Plateau; }
+    Plateau& getPlateau() { return plateau; }
 
     //Méthode d'ajout/enlever/obtenir les pierres
 };
