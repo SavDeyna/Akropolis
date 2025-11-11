@@ -36,7 +36,4 @@ class Partie{
         vector<Tuile> jeu;
         vector<Tuile> defausse ;
 
-
 };
-
-#endif

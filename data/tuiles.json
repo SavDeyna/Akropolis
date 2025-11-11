@@ -45,7 +45,7 @@
         [["rouge",2],["bleu",0],["gris",0]],
         [["jaune",0],["gris",0],["bleu",0]],
         [["vert",3],["bleu",0],["rouge",0]],
-        [["bleu",0],["gris",0],["caserne",2]],
+        [["bleu",0],["gris",0],["rouge",2]],
         [["gris",0],["gris",0],["jaune",2]],
         [["bleu",0],["rouge",0],["violet",0]],
         [["vert",0],["gris",0],["gris",0]],

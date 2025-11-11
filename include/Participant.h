@@ -1,6 +1,3 @@
-#ifndef PARTICIPANT_H
-#define PARTICIPANT_H
-
 #pragma once
 #include <iostream>
 #include <string>
@@ -11,18 +8,23 @@ using namespace std;
 
 class Participant {
 private:
-    string pseudo;
-    unsigned int pierres;
-    Plateau& plateau{ Plateau() }
+    std::string pseudo;
+    unsigned int pierres{0};
+    Plateau plateau;
 
 public:
-    explicit Participant(const string& p) : pseudo(move(p)) {}
+    explicit Participant(const std::string& p) : pseudo(p), plateau() {}
     virtual ~Participant() = default;
     const string& getPseudo() const { return pseudo; }
     void setPseudo(string p) { pseudo = move(p); }
     Plateau& getPlateau() { return plateau; }
 
-    //Méthode d'ajout/enlever/obtenir les pierres
+    const std::string& getPseudo() const { return pseudo; }
+    void setPseudo(std::string p) { pseudo = std::move(p); }
+
+    Plateau& getPlateau() { return plateau; }
+
+    bool placerTuile(Tuile& tuile);
 };
 
 class Joueur : public Participant {
@@ -44,5 +46,3 @@ public:
     Difficulte getDifficulte() const { return difficulte; }
     void setDifficulte(Difficulte d) { difficulte = d; }
 };
-
-#endif

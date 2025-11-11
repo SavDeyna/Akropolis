@@ -27,16 +27,18 @@ void Partie::ChargerTuiles(){
         file.close();
 
         std::map<string,TypeHexagone> dict ;
-        dict["rouge"]= TypeHexagone::Caserne;
-        dict["gris"] = TypeHexagone::Carriere ;
-        dict["bleu"] = TypeHexagone::Quartier ;
-        dict["violet"] = TypeHexagone::Temple ;
-        dict["vert"] = TypeHexagone::Jardin ;
-        dict["jaune"] = TypeHexagone::Marche ;
+        dict["rouge"]  = TypeHexagone::Caserne;   // quartier rouge
+        dict["gris"]   = TypeHexagone::Carriere;  // carrière
+        dict["bleu"]   = TypeHexagone::Habitation; // quartier bleu
+        dict["violet"] = TypeHexagone::Temple;    // quartier violet
+        dict["vert"]   = TypeHexagone::Jardin;    // quartier vert
+        dict["jaune"]  = TypeHexagone::Marche;    // quartier jaune
+        dict["blanc"]  = TypeHexagone::Place;     // place
 
-
-        for (unsigned int i=0 ; i<61; i++){
-            vector<Hexagone> v ;
+        cout << "Nombre de tuiles lues : " << data["tuiles"].size() << endl;
+        for (unsigned int i=0 ; i<61; i++){   
+            cout<<"Chargement tuile numéro "<<i<<"\n";  
+            vector<Hexagone> v ; 
 
             Hexagone a(0,1,data["tuiles"][i][0][1],dict[data["tuiles"][i][0][0]]) ; 
             Hexagone b(0,0,data["tuiles"][i][1][1],dict[data["tuiles"][i][1][0]]) ;
@@ -44,7 +46,8 @@ void Partie::ChargerTuiles(){
             v.push_back(a);
             v.push_back(b);
             v.push_back(c);
-            Tuile t(i, v);
+
+            Tuile t( i,v); 
             pioche.push_back(t);
         }
     }

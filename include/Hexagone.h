@@ -1,6 +1,3 @@
-#ifndef HEXAGONE_H
-#define HEXAGONE_H
-
 #pragma once
 #include <iostream>
 #include <string>
@@ -9,12 +6,13 @@
 using namespace std;
 
 enum class TypeHexagone {
-    Carriere,
-    Caserne,
-    Jardin,
-    Temple,
-    Quartier,
-    Marche
+    Carriere,     // permet de gagner des pierres
+    Place,        // multiplicateur de points pour les quartiers
+    Caserne,      // quartier rouge
+    Jardin,       // quartier vert
+    Temple,       // quartier violet
+    Marche,       // quartier jaune
+    Habitation    // quartier bleu
 };
 
 class Hexagone {
@@ -28,7 +26,7 @@ class Hexagone {
         bool operator<(const Hexagone& other) const;
         int getQ() const{return q;};
         int getR() const{return r;};
-        int getS() const{return -getQ()-getR();};
+        int getS() const{return -(q+r);};
+        TypeHexagone getTypeHexagone() const{return typehexagone;};
+        unsigned int getEtoiles() const{return etoiles;};
 };
-
-#endif
