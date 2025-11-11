@@ -8,7 +8,6 @@
 using json = nlohmann::json;
 using namespace std ;
 
-
 //fonction locale de mélange de vecteur. 
 //Méthode trouvée sur un forum : fisher_yates_shuffle (https://stackoverflow.com/questions/6127503/shuffle-array-in-c/6128209#6128209)
 void Partie::melangePioche() {
@@ -18,7 +17,6 @@ void Partie::melangePioche() {
         swap(pioche[i], pioche[j]); 
     } 
 }
-
 
 void Partie::ChargerTuiles(){
     ifstream file("data/tuiles.json");
@@ -53,7 +51,22 @@ void Partie::ChargerTuiles(){
             pioche.push_back(t);
         }
     }
-    else{
-        std::cout<<"Erreur dans l'ouverture du fichier tuiles.json";
+    else {
+        std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
+    }
+}
+
+Partie::Partie(std::initializer_list<const Joueur*> js, Variante v): variante(v) {
+    if (js.size() == 0 || js.size() > 4)
+        throw std::invalid_argument("Une partie doit avoir entre 1 et 4 joueurs.");
+
+    // Remplit le tableau et compte
+    nbJoueurs = 0;
+    for (const Joueur* p : js) {
+        joueurs[nbJoueurs++] = p;  // on stocke tel quel (non-owner)
+    }
+    // Pad le reste avec nullptr
+    for (std::size_t i = nbJoueurs; i < joueurs.size(); ++i) {
+        joueurs[i] = nullptr;
     }
 }
