@@ -5,14 +5,24 @@
             "name": "Run Akropolis",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Akropolis.exe",
+            "program": "${workspaceFolder}/build/Akropolis",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "externalConsole": true,
             "preLaunchTask": "Build Akropolis",
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe"
+            "MIMode": "lldb",
+            "osx": {
+                "MIMode": "lldb"
+            },
+            "linux": {
+                "MIMode": "gdb"
+            },
+            "windows": {
+                "program": "${workspaceFolder}/build/Akropolis.exe",
+                "MIMode": "gdb",
+                "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe"
+            }
         }
     ]
 }
