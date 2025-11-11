@@ -16,14 +16,8 @@ public:
     explicit Participant(const std::string& p) : pseudo(p), plateau() {}
     virtual ~Participant() = default;
     const string& getPseudo() const { return pseudo; }
-    void setPseudo(string p) { pseudo = move(p); }
     Plateau& getPlateau() { return plateau; }
-
-    const std::string& getPseudo() const { return pseudo; }
     void setPseudo(std::string p) { pseudo = std::move(p); }
-
-    Plateau& getPlateau() { return plateau; }
-
     bool placerTuile(Tuile& tuile);
 };
 
