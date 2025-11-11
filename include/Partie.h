@@ -11,12 +11,13 @@ enum class Variante {
 
 class Partie{
     public:
-        explicit Partie(std::initializer_list<const Joueur*> js, Variante v) {}
+        explicit Partie(std::initializer_list<const Joueur*> js, Variante v);
         Partie(const Joueur& j1, Variante v): Partie({ &j1 }, v) {}
         Partie(const Joueur& j1, const Joueur& j2, Variante v): Partie({ &j1, &j2 }, v) {}
         Partie(const Joueur& j1, const Joueur& j2, const Joueur& j3, Variante v): Partie({ &j1, &j2, &j3 }, v) {}
         Partie(const Joueur& j1, const Joueur& j2, const Joueur& j3, const Joueur& j4, Variante v): Partie({ &j1, &j2, &j3, &j4 }, v) {}
         ~Partie() = default;
+
         int getTour() const { return tour; }
         const Joueur* getJoueur(std::size_t i) const {
             if (i >= nbJoueurs) throw std::out_of_range("Index de joueur invalide");
@@ -25,7 +26,10 @@ class Partie{
         std::size_t getNbJoueurs() const noexcept { return nbJoueurs; }
         void incTour() { tour += 1; }
         Variante getVariante() { return variante; }
-        
+       
+        void melangePioche();
+        void ChargerTuiles();
+
     private:
         Variante variante;
         std::array<const Joueur*, 4> joueurs{};
@@ -37,3 +41,4 @@ class Partie{
         vector<Tuile> defausse ;
 
 };
+#endif
