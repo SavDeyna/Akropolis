@@ -18,8 +18,9 @@ enum class TypeHexagone {
 class Hexagone {
     int q;
     int r;
-    TypeHexagone typehexagone ;
     unsigned int etoiles ;
+    TypeHexagone typehexagone ;
+    
 
     public :
         Hexagone(int q, int r, unsigned int e, TypeHexagone t): q(q), r(r),  etoiles(e) , typehexagone(t) {}
