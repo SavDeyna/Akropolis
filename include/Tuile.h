@@ -26,7 +26,7 @@ protected:
 public:
     // Constructeur standard
     Tuile(int id, const std::vector<Hexagone>& d, bool tuileDepart = false)
-        : id_tuile(id), disposition(d), is_depart(tuileDepart)
+        :  is_depart(tuileDepart),disposition(d), id_tuile(id)
     {
         if (disposition.size() < 3)
             throw std::invalid_argument("Une tuile doit avoir au moins 3 hexagones");
@@ -36,7 +36,7 @@ public:
     }
 
     // Constructeur pratique pour la tuile de départ
-    Tuile(int id, bool tuileDepart) : id_tuile(id), is_depart(tuileDepart) {
+    Tuile(int id, bool tuileDepart) : is_depart(tuileDepart), id_tuile(id)  {
         if (tuileDepart) {
             disposition = {
                 Hexagone(0, 0, 1, TypeHexagone::Place),

@@ -36,7 +36,7 @@ class IA : public Participant {
 private:
     Difficulte difficulte{ Difficulte::Facile };
 public:
-    explicit IA(std::string p, Difficulte d = Difficulte::Facile): Participant(move(p)), difficulte(d) {}
+    explicit IA(std::string p, Difficulte d = Difficulte::Facile): Participant(std::move(p)), difficulte(d) {}
     Difficulte getDifficulte() const { return difficulte; }
     void setDifficulte(Difficulte d) { difficulte = d; }
 };
