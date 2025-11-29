@@ -1,74 +1,59 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <set>
 #include "Plateau.h"
-#include "Tuile.h"
-
-#include <algorithm>
-
+#include <iostream>
 
 using namespace std;
 
-// si au moins une coordonnée d'une tuile correspond à la coordonnée du paramètre alors on renvoie la tuile trouvée
-const Tuile* Plateau::getTuile(const Hexagone& coord) const {
-    for (const auto& t : matrice_hexa) {
-        for (const auto& c : t.getDisposition()) {
-            if (c.getQ() == coord.getQ() && c.getR() == coord.getR() && c.getS() == coord.getS()) {
-                return &t;
-            }
-        }
+const HexState* Plateau::getHex(const HexagoneCoord& c) const {
+    auto it = grille.find(c);
+    return (it == grille.end()) ? nullptr : &it->second;
+}
+
+bool Plateau::estOccupe(const HexagoneCoord& c) const {
+    return grille.find(c) != grille.end();
+}
+
+vector<HexagoneCoord> Plateau::getVoisins(const HexagoneCoord& c) const {
+    static const int d[6][3] = {
+        {+1,-1,0}, {+1,0,-1}, {0,+1,-1},
+        {-1,+1,0}, {-1,0,+1}, {0,-1,+1}
+    };
+    vector<HexagoneCoord> v;
+    for (auto& x : d) {
+        HexagoneCoord nc{c.q + x[0], c.r + x[1], c.s + x[2]};
+        if (grille.find(nc) != grille.end())
+            v.push_back(nc);
     }
-    return nullptr;
+    return v;
 }
 
-vector<Hexagone> Plateau::getVoisins(const Hexagone& c) const {
-    // Déplacements pour les 6 voisins dans un système axial (q,r)
-    static const int dq[6] = { +1, +1,  0, -1, -1,  0 };
-    static const int dr[6] = {  0, -1, -1,  0, +1, +1 };
-
-    vector<Hexagone> voisins;
-    voisins.reserve(6);
-
-    for (int i = 0; i < 6; ++i) {
-        int nq = c.getQ() + dq[i];
-        int nr = c.getR() + dr[i];
-
-        // Crée un hexagone qui permet de rechercher la tuile
-        // Les valeurs type et étoiles sont factices ici
-        Hexagone probe(nq, nr, 0u, TypeHexagone::Carriere);
-
-        const Tuile* tuile = getTuile(probe); // renvoie nullptr si pas de tuile
-        if (tuile != nullptr) {
-            // Cherche l’hexagone exact dans la tuile
-            const auto& disposition = tuile->getDisposition();
-            auto it = std::find_if(disposition.begin(), disposition.end(),
-                [nq, nr](const Hexagone& h) { return h.getQ() == nq && h.getR() == nr; });
-
-            if (it != disposition.end()) {
-                voisins.push_back(*it);
-            }
-        }
+void Plateau::placerTuile(const Tuile& t, const HexagoneCoord& origin) {
+    for (const auto& h : t.getDisposition()) {
+        // h.getQ() et getR() sont relatifs → on les additionne à origin
+        HexagoneCoord pos {
+            origin.q + h.getQ(),
+            origin.r + h.getR(),
+            origin.s + h.getS()
+        };
+        HexState st;
+        st.type = h.getTypeHexagone();
+        st.etoiles = h.getEtoiles();
+        st.hauteur = t.getHauteur();
+        st.id_tuile = t.getId();
+        grille[pos] = st;
     }
-
-    return voisins;
 }
 
-void Plateau::placerTuile(const Tuile& tuile) {
-    matrice_hexa.push_back(tuile);
-}
-
-void Plateau::afficherPlateau() {
-    std::cout << "=== État actuel du plateau ===" << std::endl;
-
-    if (matrice_hexa.empty()) { 
-        std::cout << "Aucune tuile placée." << std::endl;
+void Plateau::afficherPlateau() const {
+    std::cout << "=== Grille du plateau ===\n";
+    if (grille.empty()) {
+        std::cout << "(vide)\n";
         return;
     }
-
-    for (const auto& tuile : matrice_hexa) {
-        // On utilise directement la méthode d'affichage de la tuile
-        tuile.afficherTuile();
+    for (const auto& [coord, st] : grille) {
+        std::cout << "Hex (" << coord.q << "," << coord.r << "," << coord.s << ")"
+                  << " type=" << static_cast<int>(st.type)
+                  << " étoiles=" << st.etoiles
+                  << " hauteur=" << st.hauteur
+                  << " id_tuile=\"" << st.id_tuile << "\"\n";
     }
 }
-

@@ -1,54 +1,47 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <iostream>
+
+#include "Participant.h"
 #include "Plateau.h"
 #include "Tuile.h"
 #include "Hexagone.h"
-#include "Participant.h"
 
-bool Participant::placerTuile(Tuile& tuile) {
-    auto& p = getPlateau();
-    const auto& coords = tuile.getDisposition();
-    std::set<const Tuile*> coveredTuiles;
-    int maxHauteur = 0;
+using namespace std;
 
-    cout<<"Fonction initalisée\n";
-    // Vérifie chevauchement
-    for (const auto& c : coords) {
-        const Tuile* t = p.getTuile(c);
-        if (t) {
-            coveredTuiles.insert(t);
-            maxHauteur = std::max(maxHauteur, t->getHauteur());
-        }
-    }
-    cout<<"Chevauchement vérifié\n";
+bool Participant::placerTuile(const Tuile& tuile) {
+    Plateau& p = plateau;
 
-    // Si on recouvre une seule tuile : interdit
-    if (coveredTuiles.size() == 1) return false;
+    // On vérifie si au moins un hexagone voisin est occupé
+    bool voisinTrouve = false;
 
-    cout<<"début boucles\n";
-    // Si on ne recouvre aucune tuile, vérifier qu'au moins un hexagone touche une tuile existante
-    if (coveredTuiles.empty()) {
-        bool touche = false;
-        for (const auto& c : coords) {
-            auto voisins = p.getVoisins(c);
-            for (auto& v : voisins) {
-                const Tuile* t = p.getTuile(v);
-                if (t) { // une tuile du participant touche
-                    touche = true;
-                    break;
-                }
+    for (const auto& h : tuile.getDisposition()) {
+
+        // Convertit un Hexagone → HexagoneCoord
+        HexagoneCoord c { h.getQ(), h.getR(), h.getS() };
+
+        // Récupère les voisins du plateau (coord absolues)
+        auto voisins = p.getVoisins(c);
+
+        for (const auto& v : voisins) {
+            if (p.estOccupe(v)) {
+                voisinTrouve = true;
+                break;
             }
-            if (touche) break;
         }
-        if (!touche) return false;
+        if (voisinTrouve) break;
     }
 
-    // Si chevauche plusieurs tuiles, pas besoin de vérifier le joueur (plateau privé)
+    if (!voisinTrouve && !p.estVide()) {
+        std::cout << "Aucun voisin, placement refusé.\n";
+        return false;
+    }
 
-    cout<<"après boucles\n";
+    // Choix de l'origine de la tuile (ex: placer la première au centre)
+    HexagoneCoord origin { 0,0,0 };
 
-    tuile.setHauteur(maxHauteur + 1);
-    p.placerTuile(tuile); // ajoute la tuile au plateau
+    p.placerTuile(tuile, origin);
     return true;
 }
+
