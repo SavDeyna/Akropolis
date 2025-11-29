@@ -11,13 +11,6 @@
 #include <windows.h>
 #endif
 
-void afficherPlateauConsole(const Plateau& p) {
-    std::cout << "\n=== Contenu du plateau (HexState) ===\n";
-
-    // Impossible d'accéder directement à p.grille car private → on ajoute une méthode utilitaire
-    // En attendant, on la copie dans une fonction amie ou on ajoute un getter temporaire.
-    // Si tu ne veux pas modifier Plateau, commente ce bloc.
-}
 
 int main() {
 
@@ -27,49 +20,66 @@ int main() {
 
     std::cout << "Lancement du jeu\n";
 
-    Partie partie;
-    partie.ChargerTuiles();
-    partie.melangePioche();
+    std::cout<<"Lancement du jeu\n";
+    string choix ="";
+    do {
+        std::cout<<"Veillez choisir un mode de lancement : \nTapez 1 : Mode Console\nTapez 2 : Debug\nAutre : Sortie\n";
+        std::cin>> choix;
+    }while (choix !="1" && choix !="0" && choix !="2");
+    if (choix == "1"){
+        std::cout<<"Création des objets :\n";
+        //Partie partie(nullptr);
+        std::cout<<"Partie créée\n";
+        //partie.ChargerTuiles();
+        std::cout<<"Tuiles chargées\n";
+        //partie.melangePioche();
+        std::cout<<"    Mode de jeu\n";
+        
+        // Besoin d'une fonction qui va me créer des objets modedejeu pour chaque mode de jeu. Créer les méthodes associées nécesssaires
+        //GameMode mode = ;
 
-    Joueur alice("Alice");
+        //Boucle pour choisir le mode de jeu, détruire les autres mdj non utilisés
 
-    std::cout << "\n=== Création des tuiles de test ===\n";
+        std::cout<<"    Participant(s)\n";
 
-    // IMPORTANT : Hexagone(q, r, étoiles, type) → s = -(q+r)
+        //Construire les objets participants en fonction du nbr de joueurs dans objet mode de jeu 
+        //partie.initParticipants();
 
-    Hexagone h1(0, 0, 1, TypeHexagone::Caserne);
-    Hexagone h2(1, -1, 1, TypeHexagone::Jardin);
-    Hexagone h3(1, 0, 2, TypeHexagone::Temple);
-    Tuile tuile1(1, {h1, h2, h3});
+        //Mettre leur plateau associé, initié avec 1 case neutre à définir, 3 cases cailloux
 
-    Hexagone h4(0, 1, 1, TypeHexagone::Carriere);
-    Hexagone h5(1, 0, 0, TypeHexagone::Marche);
-    Hexagone h6(1, 1, 1, TypeHexagone::Habitation);
-    Tuile tuile2(2, {h4, h5, h6});
+        std::cout<<"    Partie\n";
+        //Partie partie(mode);
 
-    Hexagone h7(0, -1, 2, TypeHexagone::Temple);
-    Hexagone h8(1, -2, 1, TypeHexagone::Jardin);
-    Hexagone h9(1, -1, 0, TypeHexagone::Caserne);
-    Tuile tuile3(3, {h7, h8, h9});
+        //Méthode pour choisir au hasard l'ordre des participants: les joueurs réels commencent toujours, donner l'ordre des participants actuels, changer de 1 l'ordre des participants(le premier devient le dernier)
+        //partie.computeTurnOrder();
+        //créer méthode tour suivant
+        //méthode initialisation : 
+            //donne un ordre de passage
+            //donne le nbr de cailloux en fonction des ordres de passages
 
-    std::cout << "Tuiles créées\n";
+        std::cout<<"    Plateau\n";
 
-    // Placement avec origine (coordonnées absolues du plateau)
-    Plateau& plateau = alice.getPlateau();
+            //priorité à créer le stockage du plateau
 
-    std::cout << "\nPlacement tuile 1...\n";
-    plateau.placerTuile(tuile1, HexagoneCoord{0, 0, 0});
+            //Méthode pour voir si une tuile(3 hexagones) peut être placée sur plateau à certaines coordonnées, passées en paramètre
+            //Méthode pour placer, qui utilise la méthode de vérif au préalable
+            //méthode calcul de points
 
-    std::cout << "\nPlacement tuile 2...\n";
-    plateau.placerTuile(tuile2, HexagoneCoord{3, 0, -3});
+        std::cout<<"    Tuile\n";
+            //Méthode de rotation de tuile
+            //méthode de chargement des 61 tuiles
+            //méthode de tirage de x tuiles parmis les 61, sans remise (faire par exemple un tableau ou on retire des éléments petits à petit)
+            //méthode de chargement des 61 pièces stockées
 
-    std::cout << "\nPlacement tuile 3...\n";
-    plateau.placerTuile(tuile3, HexagoneCoord{-2, 1, 1});
+            //non prioritaire : création aléatoire des 61 tuiles (proba à déterminer)
+    }
+    else if (choix == "2"){
+        //script de test, généré par IA, utilisé pour débogger les méthodes
 
-    std::cout << "\nPlateau du joueur " << alice.getPseudo() << " :\n";
+    }
 
-    plateau.afficherPlateau();
+    
 
-    system("pause");
+    
     return 0;
 }

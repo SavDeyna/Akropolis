@@ -4,7 +4,10 @@
         {
             "label": "Build Akropolis",
             "type": "shell",
-            "command": "mingw32-make",
+            "command": "make",
+            "windows": {
+                "command": "mingw32-make"
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -14,7 +17,10 @@
         {
             "label": "Run Akropolis",
             "type": "shell",
-            "command": "./Akropolis.exe",
+            "command": "./build/Akropolis",
+            "windows": {
+                "command": ".\\build\\Akropolis.exe"
+            },
             "group": "none",
             "dependsOn": ["Build Akropolis"]
         }

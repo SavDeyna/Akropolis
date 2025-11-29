@@ -15,13 +15,10 @@ private:
 public:
     explicit Participant(const std::string& p) : pseudo(p), plateau() {}
     virtual ~Participant() = default;
-
-    const std::string& getPseudo() const { return pseudo; }
-    void setPseudo(std::string p) { pseudo = std::move(p); }
-
+    const string& getPseudo() const { return pseudo; }
     Plateau& getPlateau() { return plateau; }
-
-    bool placerTuile(const Tuile& tuile);
+    void setPseudo(std::string p) { pseudo = std::move(p); }
+    bool placerTuile(Tuile& tuile);
 };
 
 class Joueur : public Participant {
@@ -39,7 +36,7 @@ class IA : public Participant {
 private:
     Difficulte difficulte{ Difficulte::Facile };
 public:
-    explicit IA(std::string p, Difficulte d = Difficulte::Facile): Participant(move(p)), difficulte(d) {}
+    explicit IA(std::string p, Difficulte d = Difficulte::Facile): Participant(std::move(p)), difficulte(d) {}
     Difficulte getDifficulte() const { return difficulte; }
     void setDifficulte(Difficulte d) { difficulte = d; }
 };
