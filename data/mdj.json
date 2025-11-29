@@ -1,10 +1,14 @@
 {
-    "nbr" : 1 ,
     "modes":{
         "solo":{
             "nbrJoueur" : 1,
             "nbrIA":0,
-            "description" : "mode solo"
+            "description" : "Mode solo\nIl faut atteindre un certain nombre de points "
+        },
+        "deuxJoueur":{
+            "nbrJoueur" : 2,
+            "nbrIA":0,
+            "description" : "mode deux joueurs sans IA"
         }
     }
 }
