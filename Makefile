@@ -1,5 +1,4 @@
-
-EXEC =  build/Akropolis
+EXEC = build/Akropolis 
 
 # fichiers sources
 SRC = src/Hexagone.cpp src/main.cpp src/Participant.cpp src/Partie.cpp src/Plateau.cpp src/Tuile.cpp
@@ -7,24 +6,20 @@ SRC = src/Hexagone.cpp src/main.cpp src/Participant.cpp src/Partie.cpp src/Plate
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 
 # Options
-CFLAGS = -Wall -Wextra -g -Iinclude -finput-charset=UTF-8 -fexec-charset=UTF-8
-
-CC = g++
+CXX = g++
+CXXFLAGS = -std=c++20 -Wall -Wextra -g -Iinclude -finput-charset=UTF-8 -fexec-charset=UTF-8
 
 all: build $(EXEC)
 
 build/%.o: src/%.cpp | build
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Création executable
 $(EXEC): $(OBJ)
-	$(CC) $(OBJ) -o $(EXEC)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(EXEC)
 
-
-build :
+build:
 	mkdir -p build
 
-#Nettoyer fichies objets
-clean :
+clean:
 	rm -rf build
-

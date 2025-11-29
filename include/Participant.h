@@ -21,7 +21,7 @@ public:
 
     Plateau& getPlateau() { return plateau; }
 
-    bool placerTuile(Tuile& tuile);
+    bool placerTuile(const Tuile& tuile);
 };
 
 class Joueur : public Participant {

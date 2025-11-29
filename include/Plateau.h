@@ -1,25 +1,30 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <vector>
 #include <map>
+#include <iostream>
+#include <vector>
 
+#include "Hexagone.h"
 #include "Tuile.h"
-using namespace std;
 
 class Plateau {
 private:
-    std::vector<Tuile> matrice_hexa; // first(key) : Hexagone ; second(value) : Tuile
+    std::map<HexagoneCoord, HexState> grille;
+
 public:
-    Plateau() {
-        Tuile tuile_depart(0, true); // tuile de départ automatique
-        matrice_hexa.push_back(tuile_depart);
-    }
+    Plateau() = default;
 
-    // Méthode pour ajouter une tuile (ne fait aucune vérification)
-    void placerTuile(const Tuile& tuile);
+    // accès au hex
+    const HexState* getHex(const HexagoneCoord& c) const;
+    bool estOccupe(const HexagoneCoord& c) const;
 
-    const Tuile* getTuile(const Hexagone& coord) const; // renvoie un pointeur vers la tuile qui recouvre l'hexagone donné
-    std::vector<Hexagone> getVoisins(const Hexagone& c) const;
-    void afficherPlateau();
+    // voisins existants (sur la grille)
+    std::vector<HexagoneCoord> getVoisins(const HexagoneCoord& c) const;
+
+    // placer une tuile avec origine (coord absolue du centre ou repère)
+    void placerTuile(const Tuile& t, const HexagoneCoord& origin);
+
+    // affiche la grille
+    void afficherPlateau() const;
+
+    bool estVide() const { return grille.empty(); }
 };

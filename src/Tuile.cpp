@@ -26,7 +26,7 @@ bool Tuile::formeValide() const {
     if (is_depart) return true; // départ toujours valide par construction
 
     if (disposition.size() != 3) {
-        std::cerr << "⚠️ formeValide attendu 3 hexagones, en a " << disposition.size() << std::endl;
+        std::cerr << "FormeValide attendu 3 hexagones, en a " << disposition.size() << std::endl;
         return false;
     }
 

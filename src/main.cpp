@@ -1,10 +1,9 @@
 #include "Partie.h"
+#include "Participant.h"
+#include "Hexagone.h"
+#include "Tuile.h"
 
 #include <iostream>
-#include <fstream>
-
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
 
 #ifdef _WIN32
 #define NOMINMAX
@@ -12,113 +11,64 @@ using json = nlohmann::json;
 #include <windows.h>
 #endif
 
-//Bien faire les setter / getter 
+void afficherPlateauConsole(const Plateau& p) {
+    std::cout << "\n=== Contenu du plateau (HexState) ===\n";
 
-int main(){
-    
-    #ifdef _WIN32
-        SetConsoleOutputCP(CP_UTF8); // pour que Windows affiche l’UTF-8
-    #endif
+    // Impossible d'accéder directement à p.grille car private → on ajoute une méthode utilitaire
+    // En attendant, on la copie dans une fonction amie ou on ajoute un getter temporaire.
+    // Si tu ne veux pas modifier Plateau, commente ce bloc.
+}
 
-    std::cout<<"Lancement du jeu\n";
-    
-    std::cout<<"Création des objets :\n";
+int main() {
+
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+
+    std::cout << "Lancement du jeu\n";
+
     Partie partie;
-    std::cout<<"Partie créée\n";
     partie.ChargerTuiles();
-    std::cout<<"Tuiles chargées\n";
     partie.melangePioche();
-    std::cout<<"    Mode de jeu\n";
-    
-    // Besoin d'une fonction qui va me créer des objets modedejeu pour chaque mode de jeu. Créer les méthodes associées nécesssaires
-    //GameMode mode = ;
-
-    //Boucle pour choisir le mode de jeu, détruire les autres mdj non utilisés
-
-    std::cout<<"    Participant(s)\n";
-
-    //Construire les objets participants en fonction du nbr de joueurs dans objet mode de jeu 
-    //partie.initParticipants();
-
-    //Mettre leur plateau associé, initié avec 1 case neutre à définir, 3 cases cailloux
-
-    std::cout<<"    Partie\n";
-    //Partie partie(mode);
-
-    //Méthode pour choisir au hasard l'ordre des participants: les joueurs réels commencent toujours, donner l'ordre des participants actuels, changer de 1 l'ordre des participants(le premier devient le dernier)
-    //partie.computeTurnOrder();
-    //créer méthode tour suivant
-    //méthode initialisation : 
-        //donne un ordre de passage
-        //donne le nbr de cailloux en fonction des ordres de passages
-
-    std::cout<<"    Plateau\n";
-
-        //priorité à créer le stockage du plateau
-
-        //Méthode pour voir si une tuile(3 hexagones) peut être placée sur plateau à certaines coordonnées, passées en paramètre
-        //Méthode pour placer, qui utilise la méthode de vérif au préalable
-        //méthode calcul de points
-
-    std::cout<<"    Tuile\n";
-        //Méthode de rotation de tuile
-        //méthode de chargement des 61 tuiles
-        //méthode de tirage de x tuiles parmis les 61, sans remise (faire par exemple un tableau ou on retire des éléments petits à petit)
-        //méthode de chargement des 61 pièces stockées
-
-        //non prioritaire : création aléatoire des 61 tuiles (proba à déterminer)
-    
-
-    //script de test, généré par IA, utilisé pour débogger les méthodes
 
     Joueur alice("Alice");
 
-    // Création de tuiles normales
-    Hexagone h1(1, 0,-1, TypeHexagone::Caserne);
-    Hexagone h2(2, -1, 0, TypeHexagone::Jardin);
-    Hexagone h3(1, -1, 1, TypeHexagone::Temple);
-    std::vector<Hexagone> dispo1 = {h1, h2, h3};
-    Tuile tuile1(1, dispo1);
+    std::cout << "\n=== Création des tuiles de test ===\n";
 
-    std::cout << "Tuile 1 créée\n";
+    // IMPORTANT : Hexagone(q, r, étoiles, type) → s = -(q+r)
 
-    Hexagone h4(2, -1, 1, TypeHexagone::Carriere);
-    Hexagone h5(2, 0, 1, TypeHexagone::Marche);
-    Hexagone h6(3, -1, 1, TypeHexagone::Habitation);
-    std::vector<Hexagone> dispo2 = {h4, h5, h6};
-    Tuile tuile2(2, dispo2);
+    Hexagone h1(0, 0, 1, TypeHexagone::Caserne);
+    Hexagone h2(1, -1, 1, TypeHexagone::Jardin);
+    Hexagone h3(1, 0, 2, TypeHexagone::Temple);
+    Tuile tuile1(1, {h1, h2, h3});
 
-    std::cout << "Tuile 2 créée\n";
+    Hexagone h4(0, 1, 1, TypeHexagone::Carriere);
+    Hexagone h5(1, 0, 0, TypeHexagone::Marche);
+    Hexagone h6(1, 1, 1, TypeHexagone::Habitation);
+    Tuile tuile2(2, {h4, h5, h6});
 
-    Hexagone h7(1,1,-2, TypeHexagone::Temple);
-    Hexagone h8(2,0,-2, TypeHexagone::Jardin);
-    Hexagone h9(2,1,-3, TypeHexagone::Caserne);
-    std::vector<Hexagone> dispo3 = {h7, h8, h9};
-    Tuile tuile3(3, dispo3);
-
-    std::cout << "Tuile 3 créée\n";
+    Hexagone h7(0, -1, 2, TypeHexagone::Temple);
+    Hexagone h8(1, -2, 1, TypeHexagone::Jardin);
+    Hexagone h9(1, -1, 0, TypeHexagone::Caserne);
+    Tuile tuile3(3, {h7, h8, h9});
 
     std::cout << "Tuiles créées\n";
 
-    alice.getPlateau().afficherPlateau();
+    // Placement avec origine (coordonnées absolues du plateau)
+    Plateau& plateau = alice.getPlateau();
 
-    if (alice.placerTuile(tuile1))
-        std::cout << "Tuile 1 placée avec succès.\n";
-    else
-        std::cout << "Placement de la tuile 1 impossible.\n";
+    std::cout << "\nPlacement tuile 1...\n";
+    plateau.placerTuile(tuile1, HexagoneCoord{0, 0, 0});
 
-    if (alice.placerTuile(tuile2))
-        std::cout << "Tuile 2 placée avec succès.\n";
-    else
-        std::cout << "Placement de la tuile 2 impossible.\n";
-    
-    if (alice.placerTuile(tuile3))
-        std::cout << "Tuile 3 placée avec succès.\n";
-    else
-        std::cout << "Placement de la tuile 3 impossible.\n";
+    std::cout << "\nPlacement tuile 2...\n";
+    plateau.placerTuile(tuile2, HexagoneCoord{3, 0, -3});
 
-    std::cout << "\nPlateau du joueur " << alice.getPseudo() << " :" << std::endl;
-    alice.getPlateau().afficherPlateau();
+    std::cout << "\nPlacement tuile 3...\n";
+    plateau.placerTuile(tuile3, HexagoneCoord{-2, 1, 1});
+
+    std::cout << "\nPlateau du joueur " << alice.getPseudo() << " :\n";
+
+    plateau.afficherPlateau();
 
     system("pause");
     return 0;

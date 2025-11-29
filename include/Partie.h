@@ -1,26 +1,21 @@
 #pragma once
 
-#include "Participant.h"
+#include <vector>
+#include "Tuile.h"
 
-class Partie{
-    public:
-        ~Partie(){};
+class Partie {
+public:
+    ~Partie() = default;
 
-        //Fonction qui charge les tuiles du fichier json
-        void ChargerTuiles();
+    // Fonction qui charge les tuiles du fichier json
+    void ChargerTuiles();
 
-        //Méthode pour mélanger les tuiles d'une partie Tom s'en occupe
-        void melangePioche();
+    // Méthode pour mélanger les tuiles d'une partie
+    void melangePioche();
 
-        //Méthode pour choisir l'ordre de passage 
-
-        //Méthode pour mettre à jour les ordres de passage
-    
-
-
-    private:
-        vector<Tuile> pioche ;
-        vector<Tuile> jeu;
-        vector<Tuile> defausse ;
-
+    // à compléter : ordre de passage...
+private:
+    std::vector<Tuile> pioche ;
+    std::vector<Tuile> jeu;
+    std::vector<Tuile> defausse ;
 };
