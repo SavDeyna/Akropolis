@@ -18,7 +18,6 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
 #endif
 
-    std::cout << "Lancement du jeu\n";
 
     std::cout<<"Lancement du jeu\n";
     string choix ="";
@@ -26,19 +25,23 @@ int main() {
         std::cout<<"Veillez choisir un mode de lancement : \nTapez 1 : Mode Console\nTapez 2 : Debug\nAutre : Sortie\n";
         std::cin>> choix;
     }while (choix !="1" && choix !="0" && choix !="2");
-    if (choix == "1"){
-        std::cout<<"Création des objets :\n";
-        //Partie partie(nullptr);
-        std::cout<<"Partie créée\n";
-        //partie.ChargerTuiles();
-        std::cout<<"Tuiles chargées\n";
-        //partie.melangePioche();
-        std::cout<<"    Mode de jeu\n";
-        
-        // Besoin d'une fonction qui va me créer des objets modedejeu pour chaque mode de jeu. Créer les méthodes associées nécesssaires
-        //GameMode mode = ;
 
-        //Boucle pour choisir le mode de jeu, détruire les autres mdj non utilisés
+    //Mode console
+    if (choix == "1"){
+        std::cout<<"Mode console\n\n";
+        Partie partie;
+        
+
+
+        //Choix mdj
+        partie.choixMDJ();
+
+
+        //Chargement des tuiles
+        partie.ChargerTuiles();
+        partie.melangePioche();
+
+        
 
         std::cout<<"    Participant(s)\n";
 
@@ -73,13 +76,17 @@ int main() {
 
             //non prioritaire : création aléatoire des 61 tuiles (proba à déterminer)
     }
+
+    //Débug, pour test vos trucs
     else if (choix == "2"){
         //script de test, généré par IA, utilisé pour débogger les méthodes
 
     }
-
-    
-
-    
+    else {
+        return 0;
+    }
     return 0;
+
+    
+    
 }
