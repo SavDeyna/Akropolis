@@ -25,7 +25,7 @@ class Joueur : public Participant {
 private:
     bool victoire{ false };
 public:
-    explicit Joueur(const string& p, bool v = false) : Participant(p), victoire(v) {}
+    explicit Joueur(const string& p) : Participant(p), victoire(false) {}
     bool aGagne() const noexcept { return victoire; }
     void setVictoire(bool v) noexcept { victoire = v; }
 };

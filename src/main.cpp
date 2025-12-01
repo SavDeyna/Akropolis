@@ -6,7 +6,9 @@
 #include <iostream>
 
 #ifdef _WIN32
+#ifndef NOMINMAX 
 #define NOMINMAX
+#endif
 #define byte win_byte_override
 #include <windows.h>
 #endif
@@ -29,13 +31,11 @@ int main() {
     //Mode console
     if (choix == "1"){
         std::cout<<"Mode console\n\n";
-        Partie partie;
-        
-
+        Partie& partie = Partie::getInstance(); // init du singleton partie avec getInstance
 
         //Choix mdj
         partie.choixMDJ();
-
+        partie.initParticipants();
 
         //Chargement des tuiles
         partie.ChargerTuiles();
@@ -88,5 +88,8 @@ int main() {
     return 0;
 
     
+    std::cout << "Appuyez sur Entrée pour quitter..." << std::endl;
+    std::cin.get(); // Attend l'appui sur la touche Entrée
     
+    return 0;
 }

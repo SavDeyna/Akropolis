@@ -55,10 +55,11 @@ void Partie::ChargerTuiles(){
         std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
     }
 }
+
 Participant Partie::getParticipant(std::size_t i) const {
             if (i >= nbParticipants) throw std::out_of_range("Index de participant");
             return participants[i];
-    }
+}
 
 void Partie::choixMDJ() {
     ifstream file("data/mdj.json");
@@ -84,6 +85,17 @@ void Partie::choixMDJ() {
     }
     else {
         std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
+    }
+}
+
+void initParticipants(){
+    for(unsigned int i=0; i<Partie::getInstance().getMDJ().getNbJoueur(); i++){
+        Joueur j("Joueur "+ to_string(i+1)); // pseudo = joueur i+1
+        Partie::getInstance().getParticipants().push_back(j);
+    }
+    for(unsigned int i=0; i<Partie::getInstance().getMDJ().getNbrIA(); i++){
+        IA ia("Joueur "+ to_string(i+1));
+        Partie::getInstance().getParticipants().push_back(ia);
     }
 }
 
