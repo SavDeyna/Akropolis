@@ -60,4 +60,30 @@ Participant Partie::getParticipant(std::size_t i) const {
             return participants[i];
     }
 
+void Partie::choixMDJ() {
+    ifstream file("data/mdj.json");
+    //lecture du fichier
+    if (file.is_open()){
+        json data;
+        file >> data;
+        file.close();
+        unsigned int i = 0 ;
+        unsigned int nbMdj = data.size();
+        string a ;
+        std::cout<<"Choississez le mode de jeu :\nTapez 1 : Selectionner\nAutre : Suivant";
+        do {
+            i++;
+            i%=nbMdj;
+            a="";
+            std::cout<<"\n    Nom : " <<data[i]["nom"]<<"\n    Nombre de Joueur : "<<data[i]["nbrJoueur"]<<"\n    Nombre de IA : "<< data[i]["nbrIA"]<<"\n    Description : "<<data[i]["description"]<<"\n";
+
+            std::cin >> a;
+        }while(a !="1");
+        ModeDeJeu m(data[i]["nom"],data[i]["nbrJoueur"],data[i]["nbrIA"],data[i]["description"]);
+        this->SetMdj(m);
+    }
+    else {
+        std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
+    }
+}
 

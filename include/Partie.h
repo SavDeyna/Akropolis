@@ -8,28 +8,35 @@ class ModeDeJeu {
     public :
         const string& getnomMDJ() const {return nom;}
         unsigned int getNbrJoueur() const {return nbrJoueur;}
-        const string& getDescription() const {return Description;}
-        
+        unsigned int getNbrIA() const {return nbrIA;}
+        const string& getDescription() const {return description;}
+        ModeDeJeu(const string& n, unsigned int j, unsigned int i, const string& d) : nom(n), nbrJoueur(j),nbrIA(i), description(d) {};
+
+        //Constructeur nécessaire pour initié partie sans aucun mdj
+        ModeDeJeu() : nom("Indéfini"), nbrJoueur(0), nbrIA(0), description("") {}
+        ~ModeDeJeu() = default;
+
     private:
         string nom;
         unsigned int nbrJoueur ;
-        string Description;
+        unsigned int nbrIA ;
+        string description;
 };
 
 class Partie{
     public:
         //Partie mode de Jeu
-        void chargerMDJ();
+        void choixMDJ(); // l'utilisateur choisit un mode de jeu
 
         //Partie initialisation objet
         
-        Partie() {};
+        Partie() {} ;
         ~Partie() = default;
 
 
 
         //getter
-        ModeDeJeu getMDJ() { return mdj; }
+
         int getTour() const { return tour; }
         Participant getParticipant(std::size_t i) const ;
         std::size_t getNbJoueurs() const noexcept { return nbParticipants; }
@@ -43,12 +50,17 @@ class Partie{
     private:
         //Partie mode de Jeu
         ModeDeJeu mdj;
+        void SetMdj(const ModeDeJeu& m){mdj=m;}
+
+        //Partie participants
         vector<Participant> participants;
         unsigned int nbParticipants{ 0 };
 
         //déroulement partie
         int tour{ 0 };
         
+        
+
         //Partie tuiles
         vector<Tuile> pioche ;
         vector<Tuile> jeu;
