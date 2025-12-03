@@ -17,8 +17,10 @@ int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
-
-
+    //=== test d'initialisation d'un Plateau
+    Plateau p1;
+    p1.afficherPlateau();
+    //===
     std::cout<<"Lancement du jeu\n";
     string choix ="";
     do {
