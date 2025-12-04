@@ -11,6 +11,7 @@ private:
     std::map<HexagoneCoord, HexState> grille;
 
 public:
+    friend class Participation;
     Plateau() = default;
 
     // accès au hex
@@ -27,4 +28,7 @@ public:
     void afficherPlateau() const;
 
     bool estVide() const { return grille.empty(); }
+
+    //Verifier que l'on peut poser une tuile de 3 hexagones
+    bool peutPoserTuile(const Tuile& t, const HexagoneCoord& origin) const;
 };
