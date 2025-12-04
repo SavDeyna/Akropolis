@@ -61,9 +61,9 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
     sauvegardes.push_back(newSave);
 
 
-    ofstream file("data/sauvegarde.json");
-    file. << sauvegardes.dump();
-    file.close();
+    ofstream file2("data/sauvegarde.json");
+    file2 << sauvegardes.dump(4);
+    file2.close();
 
     cout << "Sauvegarde ajoutée avec succès.\n";
 }
