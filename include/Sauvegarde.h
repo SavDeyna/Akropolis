@@ -2,6 +2,8 @@
 #define SAUVEGARDE_H
 #include "Partie.h"
 
+class Sauvegarde ;
+
 struct SauvegardeInfo{
     unsigned int tour ;
     string nomSauvegarde ;
@@ -10,7 +12,7 @@ struct SauvegardeInfo{
 };
 
 class SauvegardeManager{
-    private: 
+
         
     public :
         vector<SauvegardeInfo> getListeSauvegardes();

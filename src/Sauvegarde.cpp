@@ -17,7 +17,6 @@ Sauvegarde::Sauvegarde(const Partie p, const string& nomsauvegarde){
     pioche =p.pioche;
     
 }
-
 void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
     json newSave;
 
@@ -105,6 +104,11 @@ Partie SauvegardeManager::chargerSauvegarde(unsigned int id){
     if (!data.is_array() || id >= data.size())
         throw runtime_error("ID de sauvegarde invalide");
 
-    Partie p;
+    //A initier
+    vector<Participant> participants;
+    ModeDeJeu mdj ;
+    vector<Tuile> pioche ;
+
+    Partie p = Partie(data[id]["tour"],participants, mdj , pioche);
     return p;
 }

@@ -33,7 +33,7 @@ class Partie{
         
         Partie() {} ;
         //Constructeur pour charger une partie depuis une sauvegarde.
-        Partie() {};
+        Partie(unsigned int tour, vector<Participant> participants , ModeDeJeu mdj, vector<Tuile> pioche);
         ~Partie() = default;
 
 
