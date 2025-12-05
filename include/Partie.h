@@ -46,6 +46,7 @@ class Partie{
         //Partie tuiles
         void melangePioche();
         void ChargerTuiles();
+        void GenererTuilesAleatoires(unsigned int n = 61);
 
     private:
         //Partie mode de Jeu

@@ -93,3 +93,32 @@ void Partie::choixMDJ() {
     }
 }
 
+void Partie::GenererTuilesAleatoires(unsigned int n) {
+    static std::vector<TypeHexagone> types = {
+        TypeHexagone::Caserne,
+        TypeHexagone::Carriere,
+        TypeHexagone::Habitation,
+        TypeHexagone::Temple,
+        TypeHexagone::Jardin,
+        TypeHexagone::Marche
+    };
+
+    for (unsigned int k = 0; k < n; k++) {
+        // types aléatoires des 3 hexagones de la tuile
+        TypeHexagone t1 = types[rand() % types.size()];
+        TypeHexagone t2 = types[rand() % types.size()];
+        TypeHexagone t3 = types[rand() % types.size()];
+
+        // forme (triangle)
+        std::vector<Hexagone> disp;
+        disp.emplace_back(0, 1, t1);
+        disp.emplace_back(0, 0, t2);
+        disp.emplace_back(1, 0, t3);
+
+        // id basé sur la taille actuelle (je suis pas sûr de ca)
+        int id = pioche.size();
+
+        Tuile tuile(id, disp);
+        pioche.push_back(tuile);
+    }
+}
