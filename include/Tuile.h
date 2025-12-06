@@ -39,10 +39,10 @@ public:
     Tuile(int id, bool tuileDepart) : is_depart(tuileDepart), id_tuile(id)  {
         if (tuileDepart) {
             disposition = {
-                Hexagone(0, 0, 1, TypeHexagone::Place),
-                Hexagone(1, 0, 0, TypeHexagone::Carriere),
-                Hexagone(0, 1, 0, TypeHexagone::Carriere),
-                Hexagone(-1, 1, 0, TypeHexagone::Carriere)
+                Hexagone(0, 0, TypeHexagone::Habitation, true), // "true" car cet hexagone est une place
+                Hexagone(1, 0, TypeHexagone::Carriere),
+                Hexagone(-1, 1, TypeHexagone::Carriere),
+                Hexagone(0, -1, TypeHexagone::Carriere)
             };
         } else {
             throw std::invalid_argument("Tuile(id, bool): mettre true pour la tuile de départ.");

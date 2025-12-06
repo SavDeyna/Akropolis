@@ -17,8 +17,6 @@ int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
-
-
     std::cout<<"Lancement du jeu\n";
     string choix ="";
     do {
@@ -79,8 +77,11 @@ int main() {
 
     //Débug, pour test vos trucs
     else if (choix == "2"){
-        //script de test, généré par IA, utilisé pour débogger les méthodes
-
+        //=== test d'initialisation d'un Plateau
+        Plateau p1;
+        p1.afficherPlateau();
+        //===
+        
     }
     else {
         return 0;

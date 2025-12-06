@@ -16,7 +16,6 @@ using namespace std;
             case TypeHexagone::Temple:    return "Temple";
             case TypeHexagone::Jardin:    return "Jardin";
             case TypeHexagone::Marche:    return "Marché";
-            case TypeHexagone::Place:     return "Place";
             default:                      return "Inconnu";
         }
     }
@@ -52,7 +51,6 @@ void Tuile::afficherTuile() const {
                   << "  q=" << std::setw(2) << h.getQ()
                   << "  r=" << std::setw(2) << h.getR()
                   << "  s=" << std::setw(2) << h.getS()
-                  << "  étoiles=" << std::setw(2) << h.getEtoiles()
                   << "  type=" << typeHexagoneToString(h.getTypeHexagone())
                   << std::endl;
     }
