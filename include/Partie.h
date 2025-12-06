@@ -1,8 +1,5 @@
-#ifndef PARTIE_H
-#define PARTIE_H
-#include "Participant.h"
+#pragma once
 #include "Participation.h"
-
 
 
 
@@ -35,7 +32,7 @@ class Partie{
         
         Partie() {} ;
         //Constructeur pour charger une partie depuis une sauvegarde.
-        Partie(unsigned int tour, vector<Participant> participants , ModeDeJeu mdj, vector<Tuile> pioche);
+        Partie(unsigned int tour, vector<Participation> participants , ModeDeJeu mdj, vector<Tuile> pioche);
         ~Partie() = default;
 
 
@@ -43,7 +40,7 @@ class Partie{
         //getter
 
         int getTour() const { return tour; }
-        Participant getParticipant(std::size_t i) const ;
+        Participation getParticipant(std::size_t i) const ;
         std::size_t getNbJoueurs() const noexcept { return nbParticipants; }
         void incTour() { tour += 1; }
         
@@ -65,7 +62,7 @@ class Partie{
         void SetMdj(const ModeDeJeu& m){mdj=m;}
 
         //Partie participants
-        vector<Participant> participants;
+        vector<Participation> participants;
         unsigned int nbParticipants{ 0 };
 
         //déroulement partie
@@ -77,7 +74,4 @@ class Partie{
         vector<Tuile> pioche ;
         vector<Tuile> jeu;
 
-        std::vector<Participation> participations;
-
 };
-#endif

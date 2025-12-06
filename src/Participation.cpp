@@ -1,10 +1,7 @@
 #include "Participation.h"
-#include "Plateau.h"
-#include "Participant.h"
-#include "Hexagone.h"
 
 // ----- calcul des points -----
-int Participation::calculerPoints() {
+unsigned int Participation::calculerPoints() {
 
     /**
      * Calcule le score final du joueur selon les règles de Akropolis.
@@ -15,7 +12,6 @@ int Participation::calculerPoints() {
      *  4. Ajouter 1 point par pierre possédée.
      */
 
-    Plateau& plateau = participant->getPlateau();
 
     // Types de quartiers concernés
     const std::vector<TypeHexagone> quartiers = {
@@ -68,9 +64,46 @@ int Participation::calculerPoints() {
     }
 
     // --- Ajout des pierres ---
-    nbrPierre = Participation::getPierres();
-    total += nbrPierre;
+    pierres = Participation::getPierres();
+    total += pierres;
 
-    nbrPoints = total;
-    return nbrPoints;
+    nbPoints = total;
+    return nbPoints;
 }
+
+bool Participation::placerTuile(const Tuile& tuile) {
+    Plateau& p = plateau;
+
+    // On vérifie si au moins un hexagone voisin est occupé
+    bool voisinTrouve = false;
+
+    for (const auto& h : tuile.getDisposition()) {
+
+        // Convertit un Hexagone → HexagoneCoord
+        HexagoneCoord c { h.getQ(), h.getR(), h.getS() };
+
+        // Récupère les voisins du plateau (coord absolues)
+        auto voisins = p.getVoisins(c);
+
+        for (const auto& v : voisins) {
+            if (p.estOccupe(v)) {
+                voisinTrouve = true;
+                break;
+            }
+        }
+        if (voisinTrouve) break;
+    }
+
+    if (!voisinTrouve && !p.estVide()) {
+        std::cout << "Aucun voisin, placement refusé.\n";
+        return false;
+    }
+
+    // Choix de l'origine de la tuile (ex: placer la première au centre)
+    HexagoneCoord origin { 0,0,0 };
+
+    p.placerTuile(tuile, origin);
+    return true;
+}
+
+

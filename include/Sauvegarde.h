@@ -1,6 +1,9 @@
 #ifndef SAUVEGARDE_H
 #define SAUVEGARDE_H
+#pragma once
 #include "Partie.h"
+#include "Participation.h"
+#include "Tuile.h"
 
 class Sauvegarde ;
 
@@ -31,7 +34,7 @@ class Sauvegarde{
 
         string nom;
         ModeDeJeu mdj;
-        vector<Participant> participants;
+        vector<Participation> participants;
         unsigned int nbParticipants;
         unsigned int tour ;
         vector<Tuile> pioche ;

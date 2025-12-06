@@ -1,7 +1,4 @@
 #include "Partie.h"
-#include "Participant.h"
-#include "Hexagone.h"
-#include "Tuile.h"
 
 #include <iostream>
 

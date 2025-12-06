@@ -33,8 +33,8 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
 
     for (unsigned int i = 0; i < s.nbParticipants; i++) {
         json temp;
-        temp["nom"] = s.participants[i].getPseudo();
-        temp["pierre"] = s.participants[i].getPierre();
+        temp["nom"] = s.participants[i].getParticipant()->getPseudo();
+        temp["pierre"] = s.participants[i].getPierres();
         newSave["participants"].push_back(temp);
     }
 
@@ -105,7 +105,7 @@ Partie SauvegardeManager::chargerSauvegarde(unsigned int id){
         throw runtime_error("ID de sauvegarde invalide");
 
     //A initier
-    vector<Participant> participants;
+    vector<Participation> participants;
     ModeDeJeu mdj ;
     vector<Tuile> pioche ;
 

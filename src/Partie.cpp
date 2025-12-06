@@ -63,7 +63,7 @@ void Partie::ChargerTuiles(){
         std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
     }
 }
-Participant Partie::getParticipant(std::size_t i) const {
+Participation Partie::getParticipant(std::size_t i) const {
             if (i >= nbParticipants) throw std::out_of_range("Index de participant");
             return participants[i];
     }
@@ -124,27 +124,20 @@ void Partie::GenererTuilesAleatoires(unsigned int n) {
         pioche.push_back(tuile);
     }
 }
-Partie::Partie(unsigned int tour, vector<Participant> participants , ModeDeJeu mdj, vector<Tuile> pioche):
+Partie::Partie(unsigned int tour, vector<Participation> participants , ModeDeJeu mdj, vector<Tuile> pioche):
     mdj(mdj),participants(participants),tour(tour),pioche(pioche){}
 
-void Partie::initialiserParticipations() {
-    participations.clear();
-
-    for (std::size_t i = 0; i < participants.size(); ++i) {
-        participations.emplace_back(&participants[i], i + 1);  // ordre de passage
-    }
-}
 
 void Partie::calculerScoresFinDePartie() {
-    for (auto& part : participations) {
+    for (auto& part : participants) {
         part.calculerPoints();
     }
 }
 
 Participation& Partie::getGagnant() {
     return *std::max_element(
-        participations.begin(),
-        participations.end(),
+        participants.begin(),
+        participants.end(),
         [](const Participation& a, const Participation& b) {
 
             // Critère 1 : points
