@@ -52,6 +52,7 @@ class Partie{
         //Partie tuiles
         void melangePioche();
         void ChargerTuiles();
+        void GenererTuilesAleatoires(unsigned int n = 61);
 
         //Methodes pour la participation
         void initialiserParticipations();

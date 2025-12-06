@@ -36,7 +36,17 @@ int main() {
 
 
         //Chargement des tuiles
-        partie.ChargerTuiles();
+        string choix2 ="";
+        do {
+            std::cout<<"Veillez choisir un mode de chargement des tuiles : \nTapez 1 : Mode normal\nTapez 2 : Mode aléatoire\n";
+            std::cin>> choix2;
+        }while (choix2 !="1" && choix2 !="2");
+        if (choix2 == "1"){
+            partie.ChargerTuiles();
+        }
+        else {
+            partie.GenererTuilesAleatoires();
+        }
         partie.melangePioche();
 
         
@@ -73,6 +83,8 @@ int main() {
             //méthode de chargement des 61 pièces stockées
 
             //non prioritaire : création aléatoire des 61 tuiles (proba à déterminer)
+
+        system("pause"); // pour débug sur VS code
     }
 
     //Débug, pour test vos trucs
@@ -88,6 +100,5 @@ int main() {
     }
     return 0;
 
-    
     
 }
