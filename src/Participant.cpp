@@ -10,7 +10,7 @@
 
 using namespace std;
 
-bool Participant::placerTuile(const Tuile& tuile) {
+bool Participant::placerTuile( Tuile& tuile) {
     Plateau& p = plateau;
 
     // On vérifie si au moins un hexagone voisin est occupé

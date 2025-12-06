@@ -17,6 +17,30 @@ int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
+
+
+    Plateau plateau;
+
+    plateau.afficherPlateau();
+
+    // Création d'une tuile test
+    vector<Hexagone> hexs = {
+        Hexagone(0,1, TypeHexagone::Carriere, true),
+        Hexagone(-1,+2, TypeHexagone::Carriere),
+        Hexagone(0,+2, TypeHexagone::Caserne)
+    };
+    Tuile t(1, hexs);
+
+    HexagoneCoord origin{0,0,0};
+
+    if (plateau.placerTuile(t, origin)) {
+        cout << "Tuile placée avec succès !\n";
+    } else {
+        cout << "Impossible de placer la tuile.\n";
+    }
+
+    plateau.afficherPlateau();
+
     std::cout<<"Lancement du jeu\n";
     string choix ="";
     do {
