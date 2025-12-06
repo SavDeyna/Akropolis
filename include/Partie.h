@@ -1,9 +1,6 @@
-#ifndef PARTIE_H
-#define PARTIE_H
-#include <string>
-#include <vector>
-#include "Participant.h"
-#include "Tuile.h"
+#pragma once
+#include "Participation.h"
+
 
 
 class ModeDeJeu {
@@ -33,6 +30,11 @@ class Partie{
             static Partie instance;
             return instance;
         }
+        //Partie mode de Jeu
+        void choixMDJ(); // l'utilisateur choisit un mode de jeu
+        ModeDeJeu getMDJ() const {return mdj;}
+        //Constructeur pour charger une partie depuis une sauvegarde.
+        Partie(unsigned int tour, vector<Participation> participants , ModeDeJeu mdj, vector<Tuile> pioche);
 
         ~Partie() = default;
 
@@ -49,11 +51,17 @@ class Partie{
         std::size_t getNbParticipants() const noexcept { return nbParticipants; }
         void incTour() { tour += 1; }
         
+        friend class Sauvegarde;
        
         //Partie tuiles
         void melangePioche();
         void ChargerTuiles();
-    
+        void GenererTuilesAleatoires(unsigned int n = 61);
+
+        //Methodes pour la participation
+        void initialiserParticipations();
+        void calculerScoresFinDePartie();
+        Participation& getGagnant();
 
     private:
         Partie() {}; // init private => singleton
@@ -69,14 +77,12 @@ class Partie{
         unsigned int nbParticipants{ 0 };
 
         //déroulement partie
-        int tour{ 0 };
+        unsigned int tour{ 0 };
         
         
 
         //Partie tuiles
-        std::vector<Tuile> pioche ;
-        std::vector<Tuile> jeu;
-        std::vector<Tuile> defausse ;
+        vector<Tuile> pioche ;
+        vector<Tuile> jeu;
 
 };
-#endif

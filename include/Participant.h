@@ -2,23 +2,20 @@
 #include <iostream>
 #include <string>
 
-#include "Plateau.h"
 using namespace std;
 
 
 class Participant {
 private:
     std::string pseudo;
-    unsigned int pierres{0};
-    Plateau plateau;
 
 public:
-    explicit Participant(const std::string& p) : pseudo(p), plateau() {}
+    explicit Participant(const std::string& p) : pseudo(p) {}
     virtual ~Participant() = default;
     const string& getPseudo() const { return pseudo; }
-    Plateau& getPlateau() { return plateau; }
+    
     void setPseudo(std::string p) { pseudo = std::move(p); }
-    bool placerTuile(const Tuile& tuile);
+    
 };
 
 class Joueur : public Participant {
