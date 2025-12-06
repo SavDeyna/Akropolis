@@ -1,4 +1,6 @@
 #include <Partie.h>
+#include <algorithm>
+#include <iostream>
 #include <fstream>
 #include <ostream>
 #include <vector>
@@ -121,4 +123,36 @@ void Partie::GenererTuilesAleatoires(unsigned int n) {
         Tuile tuile(id, disp);
         pioche.push_back(tuile);
     }
+}
+Partie::Partie(unsigned int tour, vector<Participant> participants , ModeDeJeu mdj, vector<Tuile> pioche):
+    mdj(mdj),participants(participants),tour(tour),pioche(pioche){}
+
+void Partie::initialiserParticipations() {
+    participations.clear();
+
+    for (std::size_t i = 0; i < participants.size(); ++i) {
+        participations.emplace_back(&participants[i], i + 1);  // ordre de passage
+    }
+}
+
+void Partie::calculerScoresFinDePartie() {
+    for (auto& part : participations) {
+        part.calculerPoints();
+    }
+}
+
+Participation& Partie::getGagnant() {
+    return *std::max_element(
+        participations.begin(),
+        participations.end(),
+        [](const Participation& a, const Participation& b) {
+
+            // Critère 1 : points
+            if (a.getPoints() != b.getPoints())
+                return a.getPoints() < b.getPoints();
+
+            // Critère 2 : pierres en cas d'égalité
+            return a.getPierres() < b.getPierres();
+        }
+    );
 }

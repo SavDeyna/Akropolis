@@ -15,6 +15,7 @@ private:
 public:
     explicit Participant(const std::string& p) : pseudo(p), plateau() {}
     virtual ~Participant() = default;
+    unsigned int getPierre() const {return pierres;}
     const string& getPseudo() const { return pseudo; }
     Plateau& getPlateau() { return plateau; }
     void setPseudo(std::string p) { pseudo = std::move(p); }
