@@ -1,5 +1,10 @@
 #include "Plateau.h"
 #include <iostream>
+#include <climits>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <cmath>
 
 using namespace std;
 
@@ -55,5 +60,73 @@ void Plateau::afficherPlateau() const {
                   << " étoiles=" << st.etoiles
                   << " hauteur=" << st.hauteur
                   << " id_tuile=\"" << st.id_tuile << "\"\n";
+    }
+}
+
+void Plateau::dessinerPlateau(const int radius) const{
+    vector<stringstream> lignes(2);
+    for(int r = -radius; r <= radius; ++r){
+        //reset des lignes
+        for(size_t i = 0; i < 2; ++i) {
+            lignes[i].str(""); // Clear the contents
+            lignes[i].clear(); // Clear the flags
+        }
+        for(size_t j = 0; j < abs(r); ++j){
+            lignes[0] << "     ";
+            lignes[1] << "     ";
+        }
+        lignes[0] << "  ";
+        lignes[1] << "  ";
+        for(int q = -radius; q <= radius; ++q){
+            int s = -q - r;
+            if (s >= -radius && s <= radius) {
+                auto it = grille.find(HexagoneCoord{q, r, s});
+                const HexState * hexS = (it == grille.end()) ? nullptr : &it->second;
+                string typeString = " ";
+                string etoilesString = " ";
+                if (hexS != nullptr) { 
+                    // Si l'hexagone existe, on peut accéder à ses membres en toute sécurité
+                    switch(hexS->type){
+                        case TypeHexagone::Carriere: typeString = "C"; break;
+                        case TypeHexagone::Place: typeString = "P"; break;
+                        case TypeHexagone::Caserne: typeString = "S"; break;
+                        case TypeHexagone::Jardin: typeString = "J"; break;
+                        case TypeHexagone::Temple: typeString = "T"; break;
+                        case TypeHexagone::Marche: typeString = "M"; break;
+                        case TypeHexagone::Habitation: typeString = "H"; break;
+                        default: typeString = "?"; break;
+                    }
+                    etoilesString = std::to_string(hexS->etoiles);
+                }
+                if (r == -radius) {
+                    lignes[0] << "";
+                    lignes[1] << "___";
+                    lignes[1] << "       ";
+                } else if (r + q == -radius) {
+                    if (r == 0) {
+                        lignes[0] << "      /   ";
+                        lignes[1] << "     /    ";
+                    } else {
+                        lignes[0] << "      /   ";
+                        lignes[1] << "  ___/    ";
+                    }
+                } else if (r + s == -radius) {
+                    if (r == 0) {
+                        lignes[0] << "\\         ";
+                        lignes[1] << " \\        ";
+                    } else {
+                        lignes[0] << "\\         ";
+                        lignes[1] << " \\___     ";
+                    }
+                } else {
+                    lignes[0] << "\\ "<< typeString <<etoilesString <<"  /   ";
+                    lignes[1] << " \\___/    ";
+                }
+            }
+        }
+        // quand on a fini une rangée d'hexagones, on peut l'afficher
+        for(const auto& line : lignes){
+            cout << line.str() << "\n";
+        }
     }
 }

@@ -2,6 +2,7 @@
 #include "Participant.h"
 #include "Hexagone.h"
 #include "Tuile.h"
+#include "Plateau.h"
 
 #include <iostream>
 
@@ -20,7 +21,52 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
 #endif
 
+    std::cout << "\n=== MODE DEBUG - TEST PLATEAU ===\n\n";
 
+    // Créer un plateau
+    Plateau plateau;
+    std::cout << "Plateau créé (vide)\n";
+    plateau.afficherPlateau();
+
+    // Créer une tuile de départ
+    std::cout << "\nCréation d'une tuile de départ...\n";
+    Tuile tuileDepart(0, true);
+    std::cout << "Tuile de départ créée\n";
+
+    // Placer la tuile au centre du plateau
+    HexagoneCoord origin{0, 0, 0};
+    plateau.placerTuile(tuileDepart, origin);
+    std::cout << "Tuile placée à l'origine (0,0,0)\n";
+
+    // Afficher le plateau
+    std::cout << "\nAffichage du plateau après placement:\n";
+    plateau.afficherPlateau();
+
+    // Afficher avec le dessin complet
+    std::cout << "\nDessin du plateau complet (avec hauteurs):\n";
+    plateau.dessinerPlateau(3);
+
+    // Test avec une deuxième tuile (créée manuellement)
+    std::cout << "\nCréation d'une deuxième tuile...\n";
+    std::vector<Hexagone> disposition2{
+        Hexagone(0, 0, 1, TypeHexagone::Jardin),
+        Hexagone(1, 0, 1, TypeHexagone::Jardin),
+        Hexagone(1, -1, 0, TypeHexagone::Jardin)
+    };
+    Tuile tuile2(1, disposition2, false);
+    tuile2.setHauteur(1);  // hauteur 1
+
+    // Placer la deuxième tuile à côté
+    HexagoneCoord origin2{2, 0, -2};
+    plateau.placerTuile(tuile2, origin2);
+    std::cout << "Tuile 2 placée à (2,0,-2) avec hauteur 1\n";
+
+    // Affichage final
+    std::cout << "\nAffichage final du plateau:\n";
+    plateau.afficherPlateau();
+    plateau.dessinerPlateau(4);
+
+    /*
     std::cout<<"Lancement du jeu\n";
     string choix ="";
     do {
@@ -87,7 +133,7 @@ int main() {
     }
     return 0;
 
-    
+    */
     std::cout << "Appuyez sur Entrée pour quitter..." << std::endl;
     std::cin.get(); // Attend l'appui sur la touche Entrée
     

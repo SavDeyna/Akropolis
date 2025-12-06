@@ -26,5 +26,8 @@ public:
     // affiche la grille
     void afficherPlateau() const;
 
+    // dessine le plateau en ASCII art (version compacte en tuiles collées)
+    void dessinerPlateau(const int radius) const;
+
     bool estVide() const { return grille.empty(); }
 };
