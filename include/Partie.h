@@ -1,7 +1,16 @@
 #pragma once
 #include "Participation.h"
+#include <set>
+#include <string>
 
-
+// Les 5 variantes du jeu
+enum class Variante {
+    Habitations,
+    Marches,
+    Casernes,
+    Temples,
+    Jardins
+};
 
 class ModeDeJeu {
     public :
@@ -15,12 +24,29 @@ class ModeDeJeu {
         ModeDeJeu() : nom("Indéfini"), nbrJoueur(0), nbrIA(0), description("") {}
         ~ModeDeJeu() = default;
 
+        // Variantes
+        bool varianteActive(Variante v) const {
+            return variantes.count(v) > 0;
+        }
+
+        void activerVariante(Variante v) {
+            variantes.insert(v);
+        }
+
+        const std::set<Variante>& getVariantes() const {
+            return variantes;
+        }
+
     private:
         string nom;
         unsigned int nbrJoueur ;
         unsigned int nbrIA ;
         string description;
+
+        // Variantes
+        std::set<Variante> variantes;
 };
+
 
 class Partie{
     public:

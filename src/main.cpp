@@ -46,6 +46,9 @@ int main() {
         }
         partie.melangePioche();
 
+        std::cout << "Tuiles chargees et melangees !\n";
+        
+
         
 
         std::cout<<"    Participant(s)\n";
