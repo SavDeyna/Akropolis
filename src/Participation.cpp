@@ -30,7 +30,16 @@ int Participation::calculerPoints() {
     std::map<TypeHexagone, int> nbQuartiers;
     int totalMultiplicateur = 0;
 
-    // ⚠️ nécessite : friend class Participation; dans Plateau
+    //Tableau des points : 
+    map<TypeHexagone,int> tabpoints={
+        {TypeHexagone::Caserne, 2},
+        {TypeHexagone::Jardin, 3},
+        {TypeHexagone::Temple, 2},
+        {TypeHexagone::Marche , 2},
+        {TypeHexagone::Habitation , 1}
+    };
+
+    // nécessite : friend class Participation; dans Plateau
     for (const auto& entry : plateau.grille) {
         const HexState& hex = entry.second;
 
@@ -47,8 +56,8 @@ int Participation::calculerPoints() {
         }
 
         // --- Multiplicateur des Places ---
-        if (hex.type == TypeHexagone::Place) {
-            totalMultiplicateur += hex.etoiles;
+        if (hex.place) {
+            totalMultiplicateur += tabpoints[hex.type];
         }
     }
 
