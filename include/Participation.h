@@ -36,4 +36,7 @@ public:
     void setOrdrePassage(int o) { ordrePassage = o; }
     void addPierres(unsigned int i) {pierres+=i;}
 
-};
+
+    unsigned int Participation::calculerPoints();
+    bool Participation::placerTuile(const Tuile& tuile);
+}; 
