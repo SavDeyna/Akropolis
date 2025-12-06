@@ -1,6 +1,8 @@
 #ifndef PARTIE_H
 #define PARTIE_H
 #include "Participant.h"
+#include "Participation.h"
+
 
 
 
@@ -47,6 +49,11 @@ class Partie{
         void melangePioche();
         void ChargerTuiles();
 
+        //Methodes pour la participation
+        void initialiserParticipations();
+        void calculerScoresFinDePartie();
+        Participation& getGagnant();
+
     private:
         //Partie mode de Jeu
         ModeDeJeu mdj;
@@ -65,6 +72,8 @@ class Partie{
         vector<Tuile> pioche ;
         vector<Tuile> jeu;
         vector<Tuile> defausse ;
+
+        std::vector<Participation> participations;
 
 };
 #endif
