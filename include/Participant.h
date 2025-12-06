@@ -19,6 +19,7 @@ public:
     Plateau& getPlateau() { return plateau; }
     void setPseudo(std::string p) { pseudo = std::move(p); }
     bool placerTuile(const Tuile& tuile);
+    unsigned int getPierres() {return pierres;}
 };
 
 class Joueur : public Participant {
