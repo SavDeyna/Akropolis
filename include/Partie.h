@@ -29,10 +29,13 @@ class Partie{
     public:
         //Partie mode de Jeu
         void choixMDJ(); // l'utilisateur choisit un mode de jeu
+        ModeDeJeu getMDJ() const {return mdj;}
 
         //Partie initialisation objet
         
         Partie() {} ;
+        //Constructeur pour charger une partie depuis une sauvegarde.
+        Partie(unsigned int tour, vector<Participant> participants , ModeDeJeu mdj, vector<Tuile> pioche);
         ~Partie() = default;
 
 
@@ -44,6 +47,7 @@ class Partie{
         std::size_t getNbJoueurs() const noexcept { return nbParticipants; }
         void incTour() { tour += 1; }
         
+        friend class Sauvegarde;
        
         //Partie tuiles
         void melangePioche();
@@ -64,14 +68,13 @@ class Partie{
         unsigned int nbParticipants{ 0 };
 
         //déroulement partie
-        int tour{ 0 };
+        unsigned int tour{ 0 };
         
         
 
         //Partie tuiles
         vector<Tuile> pioche ;
         vector<Tuile> jeu;
-        vector<Tuile> defausse ;
 
         std::vector<Participation> participations;
 

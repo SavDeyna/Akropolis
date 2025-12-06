@@ -95,6 +95,9 @@ void Partie::choixMDJ() {
     }
 }
 
+Partie::Partie(unsigned int tour, vector<Participant> participants , ModeDeJeu mdj, vector<Tuile> pioche):
+    mdj(mdj),participants(participants),tour(tour),pioche(pioche){}
+
 void Partie::initialiserParticipations() {
     participations.clear();
 
