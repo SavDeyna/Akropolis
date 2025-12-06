@@ -89,6 +89,7 @@ void Partie::choixMDJ() {
         }while(a !="1");
         ModeDeJeu m(data[i]["nom"],data[i]["nbrJoueur"],data[i]["nbrIA"],data[i]["description"]);
         this->SetMdj(m);
+        SetNbParticipants();
     }
     else {
         std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
@@ -149,3 +150,15 @@ Participation& Partie::getGagnant() {
         }
     );
 }
+
+void Partie::addParticipation(const Participation& p){
+    if (participants.size()==4){
+        throw "Nombre maximal de participant atteint";
+    }
+    participants.push_back(p);
+}
+
+void Partie::SetNbParticipants(){
+    //Une fois le mode de jeu choisi, permet de mettre à jour le nb de participant
+    nbParticipants= mdj.getNbrJoueur()+mdj.getNbrIA();
+};

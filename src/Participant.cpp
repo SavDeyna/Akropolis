@@ -7,3 +7,10 @@
 
 using namespace std;
 
+void IA::Jouer() const {
+
+}
+
+void Joueur::Jouer() const {
+
+}

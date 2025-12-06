@@ -31,7 +31,6 @@ int main() {
         //Choix mdj
         partie.choixMDJ();
 
-
         //Chargement des tuiles
         string choix2 ="";
         do {
@@ -40,25 +39,30 @@ int main() {
         }while (choix2 !="1" && choix2 !="2");
         if (choix2 == "1"){
             partie.ChargerTuiles();
+            partie.melangePioche();
         }
         else {
             partie.GenererTuilesAleatoires();
         }
-        partie.melangePioche();
-
         
 
-        std::cout<<"    Participant(s)\n";
-
-        //Construire les objets participants en fonction du nbr de joueurs dans objet mode de jeu 
-        //partie.initParticipants();
-
-        //Mettre leur plateau associé, initié avec 1 case neutre à définir, 3 cases cailloux
+        //Chargement des participations :
+        //Donne des tours, les cailloux de départs, l'ordre de passage
+        for (unsigned int i = 0 ; i<partie.getNbJoueurs();i++){
+            std::cout<<"Pseudo du joueur n°"<<i+1<<" :\n";
+            string p;
+            std::cin >> p ;
+            Joueur j(p) ;
+            Participation parti(&j,i);
+            parti.addPierres(i+1);
+            partie.addParticipation(parti);
+        }
+        
 
         std::cout<<"    Partie\n";
         //Partie partie(mode);
 
-        //Méthode pour choisir au hasard l'ordre des participants: les joueurs réels commencent toujours, donner l'ordre des participants actuels, changer de 1 l'ordre des participants(le premier devient le dernier)
+        
         //partie.computeTurnOrder();
         //créer méthode tour suivant
         //méthode initialisation : 
@@ -71,15 +75,10 @@ int main() {
 
             //Méthode pour voir si une tuile(3 hexagones) peut être placée sur plateau à certaines coordonnées, passées en paramètre
             //Méthode pour placer, qui utilise la méthode de vérif au préalable
-            //méthode calcul de points
 
         std::cout<<"    Tuile\n";
             //Méthode de rotation de tuile
-            //méthode de chargement des 61 tuiles
-            //méthode de tirage de x tuiles parmis les 61, sans remise (faire par exemple un tableau ou on retire des éléments petits à petit)
-            //méthode de chargement des 61 pièces stockées
 
-            //non prioritaire : création aléatoire des 61 tuiles (proba à déterminer)
 
         system("pause"); // pour débug sur VS code
     }
