@@ -51,7 +51,7 @@ vector<HexagoneCoord> Plateau::getVoisins(const HexagoneCoord& c) const {
     return v;
 }
 
-bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin) {
+bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres) {
     std::vector<HexagoneCoord> coords;
     coords.reserve(3); // pour éviter une surallocation de mémoire
 
@@ -90,6 +90,11 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin) {
         } 
         h = hex1->hauteur + 1;
         t.setHauteur(h);
+
+        for (const auto* hex : {hex1, hex2, hex3}) {
+            if (hex->type == TypeHexagone::Carriere)
+                nbPierres++;
+        }
     } else if (allEmpty) {
         if (h == 1){
             int i{0};

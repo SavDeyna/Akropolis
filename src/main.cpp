@@ -18,7 +18,7 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
 #endif
 
-
+    /*
     Plateau plateau;
 
     plateau.afficherPlateau();
@@ -39,7 +39,7 @@ int main() {
         cout << "Impossible de placer la tuile.\n";
     }
 
-    plateau.afficherPlateau();
+    plateau.afficherPlateau(); */
 
     std::cout<<"Lancement du jeu\n";
     string choix ="";
