@@ -9,10 +9,15 @@
 class Plateau {
 private:
     std::map<HexagoneCoord, HexState> grille;
+    unsigned int next_id = 1;
 
 public:
-    Plateau() = default;
+    friend class Participation;
 
+    Plateau();
+    int generateId() {
+        return next_id++; // renvoie l'ancienne valeur de next_id, puis l'incrémente
+    }
     // accès au hex
     const HexState* getHex(const HexagoneCoord& c) const;
     bool estOccupe(const HexagoneCoord& c) const;
@@ -27,4 +32,7 @@ public:
     void afficherPlateau() const;
 
     bool estVide() const { return grille.empty(); }
+
+    //Verifier que l'on peut poser une tuile de 3 hexagones
+    bool peutPoserTuile(const Tuile& t, const HexagoneCoord& origin) const;
 };

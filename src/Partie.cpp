@@ -1,4 +1,6 @@
 #include <Partie.h>
+#include <algorithm>
+#include <iostream>
 #include <fstream>
 #include <ostream>
 #include <vector>
@@ -33,16 +35,22 @@ void Partie::ChargerTuiles(){
         dict["violet"] = TypeHexagone::Temple;    // quartier violet
         dict["vert"]   = TypeHexagone::Jardin;    // quartier vert
         dict["jaune"]  = TypeHexagone::Marche;    // quartier jaune
-        dict["blanc"]  = TypeHexagone::Place;     // place
 
         cout << "Nombre de tuiles lues : " << data["tuiles"].size() << endl;
         for (unsigned int i=0 ; i<61; i++){   
             cout<<"Chargement tuile numéro "<<i<<"\n";  
             vector<Hexagone> v ; 
 
+            /* j'ai supprimé le champ "étoiles", j'ai donc légèrement modifié l'ancienne signature : 
+
             Hexagone a(0,1,data["tuiles"][i][0][1],dict[data["tuiles"][i][0][0]]) ; 
             Hexagone b(0,0,data["tuiles"][i][1][1],dict[data["tuiles"][i][1][0]]) ;
             Hexagone c(1,0,data["tuiles"][i][2][1],dict[data["tuiles"][i][2][0]]) ;
+            */
+
+            Hexagone a(0,1,dict[data["tuiles"][i][0][0]]) ; 
+            Hexagone b(0,0,dict[data["tuiles"][i][1][0]]) ;
+            Hexagone c(1,0,dict[data["tuiles"][i][2][0]]) ;
             v.push_back(a);
             v.push_back(b);
             v.push_back(c);
@@ -89,3 +97,33 @@ void Partie::choixMDJ() {
 
 Partie::Partie(unsigned int tour, vector<Participant> participants , ModeDeJeu mdj, vector<Tuile> pioche):
     mdj(mdj),participants(participants),tour(tour),pioche(pioche){}
+
+void Partie::initialiserParticipations() {
+    participations.clear();
+
+    for (std::size_t i = 0; i < participants.size(); ++i) {
+        participations.emplace_back(&participants[i], i + 1);  // ordre de passage
+    }
+}
+
+void Partie::calculerScoresFinDePartie() {
+    for (auto& part : participations) {
+        part.calculerPoints();
+    }
+}
+
+Participation& Partie::getGagnant() {
+    return *std::max_element(
+        participations.begin(),
+        participations.end(),
+        [](const Participation& a, const Participation& b) {
+
+            // Critère 1 : points
+            if (a.getPoints() != b.getPoints())
+                return a.getPoints() < b.getPoints();
+
+            // Critère 2 : pierres en cas d'égalité
+            return a.getPierres() < b.getPierres();
+        }
+    );
+}

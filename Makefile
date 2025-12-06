@@ -1,6 +1,6 @@
 EXEC = build/Akropolis
 
-SRC = src/Hexagone.cpp src/main.cpp src/Participant.cpp src/Partie.cpp src/Plateau.cpp src/Tuile.cpp src/Sauvegarde.cpp
+SRC = src/Hexagone.cpp src/main.cpp src/Participant.cpp src/Partie.cpp src/Plateau.cpp src/Tuile.cpp src/Sauvegarde.cpp src/Participation.cpp
 OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 
 CXX = g++
