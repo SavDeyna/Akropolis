@@ -2,6 +2,7 @@
 #include <map>
 #include <iostream>
 #include <vector>
+#include <set>
 
 #include "Hexagone.h"
 #include "Tuile.h"
@@ -31,4 +32,8 @@ public:
 
     //Verifier que l'on peut poser une tuile de 3 hexagones
     bool peutPoserTuile(const Tuile& t, const HexagoneCoord& origin) const;
+
+    //Renvoyer la liste des positions possible pour une tuile
+    std::vector<HexagoneCoord> getPositionsPossibles(const Tuile& t) const;
+
 };

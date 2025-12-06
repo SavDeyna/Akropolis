@@ -75,10 +75,6 @@ void Plateau::afficherPlateau() const {
             return false; // un hexagone de la tuile overlap → interdit
         }
 
-        // 2) (Optionnel) Vérifier contraintes de hauteur
-        // Tu peux adapter selon les règles Akropolis
-        // Exemple : ne pas dépasser une hauteur max, etc.
-        // Ici on n'impose rien
     }
 
     // 3) Vérifier qu'au moins un hexagone touche une tuile existante si le plateau n'est pas vide
@@ -106,4 +102,40 @@ void Plateau::afficherPlateau() const {
     }
 
     return true; // tout est OK → la tuile peut être posée
+}
+
+
+std::vector<HexagoneCoord> Plateau::getPositionsPossibles(const Tuile& t) const {
+
+    std::set<HexagoneCoord> positions;   // pour éviter les doublons
+    std::vector<HexagoneCoord> resultat;
+
+    // Cas particulier : plateau vide → seule position possible = origine (0,0,0)
+    if (estVide()) {
+        HexagoneCoord origin{0, 0, 0};
+        if (peutPoserTuile(t, origin))
+            resultat.push_back(origin);
+        return resultat;
+    }
+
+    // Pour chaque hexagone du plateau, on propose ses 6 voisins comme candidats
+    for (const auto& entry : grille) {
+        const HexagoneCoord& c = entry.first;
+
+        // On récupère les 6 voisins adjacents
+        auto voisins = getVoisins(c);
+
+        for (const auto& v : voisins) {
+            positions.insert(v);   // ensemble => pas de doublon
+        }
+    }
+
+    // Vérifier chaque position potentielle
+    for (const HexagoneCoord& pos : positions) {
+        if (peutPoserTuile(t, pos)) {
+            resultat.push_back(pos); // position validée
+        }
+    }
+
+    return resultat;
 }
