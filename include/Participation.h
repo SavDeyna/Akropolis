@@ -36,7 +36,4 @@ public:
     void setOrdrePassage(int o) { ordrePassage = o; }
     void addPierres(unsigned int i) {pierres+=i;}
 
-    //--------------------
-    unsigned int calculerPoints();
-    bool placerTuile(const Tuile& tuile);
 };
