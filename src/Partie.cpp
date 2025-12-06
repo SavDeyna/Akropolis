@@ -66,7 +66,7 @@ void Partie::ChargerTuiles(){
 Participation Partie::getParticipant(std::size_t i) const {
             if (i >= nbParticipants) throw std::out_of_range("Index de participant");
             return participants[i];
-    }
+}
 
 void Partie::choixMDJ() {
     ifstream file("data/mdj.json");
