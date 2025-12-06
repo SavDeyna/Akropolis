@@ -24,7 +24,7 @@ class ModeDeJeu {
 
 class Partie{
     public:
-
+        friend class SauvegardeManager;
         static Partie& getInstance() {
             // Initialisation statique locale (la plus simple et thread-safe depuis C++11)
             static Partie instance;
@@ -38,16 +38,13 @@ class Partie{
 
         ~Partie() = default;
 
-        //init de la partie bout par bout
-        void choixMDJ(); // l'utilisateur choisit un mode de jeu
-        void initParticipants(); // initialiser les participants de la partie selon le mdj
+        
 
         //getter
-        const ModeDeJeu& getMDJ() const { return mdj; }
         int getTour() const { return tour; }
-        std::vector<Participant>& getParticipants() { return participants; }
+        std::vector<Participation>& getParticipants() { return participants; }
         std::vector<Tuile>& getPioche() { return pioche; }
-        Participant getParticipant(std::size_t i) const ;
+        Participation getParticipant(std::size_t i) const ;
         std::size_t getNbParticipants() const noexcept { return nbParticipants; }
         void incTour() { tour += 1; }
         
@@ -73,7 +70,7 @@ class Partie{
         void SetMdj(const ModeDeJeu& m){mdj=m;} // choisir le mode de jeu
 
         //Partie participants
-        std::vector<Participant> participants;
+        std::vector<Participation> participants;
         unsigned int nbParticipants{ 0 };
 
         //déroulement partie

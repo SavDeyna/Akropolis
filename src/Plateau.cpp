@@ -93,7 +93,6 @@ void Plateau::dessinerPlateau(const int radius) const{
                     // Si l'hexagone existe, on peut accéder à ses membres en toute sécurité
                     switch(hexS->type){
                         case TypeHexagone::Carriere: typeString = "C"; break;
-                        case TypeHexagone::Place: typeString = "P"; break;
                         case TypeHexagone::Caserne: typeString = "S"; break;
                         case TypeHexagone::Jardin: typeString = "J"; break;
                         case TypeHexagone::Temple: typeString = "T"; break;
@@ -101,7 +100,7 @@ void Plateau::dessinerPlateau(const int radius) const{
                         case TypeHexagone::Habitation: typeString = "H"; break;
                         default: typeString = "?"; break;
                     }
-                    etoilesString = std::to_string(hexS->etoiles);
+                    etoilesString = std::to_string(hexS->place);
                 }
                 if (r == -radius) {
                     lignes[0] << "";
@@ -134,6 +133,7 @@ void Plateau::dessinerPlateau(const int radius) const{
             cout << line.str() << "\n";
         }
     }
+}
   
     bool Plateau::peutPoserTuile(const Tuile& t, const HexagoneCoord& origin) const {
     const auto& hexs = t.getDisposition();

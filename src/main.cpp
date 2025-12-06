@@ -30,7 +30,6 @@ int main() {
 
         //Choix mdj
         partie.choixMDJ();
-        partie.initParticipants();
 
         //Chargement des tuiles
         string choix2 ="";
@@ -111,21 +110,7 @@ int main() {
     std::cout << "\nDessin du plateau complet (avec hauteurs):\n";
     plateau.dessinerPlateau(3);
 
-    // Test avec une deuxième tuile (créée manuellement)
-    std::cout << "\nCréation d'une deuxième tuile...\n";
-    std::vector<Hexagone> disposition2{
-        Hexagone(0, 0, 1, TypeHexagone::Jardin),
-        Hexagone(1, 0, 1, TypeHexagone::Jardin),
-        Hexagone(1, -1, 0, TypeHexagone::Jardin)
-    };
-    Tuile tuile2(1, disposition2, false);
-    tuile2.setHauteur(1);  // hauteur 1
-
-    // Placer la deuxième tuile à côté
-    HexagoneCoord origin2{2, 0, -2};
-    plateau.placerTuile(tuile2, origin2);
-    std::cout << "Tuile 2 placée à (2,0,-2) avec hauteur 1\n";
-
+   
     // Affichage final
     std::cout << "\nAffichage final du plateau:\n";
     plateau.afficherPlateau();
