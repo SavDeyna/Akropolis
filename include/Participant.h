@@ -15,14 +15,15 @@ public:
     const string& getPseudo() const { return pseudo; }
     virtual void Jouer() const = 0 ;
     void setPseudo(std::string p) { pseudo = std::move(p); }
-    
+    bool placerTuile(Tuile& tuile, const HexagoneCoord& origin);
+    void setPierres(unsigned int p) { pierres = p; }
 };
 
 class Joueur : public Participant {
 private:
     bool victoire{ false };
 public:
-    explicit Joueur(const string& p, bool v = false) : Participant(p), victoire(v) {}
+    explicit Joueur(const string& p) : Participant(p), victoire(false) {}
     bool aGagne() const noexcept { return victoire; }
     void Jouer() const override ;
     void setVictoire(bool v) noexcept { victoire = v; }

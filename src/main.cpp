@@ -3,7 +3,9 @@
 #include <iostream>
 
 #ifdef _WIN32
+#ifndef NOMINMAX 
 #define NOMINMAX
+#endif
 #define byte win_byte_override
 #include <windows.h>
 #endif
@@ -14,6 +16,30 @@ int main() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
+
+    /*
+    Plateau plateau;
+
+    plateau.afficherPlateau();
+
+    // Création d'une tuile test
+    vector<Hexagone> hexs = {
+        Hexagone(0,1, TypeHexagone::Carriere, true),
+        Hexagone(-1,+2, TypeHexagone::Carriere),
+        Hexagone(0,+2, TypeHexagone::Caserne)
+    };
+    Tuile t(1, hexs);
+
+    HexagoneCoord origin{0,0,0};
+
+    if (plateau.placerTuile(t, origin)) {
+        cout << "Tuile placée avec succès !\n";
+    } else {
+        cout << "Impossible de placer la tuile.\n";
+    }
+
+    plateau.afficherPlateau(); */
+
     std::cout<<"Lancement du jeu\n";
     string choix ="";
     do {
@@ -24,9 +50,7 @@ int main() {
     //Mode console
     if (choix == "1"){
         std::cout<<"Mode console\n\n";
-        Partie partie;
-        
-
+        Partie& partie = Partie::getInstance(); // init du singleton partie avec getInstance
 
         //Choix mdj
         partie.choixMDJ();
@@ -44,6 +68,11 @@ int main() {
         else {
             partie.GenererTuilesAleatoires();
         }
+        partie.melangePioche();
+
+        std::cout << "Tuiles chargees et melangees !\n";
+        
+
         
 
         //Chargement des participations :
@@ -85,10 +114,19 @@ int main() {
 
     //Débug, pour test vos trucs
     else if (choix == "2"){
-        //=== test d'initialisation d'un Plateau
-        Plateau p1;
-        p1.afficherPlateau();
-        //===
+        std::cout << "\n=== MODE DEBUG - TEST PLATEAU ===\n\n";
+
+        // Créer un plateau
+        Plateau plateau;
+        std::cout << "Plateau créé (vide)\n";
+    
+        // Affichage
+        std::cout << "\nAffichage du plateau:\n";
+        plateau.afficherPlateau();
+        plateau.dessinerPlateau(7);
+        
+        std::cout << "Appuyez sur Entrée pour quitter..." << std::endl;
+        std::cin.get(); // Attend l'appui sur la touche Entrée
         
     }
     else {
@@ -96,5 +134,7 @@ int main() {
     }
     return 0;
 
+    
+    
     
 }

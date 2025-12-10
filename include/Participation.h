@@ -3,6 +3,7 @@
 #include <vector>
 #include "Participant.h"
 #include "Plateau.h"
+#include "Partie.h"
 
 /**
  * Classe représentant la participation d’un joueur (Participant)
@@ -40,3 +41,7 @@ public:
     unsigned int Participation::calculerPoints();
     bool Participation::placerTuile(const Tuile& tuile);
 }; 
+    bool placerTuile(const Tuile& tuile);
+    // Stocker les points après leur décompte
+    void Participation::setNbPoints(unsigned int pts) { nbPoints = pts;}
+};

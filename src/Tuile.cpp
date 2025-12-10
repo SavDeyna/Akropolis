@@ -55,3 +55,43 @@ void Tuile::afficherTuile() const {
                   << std::endl;
     }
 }
+
+void Tuile::tournerDroite() {
+    int pq = disposition[0].getQ();
+    int pr = disposition[0].getR();
+    int ps = disposition[0].getS();
+
+    for (auto& h : disposition) {
+        int q = h.getQ() - pq;
+        int r = h.getR() - pr;
+        int s = h.getS() - ps;
+
+        int rq = -s;
+        int rr = -q;
+        int rs = -r;
+
+        h.setQ(rq + pq);
+        h.setR(rr + pr);
+        h.setS(rs + ps);
+    }
+}
+
+void Tuile::tournerGauche() {
+    int pq = disposition[0].getQ();
+    int pr = disposition[0].getR();
+    int ps = disposition[0].getS();
+
+    for (auto& h : disposition) {
+        int q = h.getQ() - pq;
+        int r = h.getR() - pr;
+        int s = h.getS() - ps;
+
+        int rq = -r;
+        int rr = -s;
+        int rs = -q;
+
+        h.setQ(rq + pq);
+        h.setR(rr + pr);
+        h.setS(rs + ps);
+    }
+}

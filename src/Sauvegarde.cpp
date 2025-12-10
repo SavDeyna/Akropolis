@@ -9,7 +9,7 @@ using namespace std ;
 Sauvegarde::Sauvegarde(const Partie p, const string& nomsauvegarde){
     nom= nomsauvegarde;
     tour = p.getTour();
-    nbParticipants = p.getNbJoueurs();
+    nbParticipants = p.getNbParticipants();
     mdj = p.mdj;
 
     participants=p.participants;
@@ -25,7 +25,7 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
     newSave["nbParticipants"] = s.nbParticipants;
 
     newSave["mdj"] = {
-        {"nbrJoueur", s.mdj.getNbrJoueur()},
+        {"nbrJoueur", s.mdj.getNbJoueur()},
         {"nbrIA", s.mdj.getNbrIA()},
         {"description", s.mdj.getDescription()},
         {"nom", s.mdj.getnomMDJ()}
@@ -91,7 +91,7 @@ vector<SauvegardeInfo> SauvegardeManager::getListeSauvegardes(){
     }
     return liste;
 }
-Partie SauvegardeManager::chargerSauvegarde(unsigned int id){
+Partie& SauvegardeManager::chargerSauvegarde(unsigned int id){
     json data;
 
     ifstream file("data/sauvegarde.json");
@@ -108,7 +108,11 @@ Partie SauvegardeManager::chargerSauvegarde(unsigned int id){
     vector<Participation> participants;
     ModeDeJeu mdj ;
     vector<Tuile> pioche ;
-
-    Partie p = Partie(data[id]["tour"],participants, mdj , pioche);
+    Partie& p = Partie::getInstance();
+    p.tour = data[id]["tour"];
+    p.participants = participants;
+    p.mdj = mdj;
+    p.pioche = pioche;
+    p.nbParticipants = participants.size();
     return p;
 }
