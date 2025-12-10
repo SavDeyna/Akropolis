@@ -1,12 +1,11 @@
 #include "Partie.h"
-#include "Participant.h"
-#include "Hexagone.h"
-#include "Tuile.h"
 
 #include <iostream>
 
 #ifdef _WIN32
+#ifndef NOMINMAX 
 #define NOMINMAX
+#endif
 #define byte win_byte_override
 #include <windows.h>
 #endif
@@ -51,16 +50,23 @@ int main() {
     //Mode console
     if (choix == "1"){
         std::cout<<"Mode console\n\n";
-        Partie partie;
-        
-
+        Partie& partie = Partie::getInstance(); // init du singleton partie avec getInstance
 
         //Choix mdj
         partie.choixMDJ();
 
-
         //Chargement des tuiles
-        partie.ChargerTuiles();
+        string choix2 ="";
+        do {
+            std::cout<<"Veillez choisir un mode de chargement des tuiles : \nTapez 1 : Mode normal\nTapez 2 : Mode aléatoire\n";
+            std::cin>> choix2;
+        }while (choix2 !="1" && choix2 !="2");
+        if (choix2 == "1"){
+            partie.ChargerTuiles();
+        }
+        else {
+            partie.GenererTuilesAleatoires();
+        }
         partie.melangePioche();
 
         
@@ -97,14 +103,45 @@ int main() {
             //méthode de chargement des 61 pièces stockées
 
             //non prioritaire : création aléatoire des 61 tuiles (proba à déterminer)
+
+        system("pause"); // pour débug sur VS code
     }
 
     //Débug, pour test vos trucs
     else if (choix == "2"){
-        //=== test d'initialisation d'un Plateau
-        Plateau p1;
-        p1.afficherPlateau();
-        //===
+        std::cout << "\n=== MODE DEBUG - TEST PLATEAU ===\n\n";
+
+    // Créer un plateau
+    Plateau plateau;
+    std::cout << "Plateau créé (vide)\n";
+    plateau.afficherPlateau();
+
+    // Créer une tuile de départ
+    std::cout << "\nCréation d'une tuile de départ...\n";
+    Tuile tuileDepart(0, true);
+    std::cout << "Tuile de départ créée\n";
+
+    // Placer la tuile au centre du plateau
+    HexagoneCoord origin{0, 0, 0};
+    plateau.placerTuile(tuileDepart, origin);
+    std::cout << "Tuile placée à l'origine (0,0,0)\n";
+
+    // Afficher le plateau
+    std::cout << "\nAffichage du plateau après placement:\n";
+    plateau.afficherPlateau();
+
+    // Afficher avec le dessin complet
+    std::cout << "\nDessin du plateau complet (avec hauteurs):\n";
+    plateau.dessinerPlateau(3);
+
+   
+    // Affichage final
+    std::cout << "\nAffichage final du plateau:\n";
+    plateau.afficherPlateau();
+    plateau.dessinerPlateau(4);
+      
+    std::cout << "Appuyez sur Entrée pour quitter..." << std::endl;
+    std::cin.get(); // Attend l'appui sur la touche Entrée
         
     }
     else {
@@ -112,6 +149,7 @@ int main() {
     }
     return 0;
 
+    
     
     
 }

@@ -1,4 +1,6 @@
 #include <Partie.h>
+#include <algorithm>
+#include <iostream>
 #include <fstream>
 #include <ostream>
 #include <vector>
@@ -61,10 +63,10 @@ void Partie::ChargerTuiles(){
         std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
     }
 }
-Participant Partie::getParticipant(std::size_t i) const {
+Participation Partie::getParticipant(std::size_t i) const {
             if (i >= nbParticipants) throw std::out_of_range("Index de participant");
             return participants[i];
-    }
+}
 
 void Partie::choixMDJ() {
     ifstream file("data/mdj.json");
@@ -93,3 +95,57 @@ void Partie::choixMDJ() {
     }
 }
 
+void Partie::GenererTuilesAleatoires(unsigned int n) {
+    static std::vector<TypeHexagone> types = {
+        TypeHexagone::Caserne,
+        TypeHexagone::Carriere,
+        TypeHexagone::Habitation,
+        TypeHexagone::Temple,
+        TypeHexagone::Jardin,
+        TypeHexagone::Marche
+    };
+
+    for (unsigned int k = 0; k < n; k++) {
+        // types aléatoires des 3 hexagones de la tuile
+        TypeHexagone t1 = types[rand() % types.size()];
+        TypeHexagone t2 = types[rand() % types.size()];
+        TypeHexagone t3 = types[rand() % types.size()];
+
+        // forme (triangle)
+        std::vector<Hexagone> disp;
+        disp.emplace_back(0, 1, t1);
+        disp.emplace_back(0, 0, t2);
+        disp.emplace_back(1, 0, t3);
+
+        // id basé sur la taille actuelle (je suis pas sûr de ca)
+        int id = pioche.size();
+
+        Tuile tuile(id, disp);
+        pioche.push_back(tuile);
+    }
+}
+Partie::Partie(unsigned int tour, vector<Participation> participants , ModeDeJeu mdj, vector<Tuile> pioche):
+    mdj(mdj),participants(participants),tour(tour),pioche(pioche){}
+
+
+void Partie::calculerScoresFinDePartie() {
+    for (auto& part : participants) {
+        part.calculerPoints();
+    }
+}
+
+Participation& Partie::getGagnant() {
+    return *std::max_element(
+        participants.begin(),
+        participants.end(),
+        [](const Participation& a, const Participation& b) {
+
+            // Critère 1 : points
+            if (a.getPoints() != b.getPoints())
+                return a.getPoints() < b.getPoints();
+
+            // Critère 2 : pierres en cas d'égalité
+            return a.getPierres() < b.getPierres();
+        }
+    );
+}

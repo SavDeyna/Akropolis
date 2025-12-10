@@ -2,21 +2,18 @@
 #include <iostream>
 #include <string>
 
-#include "Plateau.h"
 using namespace std;
 
 
 class Participant {
 private:
     std::string pseudo;
-    unsigned int pierres{0};
-    Plateau plateau;
 
 public:
-    explicit Participant(const std::string& p) : pseudo(p), plateau() {}
+    explicit Participant(const std::string& p) : pseudo(p) {}
     virtual ~Participant() = default;
     const string& getPseudo() const { return pseudo; }
-    Plateau& getPlateau() { return plateau; }
+    
     void setPseudo(std::string p) { pseudo = std::move(p); }
     bool placerTuile(Tuile& tuile, const HexagoneCoord& origin);
     void setPierres(unsigned int p) { pierres = p; }
@@ -26,7 +23,7 @@ class Joueur : public Participant {
 private:
     bool victoire{ false };
 public:
-    explicit Joueur(const string& p, bool v = false) : Participant(p), victoire(v) {}
+    explicit Joueur(const string& p) : Participant(p), victoire(false) {}
     bool aGagne() const noexcept { return victoire; }
     void setVictoire(bool v) noexcept { victoire = v; }
 };

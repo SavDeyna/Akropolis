@@ -4,9 +4,6 @@
 #include <iostream>
 
 #include "Participant.h"
-#include "Plateau.h"
-#include "Tuile.h"
-#include "Hexagone.h"
 
 using namespace std;
 
