@@ -176,27 +176,30 @@ void Plateau::afficherPlateau() const {
 }
 
 void Plateau::dessinerPlateau(const int radius) const{
+    // on utilise 2 lignes de texte pour représenter une rangée d'hexagones
     vector<stringstream> lignes(2);
     for(int r = -radius; r <= radius; ++r){
-        //reset des lignes
-        for(size_t i = 0; i < 2; ++i) {
-            lignes[i].str(""); // Clear the contents
-            lignes[i].clear(); // Clear the flags
+        // Reset des stringstreams
+        for(size_t i = 0; i < lignes.size(); ++i) { 
+            lignes[i].str("");
+            lignes[i].clear();
         }
-        for(size_t j = 0; j < abs(r); ++j){
-            lignes[0] << "     ";
-            lignes[1] << "     ";
-        }
-        lignes[0] << "  ";
-        lignes[1] << "  ";
+        // calcul padding
+        int abs_r = abs(r);
+        string padding(abs_r * 4, ' '); 
+        lignes[0] << padding;
+        lignes[1] << padding;
         for(int q = -radius; q <= radius; ++q){
             int s = -q - r;
+            // on ne dessine que si les coordonnées sont valides
             if (s >= -radius && s <= radius) {
+                // récupération de l'hex
                 auto it = grille.find(HexagoneCoord{q, r, s});
                 const HexState * hexS = (it == grille.end()) ? nullptr : &it->second;
-                string typeString = " ";
-                string etoilesString = " ";
-                if (hexS != nullptr) { 
+                string desc = " "; 
+                string coords = " ";
+                string typeString = "?";
+                if (hexS != nullptr) {
                     // Si l'hexagone existe, on peut accéder à ses membres en toute sécurité
                     switch(hexS->type){
                         case TypeHexagone::Carriere: typeString = "C"; break;
@@ -207,42 +210,30 @@ void Plateau::dessinerPlateau(const int radius) const{
                         case TypeHexagone::Habitation: typeString = "H"; break;
                         default: typeString = "?"; break;
                     }
-                    etoilesString = std::to_string(hexS->place);
+                    desc = to_string(hexS->place) + typeString + to_string(hexS->hauteur);
                 }
-                if (r == -radius) {
-                    lignes[0] << "";
-                    lignes[1] << "___";
-                    lignes[1] << "       ";
-                } else if (r + q == -radius) {
-                    if (r == 0) {
-                        lignes[0] << "      /   ";
-                        lignes[1] << "     /    ";
-                    } else {
-                        lignes[0] << "      /   ";
-                        lignes[1] << "  ___/    ";
-                    }
-                } else if (r + s == -radius) {
-                    if (r == 0) {
-                        lignes[0] << "\\         ";
-                        lignes[1] << " \\        ";
-                    } else {
-                        lignes[0] << "\\         ";
-                        lignes[1] << " \\___     ";
-                    }
-                } else {
-                    lignes[0] << "\\ "<< typeString <<etoilesString <<"  /   ";
-                    lignes[1] << " \\___/    ";
-                }
+
+                coords = to_string(abs(q)) + to_string(abs(r)) + to_string(abs(s));
+                
+                // on s'assure que le desc fait 3 caractères pour l'alignement
+                if (desc.length() < 3) desc.insert(0, 3 - desc.length(), ' ');
+                if (desc.length() > 3) desc = desc.substr(0, 3);
+                // coords
+                if (coords.length() < 3) coords.insert(0, 3 - coords.length(), ' ');
+                if (coords.length() > 3) coords = coords.substr(0, 3);
+
+                lignes[0] << " / " << desc << " \\";
+                lignes[1] << " \\ " << coords << " /";
             }
         }
-        // quand on a fini une rangée d'hexagones, on peut l'afficher
+        //affichage de la rangée complète
         for(const auto& line : lignes){
             cout << line.str() << "\n";
         }
     }
 }
   
-    bool Plateau::peutPoserTuile(const Tuile& t, const HexagoneCoord& origin) const {
+bool Plateau::peutPoserTuile(const Tuile& t, const HexagoneCoord& origin) const {
     const auto& hexs = t.getDisposition();
 
     for (const Hexagone& h : hexs) {

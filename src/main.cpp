@@ -114,37 +114,17 @@ int main() {
     else if (choix == "2"){
         std::cout << "\n=== MODE DEBUG - TEST PLATEAU ===\n\n";
 
-    // Créer un plateau
-    Plateau plateau;
-    std::cout << "Plateau créé (vide)\n";
-    plateau.afficherPlateau();
-
-    // Créer une tuile de départ
-    std::cout << "\nCréation d'une tuile de départ...\n";
-    Tuile tuileDepart(0, true);
-    std::cout << "Tuile de départ créée\n";
-
-    // Placer la tuile au centre du plateau
-    HexagoneCoord origin{0, 0, 0};
-    plateau.placerTuile(tuileDepart, origin);
-    std::cout << "Tuile placée à l'origine (0,0,0)\n";
-
-    // Afficher le plateau
-    std::cout << "\nAffichage du plateau après placement:\n";
-    plateau.afficherPlateau();
-
-    // Afficher avec le dessin complet
-    std::cout << "\nDessin du plateau complet (avec hauteurs):\n";
-    plateau.dessinerPlateau(3);
-
-   
-    // Affichage final
-    std::cout << "\nAffichage final du plateau:\n";
-    plateau.afficherPlateau();
-    plateau.dessinerPlateau(4);
-      
-    std::cout << "Appuyez sur Entrée pour quitter..." << std::endl;
-    std::cin.get(); // Attend l'appui sur la touche Entrée
+        // Créer un plateau
+        Plateau plateau;
+        std::cout << "Plateau créé (vide)\n";
+    
+        // Affichage
+        std::cout << "\nAffichage du plateau:\n";
+        plateau.afficherPlateau();
+        plateau.dessinerPlateau(7);
+        
+        std::cout << "Appuyez sur Entrée pour quitter..." << std::endl;
+        std::cin.get(); // Attend l'appui sur la touche Entrée
         
     }
     else {
