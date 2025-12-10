@@ -7,6 +7,13 @@
 
 using namespace std;
 
+void IA::Jouer() const {
+
+}
+
+void Joueur::Jouer() const {
+
+}
 bool Participant::placerTuile(Tuile& tuile, const HexagoneCoord& origin) {
     Plateau& p = plateau;
 

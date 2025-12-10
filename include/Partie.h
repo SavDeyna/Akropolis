@@ -62,6 +62,8 @@ class Partie{
         //Constructeur pour charger une partie depuis une sauvegarde.
         Partie(unsigned int tour, vector<Participation> participants , ModeDeJeu mdj, vector<Tuile> pioche);
 
+        //Setter
+        void SetNbParticipants();
         ~Partie() = default;
 
         
@@ -82,7 +84,7 @@ class Partie{
         void GenererTuilesAleatoires(unsigned int n = 61);
 
         //Methodes pour la participation
-        void initialiserParticipations();
+        void addParticipation(const Participation&);
         void calculerScoresFinDePartie();
         Participation& getGagnant();
 
@@ -100,7 +102,7 @@ class Partie{
         unsigned int nbParticipants{ 0 };
 
         //déroulement partie
-        unsigned int tour{ 0 };
+        unsigned int tour{ 1 };
         
         
 

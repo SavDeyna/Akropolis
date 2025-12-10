@@ -13,7 +13,7 @@ public:
     explicit Participant(const std::string& p) : pseudo(p) {}
     virtual ~Participant() = default;
     const string& getPseudo() const { return pseudo; }
-    
+    virtual void Jouer() const = 0 ;
     void setPseudo(std::string p) { pseudo = std::move(p); }
     bool placerTuile(Tuile& tuile, const HexagoneCoord& origin);
     void setPierres(unsigned int p) { pierres = p; }
@@ -25,6 +25,7 @@ private:
 public:
     explicit Joueur(const string& p) : Participant(p), victoire(false) {}
     bool aGagne() const noexcept { return victoire; }
+    void Jouer() const override ;
     void setVictoire(bool v) noexcept { victoire = v; }
 };
 
@@ -37,4 +38,5 @@ public:
     explicit IA(std::string p, Difficulte d = Difficulte::Facile): Participant(std::move(p)), difficulte(d) {}
     Difficulte getDifficulte() const { return difficulte; }
     void setDifficulte(Difficulte d) { difficulte = d; }
+    void Jouer() const override ;
 };

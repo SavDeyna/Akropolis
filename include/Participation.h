@@ -16,7 +16,7 @@ class Participation {
 private:
     Participant* participant;   // Le joueur associé à cette participation
     unsigned int nbPoints{0};           // Score
-    unsigned int ordrePassage{0};        // Ordre de jeu dans la partie
+    unsigned int ordrePassage;        // Ordre de jeu dans la partie
     unsigned int pierres{0};
     Plateau plateau;
 public:
@@ -35,6 +35,12 @@ public:
 
     // ----- Setters -----
     void setOrdrePassage(int o) { ordrePassage = o; }
+    void addPierres(unsigned int i) {pierres+=i;}
+
+
+    unsigned int Participation::calculerPoints();
+    bool Participation::placerTuile(const Tuile& tuile);
+}; 
     bool placerTuile(const Tuile& tuile);
     // Stocker les points après leur décompte
     void Participation::setNbPoints(unsigned int pts) { nbPoints = pts;}
