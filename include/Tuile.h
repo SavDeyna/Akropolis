@@ -19,7 +19,7 @@ private:
 
 protected:
     std::vector<Hexagone> disposition;
-    int hauteur{0};
+    int hauteur{1}; // 1er niveau par défaut
     std::string nom_joueur;
     int id_tuile;
 
@@ -59,4 +59,9 @@ public:
     std::string getNomJoueur() const { return nom_joueur; }
     bool estTuileDepart() const { return is_depart; }
     int getId() const { return id_tuile; }
+    
+    // Rotation
+    void tournerDroite(); 
+    void tournerGauche();
 };
+

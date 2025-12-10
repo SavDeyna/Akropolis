@@ -26,7 +26,7 @@ public:
     std::vector<HexagoneCoord> getVoisins(const HexagoneCoord& c) const;
 
     // placer une tuile avec origine (coord absolue du centre ou repère)
-    void placerTuile(const Tuile& t, const HexagoneCoord& origin);
+    bool placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres);
 
     // affiche la grille
     void afficherPlateau() const;

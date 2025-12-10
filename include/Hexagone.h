@@ -50,4 +50,11 @@ public:
 
     // opérateur nécessaire si on veut comparer/sort des Hexagones, à voir si utile par la suite
     bool operator<(const Hexagone& other) const;
+
+    // Setters
+    void setQ(int nq) { q = nq; }
+    void setR(int nr) { r = nr; }
+    void setS(int ns) { r = -q - ns; } // q + r + s = 0
+    void setType(TypeHexagone t) { type = t; }
+    void setPlace(bool p) { place = p; }
 };
