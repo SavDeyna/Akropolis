@@ -130,7 +130,11 @@ Partie::Partie(unsigned int tour, vector<Participation> participants , ModeDeJeu
 
 void Partie::calculerScoresFinDePartie() {
     for (auto& part : participants) {
-        part.calculerPoints();
+        // Appel du calcul des points depuis le Plateau
+        unsigned int pts = part.getPlateau().calculerPoints(mdj, part.getPierres());
+        
+        // Stocker le résultat dans la Participation
+        part.setNbPoints(pts);  // Il faut ajouter un setter pour nbPoints dans Participation
     }
 }
 

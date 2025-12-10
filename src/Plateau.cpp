@@ -1,4 +1,9 @@
 #include "Plateau.h"
+#include "Partie.h"   // pour ModeDeJeu / Variante
+
+#include <queue>
+#include <set>
+#include <algorithm>
 #include <iostream>
 #include <climits>
 #include <algorithm>
@@ -285,4 +290,276 @@ void Plateau::dessinerPlateau(const int radius) const{
     }
 
     return true; // tout est OK → la tuile peut être posée
+}
+
+
+
+// SECTION CALCUL DES POINTS
+// helper : retourne les 6 coordonnées voisines (indépendamment de l'occupation)
+static std::vector<HexagoneCoord> voisinsCoord(const HexagoneCoord& c) {
+    static const int d[6][3] = {
+        {+1,-1,0}, {+1,0,-1}, {0,+1,-1},
+        {-1,+1,0}, {-1,0,+1}, {0,-1,+1}
+    };
+    std::vector<HexagoneCoord> v;
+    v.reserve(6);
+    for (auto &x : d) {
+        HexagoneCoord nc{ c.q + x[0], c.r + x[1], c.s + x[2] };
+        v.push_back(nc);
+    }
+    return v;
+}
+
+// Renvoie le plus grand cluster d'habitations adjacentes
+int Plateau::calculValeurHabitations() const {
+    std::set<HexagoneCoord> visited;
+    int meilleureValeur = 0;
+
+    for (const auto& kv : grille) {
+        const HexagoneCoord& coord = kv.first;
+        const HexState& hs = kv.second;
+        if (hs.type != TypeHexagone::Habitation) continue;
+        if (visited.count(coord)) continue;
+
+        std::queue<HexagoneCoord> q;
+        q.push(coord);
+        visited.insert(coord);
+        int valeurGroupe = 0;
+
+        while (!q.empty()) {
+            HexagoneCoord cur = q.front(); q.pop();
+            const HexState& hcur = grille.at(cur);
+            valeurGroupe += hcur.hauteur;
+
+            // getVoisins renvoie les voisins occupés
+            for (const auto& n : getVoisins(cur)) {
+                if (visited.count(n)) continue;
+                auto it = grille.find(n);
+                if (it != grille.end() && it->second.type == TypeHexagone::Habitation) {
+                    visited.insert(n);
+                    q.push(n);
+                }
+            }
+        }
+
+        meilleureValeur = std::max(meilleureValeur, valeurGroupe);
+    }
+
+    return meilleureValeur;
+}
+
+// Renvoie le nombre de marchés isolés (hauteur prise en compte pour le score)
+int Plateau::calculValeurMarches() const {
+    int total = 0;
+    for (const auto& kv : grille) {
+        const HexagoneCoord& coord = kv.first;
+        const HexState& hs = kv.second;
+        if (hs.type != TypeHexagone::Marche) continue;
+
+        bool isole = true;
+        // getVoisins renvoie voisins occupés ; si l'un d'eux est Marche => non isolé
+        for (const auto& n : getVoisins(coord)) {
+            const auto& neigh = grille.at(n);
+            if (neigh.type == TypeHexagone::Marche) { isole = false; break; }
+        }
+        if (isole) total += hs.hauteur;
+    }
+    return total;
+}
+
+// Renvoie le nb de casernes avc au moins un voisin vide, hauteur prise en compte
+int Plateau::calculValeurCasernes() const {
+    int total = 0;
+    for (const auto& kv : grille) {
+        const HexagoneCoord& coord = kv.first;
+        const HexState& hs = kv.second;
+        if (hs.type != TypeHexagone::Caserne) continue;
+
+        bool peripherie = false;
+        // on doit tester les 6 positions voisines indépendamment de l'occupation
+        for (const auto& n : voisinsCoord(coord)) {
+            if (!estOccupe(n)) { peripherie = true; break; }
+        }
+        if (peripherie) total += hs.hauteur;
+    }
+    return total;
+}
+
+// Renvoie le nb de temples ayant bien 6 voisins, hauteur prise en compte
+int Plateau::calculValeurTemples() const {
+    int total = 0;
+    for (const auto& kv : grille) {
+        const HexagoneCoord& coord = kv.first;
+        const HexState& hs = kv.second;
+        if (hs.type != TypeHexagone::Temple) continue;
+
+        bool entoure = true;
+        for (const auto& n : voisinsCoord(coord)) {
+            if (!estOccupe(n)) { entoure = false; break; }
+        }
+        if (entoure) total += hs.hauteur;
+    }
+    return total;
+}
+
+// Jardins, pas de contraintes
+int Plateau::calculValeurJardins() const {
+    int total = 0;
+    for (const auto& kv : grille) {
+        const HexState& hs = kv.second;
+        if (hs.type == TypeHexagone::Jardin) total += hs.hauteur;
+    }
+    return total;
+}
+
+
+//Compter les étoiles (places) : Habitation:1, Marche/Temple/Caserne:2, Jardin:3
+std::map<TypeHexagone,int> Plateau::compterEtoiles() const {
+    std::map<TypeHexagone,int> res;
+    res[TypeHexagone::Habitation] = 0;
+    res[TypeHexagone::Marche]     = 0;
+    res[TypeHexagone::Caserne]    = 0;
+    res[TypeHexagone::Temple]     = 0;
+    res[TypeHexagone::Jardin]     = 0;
+
+    for (const auto& kv : grille) {
+        const HexState& hs = kv.second;
+        if (!hs.place) continue;
+        switch (hs.type) { // si on a bien une place :
+            case TypeHexagone::Habitation: res[hs.type] += 1; break;
+            case TypeHexagone::Marche:     res[hs.type] += 2; break;
+            case TypeHexagone::Caserne:    res[hs.type] += 2; break;
+            case TypeHexagone::Temple:     res[hs.type] += 2; break;
+            case TypeHexagone::Jardin:     res[hs.type] += 3; break;
+            default: break;
+        }
+    }
+
+    return res;
+}
+
+/* 
+Appliquer les variantes (double les multiplicateurs quand condition remplie)
+on reçoit "valeurs" (déjà calculées par les fonctions ci-dessus)
+on modifie "multiplicateurs" (float) en conséquence des variantes
+REGLES (https://cdn.1j1ju.com/medias/58/eb/a4-akropolis-regle.pdf): 
+    Les Habitations : Si votre groupe d’Habitations a une valeur de 10 ou plus, ses points sont doublés.
+    Les Marchés : Si vos Quartiers Marchands sont adjacents à une place Marché, leurs points sont doublés.
+    Les Casernes : Si vos Casernes ont 3 ou 4 espaces vides adjacents, leurs points sont doublés.
+    Les Temples : Si vos Temples sont placés sur un niveau supérieur, leurs points sont doublés.
+    Les Jardins : Si vos Jardins sont adjacents à un lac (espace vide complètement entouré),leurs points sont doublés
+*/
+void Plateau::appliquerVariantes(const ModeDeJeu& mdj,
+                                 std::map<TypeHexagone,int>& valeurs,
+                                 std::map<TypeHexagone,float>& multiplicateurs) const
+{
+    // Habitations : si valeur >=10 => double
+    if (mdj.varianteActive(Variante::Habitations)) {
+        if (valeurs[TypeHexagone::Habitation] >= 10)
+            multiplicateurs[TypeHexagone::Habitation] *= 2.f;
+    }
+
+    // Marchés : si un Marché est adjacent à une place Marche => double
+    if (mdj.varianteActive(Variante::Marches)) {
+        bool ok = false;
+        for (const auto& kv : grille) {
+            if (kv.second.type != TypeHexagone::Marche) continue;
+            // getVoisins retourne voisins occupés ; on cherche une place de type Marche parmi eux
+            for (const auto& n : getVoisins(kv.first)) {
+                const HexState& nh = grille.at(n);
+                if (nh.place && nh.type == TypeHexagone::Marche) { ok = true; break; }
+            }
+            if (ok) break;
+        }
+        if (ok) multiplicateurs[TypeHexagone::Marche] *= 2.f;
+    }
+
+    // Casernes : si une caserne a 3 ou 4 espaces vides adjacents => double
+    if (mdj.varianteActive(Variante::Casernes)) {
+        bool ok = false;
+        for (const auto& kv : grille) {
+            if (kv.second.type != TypeHexagone::Caserne) continue;
+            int vides = 0;
+            for (const auto& n : voisinsCoord(kv.first)) {
+                if (!estOccupe(n)) ++vides;
+            }
+            if (vides == 3 || vides == 4) { ok = true; break; }
+        }
+        if (ok) multiplicateurs[TypeHexagone::Caserne] *= 2.f;
+    }
+
+    // Temples : si un temple (valide) est sur niveau >=2 => double
+    if (mdj.varianteActive(Variante::Temples)) {
+        bool ok = false;
+        for (const auto& kv : grille) {
+            if (kv.second.type == TypeHexagone::Temple && kv.second.hauteur >= 2) { ok = true; break; }
+        }
+        if (ok) multiplicateurs[TypeHexagone::Temple] *= 2.f;
+    }
+
+    // Jardins : si un Jardin est adjacent à un lac (case vide entourée) => double
+    if (mdj.varianteActive(Variante::Jardins)) {
+        bool ok = false;
+        for (const auto& kv : grille) {
+            if (kv.second.type != TypeHexagone::Jardin) continue;
+            for (const auto& n : voisinsCoord(kv.first)) {
+                if (estOccupe(n)) continue; // n doit être vide pour être un candidat lac
+                // vérifier que n est entouré (tous ses 6 voisins occupés)
+                bool entoure = true;
+                for (const auto& m : voisinsCoord(n)) {
+                    if (!estOccupe(m)) { entoure = false; break; }
+                }
+                if (entoure) { ok = true; break; }
+            }
+            if (ok) break;
+        }
+        if (ok) multiplicateurs[TypeHexagone::Jardin] *= 2.f;
+    }
+}
+
+
+// Calcul final des points (public) : especte la règle "au moins une Place de la couleur est nécessaire" + ajoute les pierres
+unsigned int Plateau::calculerPoints(const ModeDeJeu& mdj, unsigned int pierres) const {
+    // valeurs de base
+    std::map<TypeHexagone,int> valeurs;
+    valeurs[TypeHexagone::Habitation] = calculValeurHabitations();
+    valeurs[TypeHexagone::Marche]     = calculValeurMarches();
+    valeurs[TypeHexagone::Caserne]    = calculValeurCasernes();
+    valeurs[TypeHexagone::Temple]     = calculValeurTemples();
+    valeurs[TypeHexagone::Jardin]     = calculValeurJardins();
+
+    // étoiles
+    std::map<TypeHexagone,int> etoiles = compterEtoiles();
+
+    // multiplicateurs de variantes
+    std::map<TypeHexagone,float> mult;
+    mult[TypeHexagone::Habitation] = 1.f;
+    mult[TypeHexagone::Marche]     = 1.f;
+    mult[TypeHexagone::Caserne]    = 1.f;
+    mult[TypeHexagone::Temple]     = 1.f;
+    mult[TypeHexagone::Jardin]     = 1.f;
+
+    appliquerVariantes(mdj, valeurs, mult); // modifie les multiplicateurs comme prévu
+
+    // calcul par type
+    unsigned int total = 0u;
+    for (const auto& kv : valeurs) {
+        TypeHexagone type = kv.first;
+        int valeur = kv.second;
+        if (valeur <= 0) continue; // pas de quartiers valides pour ce type
+
+        int nbEtoiles = 0;
+        auto it = etoiles.find(type);
+        if (it != etoiles.end()) nbEtoiles = it->second;
+        if (nbEtoiles <= 0) continue; // il faut au moins une Place de la couleur
+
+        float facteur = mult[type];
+        unsigned int pts = static_cast<unsigned int>( std::round( static_cast<float>(valeur) * static_cast<float>(nbEtoiles) * facteur ) );
+        total += pts;
+    }
+
+    // pierres
+    total += pierres;
+
+    return total;
 }
