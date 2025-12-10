@@ -25,7 +25,7 @@ class SauvegardeManager{
 
 class Sauvegarde{
     public:
-        Sauvegarde(Partie p,const string& nomsauvegarde);//Va permettre de créer une nouvelle sauvegarde
+        Sauvegarde(const Partie& p,const string& nomsauvegarde);//Va permettre de créer une nouvelle sauvegarde
 
         ~Sauvegarde() = default ;
         friend class SauvegardeManager;

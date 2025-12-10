@@ -50,8 +50,10 @@ public:
     bool estVide() const { return grille.empty(); }
 
     //Verifier que l'on peut poser une tuile de 3 hexagones
+    //CHATGPT
     bool peutPoserTuile(const Tuile& t, const HexagoneCoord& origin) const;
 
     // Calcul des points, déplacé de Participation
     unsigned int calculerPoints(const ModeDeJeu& mdj, unsigned int pierres) const;
+
 };

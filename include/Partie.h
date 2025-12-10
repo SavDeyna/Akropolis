@@ -16,7 +16,7 @@ class ModeDeJeu {
     public :
         const string& getnomMDJ() const {return nom;}
         unsigned int getNbJoueur() const {return nbJoueur;}
-        unsigned int getNbrIA() const {return nbIA;}
+        unsigned int getNbIA() const {return nbIA;}
         const string& getDescription() const {return description;}
         ModeDeJeu(const string& n, unsigned int j, unsigned int i, const string& d) : nom(n), nbJoueur(j),nbIA(i), description(d) {};
 
@@ -87,6 +87,8 @@ class Partie{
         void addParticipation(const Participation&);
         void calculerScoresFinDePartie();
         Participation& getGagnant();
+
+        unsigned int getNbJoueurs() const {return nbParticipants;}
 
     private:
         Partie() {}; // init private => singleton

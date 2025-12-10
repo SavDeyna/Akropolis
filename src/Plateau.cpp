@@ -232,7 +232,8 @@ void Plateau::dessinerPlateau(const int radius) const{
         }
     }
 }
-  
+
+//CHATGPT
 bool Plateau::peutPoserTuile(const Tuile& t, const HexagoneCoord& origin) const {
     const auto& hexs = t.getDisposition();
 
@@ -554,3 +555,4 @@ unsigned int Plateau::calculerPoints(const ModeDeJeu& mdj, unsigned int pierres)
 
     return total;
 }
+

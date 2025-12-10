@@ -164,5 +164,5 @@ void Partie::addParticipation(const Participation& p){
 
 void Partie::SetNbParticipants(){
     //Une fois le mode de jeu choisi, permet de mettre à jour le nb de participant
-    nbParticipants= mdj.getNbrJoueur()+mdj.getNbrIA();
+    nbParticipants= mdj.getNbJoueur()+mdj.getNbIA();
 };

@@ -6,7 +6,7 @@
 using json = nlohmann::json;
 using namespace std ;
 
-Sauvegarde::Sauvegarde(const Partie p, const string& nomsauvegarde){
+Sauvegarde::Sauvegarde(const Partie& p, const string& nomsauvegarde){
     nom= nomsauvegarde;
     tour = p.getTour();
     nbParticipants = p.getNbParticipants();
@@ -26,7 +26,7 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
 
     newSave["mdj"] = {
         {"nbrJoueur", s.mdj.getNbJoueur()},
-        {"nbrIA", s.mdj.getNbrIA()},
+        {"nbrIA", s.mdj.getNbIA()},
         {"description", s.mdj.getDescription()},
         {"nom", s.mdj.getnomMDJ()}
     };
