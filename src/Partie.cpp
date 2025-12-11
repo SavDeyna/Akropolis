@@ -63,10 +63,7 @@ void Partie::ChargerTuiles(){
         std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
     }
 }
-Participation Partie::getParticipant(std::size_t i) const {
-            if (i >= nbParticipants) throw std::out_of_range("Index de participant");
-            return participants[i];
-}
+
 
 void Partie::choixMDJ() {
     ifstream file("data/mdj.json");
@@ -166,3 +163,37 @@ void Partie::SetNbParticipants(){
     //Une fois le mode de jeu choisi, permet de mettre à jour le nb de participant
     nbParticipants= mdj.getNbJoueur()+mdj.getNbIA();
 };
+
+void Partie::debutTour(){
+    //Va permettre de charger la pioche
+
+    //Nombre de pièce dans le jeu (nbJoueur + 1)
+    for (unsigned int i = 0; i < this->getNbParticipants()+1;i++){
+        jeu.push_back(std::move(pioche.back()));
+        pioche.pop_back();
+    }
+    
+}
+
+void Partie::finTour(){
+    //Va permettre de vider la pioche, changer l'ordre des participations, tour++
+
+    //On vide le jeu
+    while(!jeu.empty()){
+        jeu.pop_back();
+    }
+
+    //Mise à jour des ordres de passage
+    for (unsigned int i =0 ; i<this->getNbParticipants();i++){
+        participants[i].prochainOrdrePassage(this->getNbParticipants());
+        unsigned int points =participants[i].getPlateau().calculerPoints(mdj,participants[i].getPierres());
+        participants[i].setNbPoints(points);
+    }
+
+    //prochain tour
+    tour++;
+}
+void Partie::ajouterJoueur(const std::string& nom, unsigned int ordre) {
+    joueurs.emplace_back(nom);                 
+    participants.emplace_back(&joueurs.back(), ordre); 
+}

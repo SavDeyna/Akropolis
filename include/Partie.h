@@ -72,9 +72,9 @@ class Partie{
         int getTour() const { return tour; }
         std::vector<Participation>& getParticipants() { return participants; }
         std::vector<Tuile>& getPioche() { return pioche; }
-        Participation getParticipant(std::size_t i) const ;
-        std::size_t getNbParticipants() const noexcept { return nbParticipants; }
-        void incTour() { tour += 1; }
+        unsigned int getNbParticipants() const noexcept { return nbParticipants; }
+        vector<Tuile> getJeu(){return jeu;};
+        
         
         friend class Sauvegarde;
        
@@ -88,9 +88,18 @@ class Partie{
         void calculerScoresFinDePartie();
         Participation& getGagnant();
 
-        unsigned int getNbJoueurs() const {return nbParticipants;}
 
+        //Prépare le jeu grâce à la pioche
+        void debutTour();
+        //Met à jour le tour, l'ordre de passage, le score des participations, vide le jeu.
+        void finTour();
+
+        void ajouterJoueur(const std::string& nom, unsigned int ordre);
     private:
+        std::vector<Joueur> joueurs;  // stockage des joueurs, utiliser car ils sont détruits sinon dans le main.
+
+        
+
         Partie() {}; // init private => singleton
         Partie(const Partie&) = delete; // copie interdite
         Partie& operator=(const Partie&) = delete; // affectation interdite
