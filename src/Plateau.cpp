@@ -74,7 +74,6 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
             origin.s + h.getS()
         };
         coords.push_back(pos);
-        cout <<pos.q <<pos.r << pos.s <<"\n";
     }
 
     // vérifions s'il y a déjà des hexa sur le plateau aux coords indiquées
