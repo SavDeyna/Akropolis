@@ -20,13 +20,11 @@ private:
     Plateau plateau;
 public:
     // ----- Constructeur -----
-    Participation(Participant* p, unsigned int ordre)
-        : participant(p), ordrePassage(ordre)
-    {}
-
+    Participation(Participant& p, unsigned int ordre)
+        : participant(&p), ordrePassage(ordre){}
 
     // ----- Getters -----
-    Participant* getParticipant() const { return participant; }
+    Participant& getParticipant() const { return *participant; }
     unsigned int getPoints() const { return nbPoints; }
     unsigned int getPierres() const { return pierres; }
     unsigned getOrdrePassage() const { return ordrePassage; }
@@ -41,5 +39,5 @@ public:
     // Stocker les points après leur décompte
     void setNbPoints(unsigned int pts) { nbPoints = pts;}
 
-    void Jouer(vector<Tuile> jeu);
+    void Jouer(vector<Tuile>& jeu);
 };

@@ -12,8 +12,8 @@ void Participation::prochainOrdrePassage(unsigned int nbParticipants){
     else ordrePassage= nbParticipants;
 }
 
-void Participation::Jouer(vector<Tuile> jeu){
-    cout <<"Tour de "<<this->participant->getPseudo()<<"\n>>";
+void Participation::Jouer(vector<Tuile>& jeu){
+    cout <<"Tour de "<<participant->getPseudo()<<"\n>>";
     cout <<"Nombre de points : "<<nbPoints<<"\n";
     cout <<"Nombre de pierres :" << pierres<<"\n";
     for (unsigned int i = 0 ; i< jeu.size(); i++){
@@ -113,7 +113,11 @@ void Participation::Jouer(vector<Tuile> jeu){
                                                 if (!plateau.placerTuile(jeu[tuileIndice],a, pierres)){
                                                     cout<<"Placement non valide\n";
                                                 }
-                                                else saisieValide=true;
+                                                else {
+                                                    saisieValide=true;
+                                                    //On enlève la tuile du jeu
+                                                    jeu.erase(jeu.begin() +tuileIndice);
+                                                }
                                             }
                                             else cout << "Il faut choisir entre 1 et 2\n";
                                         }

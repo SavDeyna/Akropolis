@@ -1,7 +1,7 @@
 #include "Partie.h"
 
 #include <iostream>
-
+#include <sstream>
 #ifdef _WIN32
 #ifndef NOMINMAX 
 #define NOMINMAX
@@ -56,18 +56,18 @@ int main() {
         //Chargement des participations :
         //Donne des tours, les cailloux de départs, l'ordre de passage
         
-        for (unsigned int i = 0 ; i<partie.getNbParticipants();i++){
-            std::cout<<"Pseudo du joueur n°"<<i+1<<" :\n";
-            string p;
-            Joueur j = Joueur(p) ;
-            Participation parti(&j,i);
-            partie.addParticipation(parti);
-            std::cin.ignore();
-        }
+        for (unsigned int i = 0; i < partie.getNbParticipants(); i++) {
+            stringstream f;
+            f << "Joueur " << i+1;
+            partie.addParticipation(f.str());
+            cout << "Joueur " << i+1 << " initié : " << partie.getParticipants().back().getParticipant().getPseudo() << "\n";
+            }
+
 
         //Déroulement des tours
-        for (unsigned int i = 0; i<11 ; i++){
+        for (unsigned int i = 0; 11 ; i++){
             partie.debutTour();
+            cout<< "Début du tour "<<i+1<<"\n";
 
 
             for (unsigned int j = 1 ; j<=partie.getNbParticipants() ; j++){
@@ -78,17 +78,20 @@ int main() {
                 while (indice <partie.getNbParticipants()){
                     if (partie.getParticipants()[indice].getOrdrePassage() == j) {
                     trouve = true;
+                    break;
                     }
                     else indice ++;
                 }
                 if (!trouve){
-                    std::cout<<"Pas de joueur avec l'indice "<<j;
+                    std::cout<<"Pas de joueur avec l'indice "<<j<<".\n";
                     continue;
                 }
                 partie.getParticipants()[indice].Jouer(partie.getJeu());
             }
             partie.finTour();
         }
+        //On veut un gagnant :
+        cout << "Fin de partie !\nLe gagnant est : "<< partie.getGagnant();
             
 
 

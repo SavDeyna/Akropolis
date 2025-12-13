@@ -52,28 +52,28 @@ class Partie{
     public:
         friend class SauvegardeManager;
         static Partie& getInstance() {
-            // Initialisation statique locale (la plus simple et thread-safe depuis C++11)
+            // Initialisation statique locale 
             static Partie instance;
             return instance;
         }
         //Partie mode de Jeu
         void choixMDJ(); // l'utilisateur choisit un mode de jeu
         ModeDeJeu getMDJ() const {return mdj;}
-        //Constructeur pour charger une partie depuis une sauvegarde.
-        Partie(unsigned int tour, vector<Participation> participants , ModeDeJeu mdj, vector<Tuile> pioche);
+
+        void chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>& p,const ModeDeJeu& m,std::vector<Tuile>& pi) ;
+
 
         //Setter
         void SetNbParticipants();
         ~Partie() = default;
 
-        
 
         //getter
         int getTour() const { return tour; }
         std::vector<Participation>& getParticipants() { return participants; }
         std::vector<Tuile>& getPioche() { return pioche; }
         unsigned int getNbParticipants() const noexcept { return nbParticipants; }
-        vector<Tuile> getJeu(){return jeu;};
+        vector<Tuile>& getJeu(){return jeu;};
         
         
         friend class Sauvegarde;
@@ -84,9 +84,11 @@ class Partie{
         void GenererTuilesAleatoires(unsigned int n = 61);
 
         //Methodes pour la participation
-        void addParticipation(const Participation&);
-        void calculerScoresFinDePartie();
-        Participation& getGagnant();
+        void addParticipation(string pseudo);
+        
+
+        //Retourne le pseudo du gagnant
+        string getGagnant();
 
 
         //Prépare le jeu grâce à la pioche
@@ -94,11 +96,13 @@ class Partie{
         //Met à jour le tour, l'ordre de passage, le score des participations, vide le jeu.
         void finTour();
 
-        void ajouterJoueur(const std::string& nom, unsigned int ordre);
-    private:
-        std::vector<Joueur> joueurs;  // stockage des joueurs, utiliser car ils sont détruits sinon dans le main.
-
         
+
+    private:
+        void calculerScoresFinDePartie();
+        
+        //Constructeur pour charger une partie depuis une sauvegarde.
+        Partie(unsigned int tour, vector<Participation>&& participants , ModeDeJeu mdj, vector<Tuile>&& pioche);
 
         Partie() {}; // init private => singleton
         Partie(const Partie&) = delete; // copie interdite
@@ -120,5 +124,8 @@ class Partie{
         //Partie tuiles
         vector<Tuile> pioche ;
         vector<Tuile> jeu;
+
+        //On stocke également les joueurs pour éviter qu'il soit supprimé après leur création dans le main
+        std::vector<Joueur> joueurs;
 
 };

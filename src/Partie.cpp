@@ -122,7 +122,7 @@ void Partie::GenererTuilesAleatoires(unsigned int n) {
         pioche.push_back(tuile);
     }
 }
-Partie::Partie(unsigned int tour, vector<Participation> participants , ModeDeJeu mdj, vector<Tuile> pioche):
+Partie::Partie(unsigned int tour, vector<Participation>&& participants , ModeDeJeu mdj, vector<Tuile>&& pioche):
     mdj(mdj),participants(participants),tour(tour),pioche(pioche){}
 
 
@@ -136,27 +136,25 @@ void Partie::calculerScoresFinDePartie() {
     }
 }
 
-Participation& Partie::getGagnant() {
-    return *std::max_element(
-        participants.begin(),
-        participants.end(),
-        [](const Participation& a, const Participation& b) {
-
-            // Critère 1 : points
-            if (a.getPoints() != b.getPoints())
-                return a.getPoints() < b.getPoints();
-
-            // Critère 2 : pierres en cas d'égalité
-            return a.getPierres() < b.getPierres();
+string Partie::getGagnant() {
+    unsigned int max = 0 ;
+    for (unsigned int i = 1 ; i<nbParticipants ; i++){
+        if (participants[max].getPoints()<participants[i].getPoints()){
+            max=i;
         }
-    );
+    }
+    return this->getParticipants()[max].getParticipant().getPseudo();
 }
 
-void Partie::addParticipation(const Participation& p){
-    if (participants.size()==4){
-        throw "Nombre maximal de participant atteint";
+void Partie::addParticipation(string pseudo) {
+    if (participants.size() == 4) {
+        throw std::runtime_error("Nombre maximal de participants atteint");
     }
-    participants.push_back(p);
+    Joueur j(pseudo);
+    joueurs.push_back(std::move(j));
+    
+    unsigned int ordre = participants.size() +1;
+    participants.emplace_back(joueurs.back(), ordre);
 }
 
 void Partie::SetNbParticipants(){
@@ -176,14 +174,14 @@ void Partie::debutTour(){
 }
 
 void Partie::finTour(){
-    //Va permettre de vider la pioche, changer l'ordre des participations, tour++
+    //Va permettre de vider la pioche, changer l'ordre des participations, tour++, et de mettre à jour le nombre de points
 
     //On vide le jeu
     while(!jeu.empty()){
         jeu.pop_back();
     }
 
-    //Mise à jour des ordres de passage
+    //Mise à jour des ordres de passage + mise à jour du nombre de points
     for (unsigned int i =0 ; i<this->getNbParticipants();i++){
         participants[i].prochainOrdrePassage(this->getNbParticipants());
         unsigned int points =participants[i].getPlateau().calculerPoints(mdj,participants[i].getPierres());
@@ -193,7 +191,11 @@ void Partie::finTour(){
     //prochain tour
     tour++;
 }
-void Partie::ajouterJoueur(const std::string& nom, unsigned int ordre) {
-    joueurs.emplace_back(nom);                 
-    participants.emplace_back(&joueurs.back(), ordre); 
+
+void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>& p,const ModeDeJeu& m,std::vector<Tuile>& pi) {
+    tour = t;
+    participants = std::move(p);
+    mdj = m;
+    pioche = std::move(pi);
+    SetNbParticipants();
 }
