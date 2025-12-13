@@ -65,6 +65,7 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
     std::vector<HexagoneCoord> coords;
     coords.reserve(3); // pour éviter une surallocation de mémoire
 
+
     for (const auto& h: t.getDisposition()) {
         // h.getQ() et getR() sont relatifs → on les additionne à origin
         HexagoneCoord pos {
@@ -73,6 +74,7 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
             origin.s + h.getS()
         };
         coords.push_back(pos);
+        cout <<pos.q <<pos.r << pos.s <<"\n";
     }
 
     // vérifions s'il y a déjà des hexa sur le plateau aux coords indiquées
@@ -123,6 +125,8 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
     } 
     
     while (true) {
+        for (unsigned int i =0; i<3 ; i++){
+        }
         cout << "Rotation de la tuile ? (1 = gauche, 2 = droite, 0 = terminer) : ";
         int choix;
         cin >> choix;
@@ -231,6 +235,10 @@ void Plateau::dessinerPlateau(const int radius) const{
             cout << line.str() << "\n";
         }
     }
+    cout<<"\nLégende : \n";
+    cout<<"Première ligne : Etoilé , Type Quartier , Hauteur\n";
+    cout<<"Deuxième ligne : Coordonnées";
+    cout<<"Type Quartier :\nCarriere : C ; Caserne : S ; Jardin : J ; Temple : T ; Marche : M Habitation : H\n";
 }
 
 //CHATGPT

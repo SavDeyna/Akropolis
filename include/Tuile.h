@@ -22,7 +22,7 @@ protected:
     int hauteur{1}; // 1er niveau par défaut
     std::string nom_joueur;
     int id_tuile;
-
+    unsigned int orientation {1};
 public:
     // Constructeur standard
     Tuile(int id, const std::vector<Hexagone>& d, bool tuileDepart = false)
@@ -59,7 +59,25 @@ public:
     std::string getNomJoueur() const { return nom_joueur; }
     bool estTuileDepart() const { return is_depart; }
     int getId() const { return id_tuile; }
-    
+    unsigned int getOrientation() const {return orientation;}
+
+    //Va changer l'orientation, de droite et bas-droite vers droite haut-droite ou inversement
+    void changeorientation(){
+        if (orientation ==1) {
+            disposition[0].setR(-1); //r = r-2
+            disposition[0].setQ(1); //q = q+1
+            
+        }
+        if (orientation == 2){
+            disposition[0].setR(0); //r = r+2
+            disposition[0].setQ(1); //q = q-1
+        }
+        if (orientation ==2){
+            orientation--;
+        }
+        else orientation++;
+        
+    }
     // Rotation
     void tournerDroite(); 
     void tournerGauche();

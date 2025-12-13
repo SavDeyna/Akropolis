@@ -6,16 +6,12 @@
 using json = nlohmann::json;
 using namespace std ;
 
-Sauvegarde::Sauvegarde(const Partie& p, const string& nomsauvegarde){
-    nom= nomsauvegarde;
-    tour = p.getTour();
-    nbParticipants = p.getNbParticipants();
-    mdj = p.mdj;
-
-    participants=p.participants;
-
-    pioche =p.pioche;
+Sauvegarde::Sauvegarde(const Partie& p, const string& nomsauvegarde) : nom(nomsauvegarde),mdj(p.mdj),nbParticipants(p.nbParticipants),tour(p.getTour()){
     
+    participants.reserve(p.participants.size());
+    for (const auto& part : p.participants) {
+        participants.emplace_back(part.getParticipant(),part.getOrdrePassage());
+    }
 }
 void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
     json newSave;
@@ -33,7 +29,7 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
 
     for (unsigned int i = 0; i < s.nbParticipants; i++) {
         json temp;
-        temp["nom"] = s.participants[i].getParticipant()->getPseudo();
+        temp["nom"] = s.participants[i].getParticipant().getPseudo();
         temp["pierre"] = s.participants[i].getPierres();
         newSave["participants"].push_back(temp);
     }
@@ -109,10 +105,6 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int id){
     ModeDeJeu mdj ;
     vector<Tuile> pioche ;
     Partie& p = Partie::getInstance();
-    p.tour = data[id]["tour"];
-    p.participants = participants;
-    p.mdj = mdj;
-    p.pioche = pioche;
-    p.nbParticipants = participants.size();
+    p.chargerDepuisSauvegarde(data[id]["tour"],participants,mdj,pioche);
     return p;
 }

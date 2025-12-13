@@ -1,7 +1,7 @@
 #include "Partie.h"
 
 #include <iostream>
-
+#include <sstream>
 #ifdef _WIN32
 #ifndef NOMINMAX 
 #define NOMINMAX
@@ -17,28 +17,6 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
 #endif
 
-    /*
-    Plateau plateau;
-
-    plateau.afficherPlateau();
-
-    // Création d'une tuile test
-    vector<Hexagone> hexs = {
-        Hexagone(0,1, TypeHexagone::Carriere, true),
-        Hexagone(-1,+2, TypeHexagone::Carriere),
-        Hexagone(0,+2, TypeHexagone::Caserne)
-    };
-    Tuile t(1, hexs);
-
-    HexagoneCoord origin{0,0,0};
-
-    if (plateau.placerTuile(t, origin)) {
-        cout << "Tuile placée avec succès !\n";
-    } else {
-        cout << "Impossible de placer la tuile.\n";
-    }
-
-    plateau.afficherPlateau(); */
 
     std::cout<<"Lancement du jeu\n";
     string choix ="";
@@ -77,56 +55,52 @@ int main() {
 
         //Chargement des participations :
         //Donne des tours, les cailloux de départs, l'ordre de passage
-        for (unsigned int i = 0 ; i<partie.getNbJoueurs();i++){
-            std::cout<<"Pseudo du joueur n°"<<i+1<<" :\n";
-            string p;
-            std::cin >> p ;
-            Joueur j(p) ;
-            Participation parti(&j,i);
-            parti.addPierres(i+1);
-            partie.addParticipation(parti);
+        
+        for (unsigned int i = 0; i < partie.getNbParticipants(); i++) {
+            stringstream f;
+            f << "Joueur " << i+1;
+            partie.addParticipation(f.str());
+            cout << "Joueur " << i+1 << " initié : " << partie.getParticipants().back().getParticipant().getPseudo() << "\n";
+            }
+
+
+        //Déroulement des tours
+        for (unsigned int i = 0; 11 ; i++){
+            partie.debutTour();
+            cout<< "Début du tour "<<i+1<<"\n";
+
+
+            for (unsigned int j = 1 ; j<=partie.getNbParticipants() ; j++){
+
+                //On commence par trouver à qui c'est le tour
+                unsigned int indice=0;
+                bool trouve = false;
+                while (indice <partie.getNbParticipants()){
+                    if (partie.getParticipants()[indice].getOrdrePassage() == j) {
+                    trouve = true;
+                    break;
+                    }
+                    else indice ++;
+                }
+                if (!trouve){
+                    std::cout<<"Pas de joueur avec l'indice "<<j<<".\n";
+                    continue;
+                }
+                partie.getParticipants()[indice].Jouer(partie.getJeu());
+            }
+            partie.finTour();
         }
-        
-
-        std::cout<<"    Partie\n";
-        //Partie partie(mode);
-
-        
-        //partie.computeTurnOrder();
-        //créer méthode tour suivant
-        //méthode initialisation : 
-            //donne un ordre de passage
-            //donne le nbr de cailloux en fonction des ordres de passages
-
-        std::cout<<"    Plateau\n";
-
-            //priorité à créer le stockage du plateau
-
-            //Méthode pour voir si une tuile(3 hexagones) peut être placée sur plateau à certaines coordonnées, passées en paramètre
-            //Méthode pour placer, qui utilise la méthode de vérif au préalable
-
-        std::cout<<"    Tuile\n";
-            //Méthode de rotation de tuile
+        //On veut un gagnant :
+        cout << "Fin de partie !\nLe gagnant est : "<< partie.getGagnant();
+            
 
 
-        system("pause"); // pour débug sur VS code
+
     }
 
     //Débug, pour test vos trucs
     else if (choix == "2"){
-        std::cout << "\n=== MODE DEBUG - TEST PLATEAU ===\n\n";
-
-        // Créer un plateau
-        Plateau plateau;
-        std::cout << "Plateau créé (vide)\n";
-    
-        // Affichage
-        std::cout << "\nAffichage du plateau:\n";
-        plateau.afficherPlateau();
-        plateau.dessinerPlateau(7);
-        
-        std::cout << "Appuyez sur Entrée pour quitter..." << std::endl;
-        std::cin.get(); // Attend l'appui sur la touche Entrée
+       
         
     }
     else {

@@ -14,7 +14,7 @@ enum class TypeHexagone {
 
 struct HexagoneCoord {
     int q, r, s;
-
+    
     // Nécessaire pour std::map
     bool operator<(const HexagoneCoord& o) const {
         if (q != o.q) return q < o.q;

@@ -16,18 +16,16 @@ private:
     Participant* participant;   // Le joueur associé à cette participation
     unsigned int nbPoints{0};           // Score
     unsigned int ordrePassage;        // Ordre de jeu dans la partie
-    unsigned int pierres{0};
+    unsigned int pierres{1};
     Plateau plateau;
 public:
     // ----- Constructeur -----
-    Participation(Participant* p, unsigned int ordre)
-        : participant(p), ordrePassage(ordre)
-    {}
-
+    Participation(Participant& p, unsigned int ordre)
+        : participant(&p), ordrePassage(ordre){}
 
     // ----- Getters -----
-    Participant* getParticipant() const { return participant; }
-    unsigned getPoints() const { return nbPoints; }
+    Participant& getParticipant() const { return *participant; }
+    unsigned int getPoints() const { return nbPoints; }
     unsigned int getPierres() const { return pierres; }
     unsigned getOrdrePassage() const { return ordrePassage; }
     Plateau& getPlateau() { return plateau; }
@@ -36,8 +34,10 @@ public:
     void setOrdrePassage(int o) { ordrePassage = o; }
     void addPierres(unsigned int i) {pierres+=i;}
     void setPierres(unsigned int p) { pierres = p; }
-
+    void prochainOrdrePassage(unsigned int nbParticipants);
     
     // Stocker les points après leur décompte
     void setNbPoints(unsigned int pts) { nbPoints = pts;}
+
+    void Jouer(vector<Tuile>& jeu);
 };
