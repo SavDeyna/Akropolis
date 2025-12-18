@@ -16,6 +16,7 @@ Sauvegarde::Sauvegarde(const Partie& p, const string& nomsauvegarde) : nom(nomsa
 void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
     json newSave;
 
+    //Préparation de la sauvegarde
     newSave["nomSauvegarde"] = s.nom;
     newSave["tour"] = s.tour;
     newSave["nbParticipants"] = s.nbParticipants;
@@ -26,15 +27,29 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
         {"description", s.mdj.getDescription()},
         {"nom", s.mdj.getnomMDJ()}
     };
-
+    vector<json> participantsTab;
     for (unsigned int i = 0; i < s.nbParticipants; i++) {
         json temp;
         temp["nom"] = s.participants[i].getParticipant().getPseudo();
         temp["pierre"] = s.participants[i].getPierres();
-        newSave["participants"].push_back(temp);
+        temp["ordrePassage"] = s.participants[i].getOrdrePassage();
+        temp["nbPoints"] = s.participants[i].getPoints();
+        std::map<HexagoneCoord, HexState> grille = s.participants[i].getPlateau().getGrille();
+        json Plateau ;
+        for (const auto& [cle, valeur] : grille) {
+            //Conversion des coordonnées
+            std::string cleS = cle.toString();
+            std::string valeurS = valeur.toString();
+            Plateau[cleS] = valeurS;
+        }
+        temp["plateau"]= Plateau ;
+        //Rajout du participant
+        participantsTab.push_back(temp);
     }
+    //Ajout des participants
+    newSave["participants"].push_back(participantsTab);
 
-    
+    //Lecture des sauvegardes existantes
     json sauvegardes;
 
     ifstream file("data/sauvegarde.json");
@@ -52,10 +67,11 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
     if (!sauvegardes.is_array())
         sauvegardes = json::array();
 
-
+    //Ajout de la sauvegarde
     sauvegardes.push_back(newSave);
 
 
+    //Ecriture des sauvegardes
     ofstream file2("data/sauvegarde.json");
     file2 << sauvegardes.dump(4);
     file2.close();

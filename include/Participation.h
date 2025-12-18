@@ -30,6 +30,9 @@ public:
     unsigned getOrdrePassage() const { return ordrePassage; }
     Plateau& getPlateau() { return plateau; }
 
+    //Ce plateau sert à la lecture pour sauvegarder une partie
+    const Plateau& getPlateau() const { return plateau; }
+
     // ----- Setters -----
     void setOrdrePassage(int o) { ordrePassage = o; }
     void addPierres(unsigned int i) {pierres+=i;}
