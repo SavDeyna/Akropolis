@@ -23,7 +23,6 @@ struct HexagoneCoord {
     }
     //Pour la sauvegarde
     std::string toString() const ;
-    HexagoneCoord fromString(const std::string& str);
 };
 
 struct HexState {
@@ -34,7 +33,6 @@ struct HexState {
 
     //Pour la sauvegarde
     std::string toString() const ;
-    HexState fromString(const std::string& str);
 };
 
 // L'hexagone d'une tuile, coordonnées relatives, à ne pas confondre avec les coordonnées du plateau

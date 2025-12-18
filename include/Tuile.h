@@ -70,7 +70,6 @@ public:
 
     //Pour la sauvegarde
     std::string ToString() const;
-    Tuile FromString(const std::string& str);
 
 };
 

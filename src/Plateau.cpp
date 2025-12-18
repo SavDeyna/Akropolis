@@ -514,3 +514,6 @@ unsigned int Plateau::calculerPoints(const ModeDeJeu& mdj, unsigned int pierres)
     return total;
 }
 
+void Plateau::placerTuileSauvegarde(const HexagoneCoord hexaC, const HexState hexaS){
+    grille[hexaC] = hexaS;
+}

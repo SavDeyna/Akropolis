@@ -6,6 +6,7 @@
 #include <vector>
 #include <nlohmann/json.hpp>
 #include <map>
+#include <sstream>
 
 using json = nlohmann::json;
 using namespace std ;
@@ -150,11 +151,10 @@ void Partie::addParticipation(string pseudo) {
     if (participants.size() == 4) {
         throw std::runtime_error("Nombre maximal de participants atteint");
     }
-    Joueur j(pseudo);
-    joueurs.push_back(std::move(j));
+    joueurs.push_back(std::make_unique<Joueur>(pseudo));
     
     unsigned int ordre = participants.size() +1;
-    participants.emplace_back(joueurs.back(), ordre);
+    participants.emplace_back(*joueurs.back(), ordre);
 }
 
 void Partie::SetNbParticipants(){
@@ -192,10 +192,38 @@ void Partie::finTour(){
     tour++;
 }
 
-void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>& p,const ModeDeJeu& m,std::vector<Tuile>& pi) {
+void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j) {
     tour = t;
+
+    joueurs = std::move(j);
     participants = std::move(p);
+
     mdj = m;
     pioche = std::move(pi);
+    
     SetNbParticipants();
 }
+
+
+//Pour la sauvegarde
+std::string ModeDeJeu::ToStringVariente() const{
+    std::ostringstream f;
+    bool paspremiertour = false;
+    const std::map<Variante, std::string> Conversion = {
+    {Variante::Casernes,    "Caserne"},
+    {Variante::Jardins,     "Jardin"},
+    {Variante::Temples,     "Temple"},
+    {Variante::Marches,     "Marche"},
+    {Variante::Habitations, "Habitation"}
+    };
+    
+    for (auto& v : variantes){
+        if (paspremiertour){
+            f<<",";
+        }
+        paspremiertour = true;
+        f<<Conversion.at(v);
+    }
+    return f.str();
+}
+
