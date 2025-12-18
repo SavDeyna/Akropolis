@@ -13,10 +13,12 @@
 #include <QStackedWidget>
 #include "selecjoueurs.h"
 #include "menu.h"
+#include "jeu.h"
 
 enum Pages {
     MENU_PAGE = 0,
-    SETUP_PAGE = 1
+    SETUP_PAGE = 1,
+    JEU_PAGE = 2
 };
 
 class MainWindow : public QMainWindow
@@ -31,6 +33,7 @@ private slots:
     // Nouveaux slots pour gérer les actions et les transitions
     void showSelecJoueurs(); // Transition vers la page de configuration
     void showMenu(); // Revenir au menu
+    void showJeu();
 
     // Slots pour gérer les actions reçues par signaux du Menu
     void onPlayClicked(); // Slot déclenché par le signal playClicked() du Menu
@@ -39,8 +42,9 @@ private slots:
 
 private:
     QStackedWidget *m_stackedWidget;
+    Menu* m_menuScreen;
     SelecJoueurs* m_selecJoueursScreen;
-    Menu* m_menuScreen; // Le nouveau membre représentant la page du menu
+    Jeu* m_jeuScreen;
 };
 
 #endif // MAINWINDOW_H

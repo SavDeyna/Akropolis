@@ -62,11 +62,11 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
     QLabel *labelVar = new QLabel("Variantes");
     // NOTE: Pour récupérer les choix des variantes, vous devrez les rendre
     // accessibles ou les stocker dans des QList<QCheckBox*> membres de la classe Menu.
-    QCheckBox *varHabitations = new QCheckBox("Habitations");
-    QCheckBox *varMarchés = new QCheckBox("Marchés");
-    QCheckBox *varCasernes = new QCheckBox("Casernes");
-    QCheckBox *varTemples = new QCheckBox("Temples");
-    QCheckBox *varJardins = new QCheckBox("Jardins");
+    m_varHabitations = new QCheckBox("Habitations", this);
+    m_varMarches = new QCheckBox("Marchés", this);
+    m_varCasernes = new QCheckBox("Casernes", this);
+    m_varTemples = new QCheckBox("Temples", this);
+    m_varJardins = new QCheckBox("Jardins", this);
 
     // Définit une taille uniforme pour les boutons
     QSize buttonSize(300, 70);
@@ -94,11 +94,11 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
     choixJoueurs->addStretch();
 
     choixVariantes->addWidget(labelVar);
-    choixVariantes->addWidget(varHabitations);
-    choixVariantes->addWidget(varMarchés);
-    choixVariantes->addWidget(varCasernes);
-    choixVariantes->addWidget(varTemples);
-    choixVariantes->addWidget(varJardins);
+    choixVariantes->addWidget(m_varHabitations);
+    choixVariantes->addWidget(m_varMarches);
+    choixVariantes->addWidget(m_varCasernes);
+    choixVariantes->addWidget(m_varTemples);
+    choixVariantes->addWidget(m_varJardins);
     choixVariantes->addStretch();
 
     // Nous connectons le clic du bouton au signal que Menu ÉMET.
@@ -121,10 +121,24 @@ int Menu::getSelectedPlayerCount() const
     return m_selectedPlayers;
 }
 
+// Dans une fonction de ton Menu (ex: getSelectedVariants)
 QStringList Menu::getSelectedVariantes() const {
-    QStringList list;
-    //if (m_varHabitations->isChecked()) list << "Habitations";
-    //if (m_varMarches->isChecked()) list << "Marchés";
-    // ... etc
-    return list;
+    QStringList variantes;
+
+    if (m_varHabitations->isChecked()) {
+        variantes << "Habitations";
+    }
+    if (m_varMarches->isChecked()) {
+        variantes << "Marchés";
+    }
+    if (m_varCasernes->isChecked()) {
+        variantes << "Casernes";
+    }
+    if (m_varTemples->isChecked()) {
+        variantes << "Temples";
+    }
+    if (m_varJardins->isChecked()) {
+        variantes << "Jardins";
+    }
+    return variantes;
 }

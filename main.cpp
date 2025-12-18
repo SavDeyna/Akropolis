@@ -1,6 +1,4 @@
 #include "mainwindow.h"
-#include "Partie.h"
-
 #include <QApplication>
 
 #ifdef _WIN32

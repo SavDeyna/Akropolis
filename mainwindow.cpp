@@ -13,10 +13,12 @@ MainWindow::MainWindow(QWidget *parent)
     // Crée les pages (elles construisent leur UI elles-mêmes dans leur constructeur)
     m_menuScreen = new Menu(this);
     m_selecJoueursScreen = new SelecJoueurs(this);
+    m_jeuScreen = new Jeu(this);
 
     // Ajout des pages au Stacked Widget
     m_stackedWidget->addWidget(m_menuScreen);        // Index 0
     m_stackedWidget->addWidget(m_selecJoueursScreen); // Index 1
+    m_stackedWidget->addWidget(m_jeuScreen);
 
     // Connexion Jouer (déclenche la fonction qui gère la transmission des données et la transition)
     connect(m_menuScreen, &Menu::playClicked, this, &MainWindow::showSelecJoueurs);
@@ -28,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
     // connect(m_menuScreen, &Menu::chargerClicked, this, &MainWindow::onChargerClicked);
 
     connect(m_selecJoueursScreen, &SelecJoueurs::backToMenu, this, &MainWindow::showMenu);
+
+    connect(m_selecJoueursScreen, &SelecJoueurs::launchGame, this, &MainWindow::showJeu);
 
     // Afficher la page initiale
     m_stackedWidget->setCurrentIndex(MENU_PAGE);
@@ -63,6 +67,13 @@ void MainWindow::onQuitClicked() {
     QApplication::quit();
 }
 
+void MainWindow::showMenu() {
+    // On demande au gestionnaire de pile d'afficher la page du menu (Index 0)
+    m_stackedWidget->setCurrentIndex(MENU_PAGE);
+
+    qDebug() << "Retour au menu principal.";
+}
+
 void MainWindow::showSelecJoueurs() {
     int joueurs = m_menuScreen->getSelectedPlayerCount(); // <--- NOUVEAU
     QStringList variantes = m_menuScreen->getSelectedVariantes();
@@ -74,10 +85,14 @@ void MainWindow::showSelecJoueurs() {
     qDebug() << "Affichage de l'écran de confirmation pour " << joueurs << " joueurs.";
 }
 
-void MainWindow::showMenu()
-{
-    // On demande au gestionnaire de pile d'afficher la page du menu (Index 0)
-    m_stackedWidget->setCurrentIndex(MENU_PAGE);
+void MainWindow::showJeu() {
+    int nb = m_menuScreen->getSelectedPlayerCount();
+    QStringList p = m_selecJoueursScreen->getPseudos();
+    QStringList v = m_menuScreen->getSelectedVariantes();
 
-    qDebug() << "Retour au menu principal.";
+    // On les donne à l'écran de jeu
+    m_jeuScreen->initialiserAffichage(nb, v, p);
+
+    // On affiche l'écran
+    m_stackedWidget->setCurrentWidget(m_jeuScreen);
 }

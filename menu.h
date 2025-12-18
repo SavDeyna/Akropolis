@@ -5,9 +5,10 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QButtonGroup> // Ajout de ce composant essentiel
+#include <QButtonGroup>
+#include <QCheckBox>
 
-class Menu : public QWidget // <<<<<< CORRECTION CRUCIALE : Doit hériter de QWidget
+class Menu : public QWidget
 {
     Q_OBJECT
 
@@ -17,6 +18,11 @@ public:
     // Méthodes d'accès pour que MainWindow puisse lire les choix faits
     int getSelectedPlayerCount() const;
     QStringList getSelectedVariantes() const;
+
+    // Une petite fonction utilitaire pour ton moteur
+    bool estVarianteActive(const QString& nom) const {
+        return m_variantesChoisies.contains(nom);
+    }
 
 signals:
     // Signaux émis pour notifier le contrôleur (MainWindow)
@@ -34,6 +40,12 @@ private:
     // Membres UI/Logique de cette page
     QButtonGroup *m_nbJoueursGroup;
     int m_selectedPlayers = 2;
+    QStringList m_variantesChoisies;
+    QCheckBox *m_varHabitations;
+    QCheckBox *m_varMarches;
+    QCheckBox *m_varCasernes;
+    QCheckBox *m_varTemples;
+    QCheckBox *m_varJardins;
     // ... (Déclarez les QRadioButtons, QCheckboxes, et QLabels ici)
 
     // Exemples des widgets que vous devez déclarer pour les utiliser dans setupUI():
