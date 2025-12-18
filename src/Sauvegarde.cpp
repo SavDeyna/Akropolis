@@ -48,6 +48,12 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
     }
     //Ajout des participants
     newSave["participants"].push_back(participantsTab);
+    
+    json temp;
+    for (const auto& t : s.pioche){
+        temp.push_back(t.ToString());
+    }
+    newSave["pioche"] = temp;
 
     //Lecture des sauvegardes existantes
     json sauvegardes;
@@ -103,7 +109,7 @@ vector<SauvegardeInfo> SauvegardeManager::getListeSauvegardes(){
     }
     return liste;
 }
-Partie& SauvegardeManager::chargerSauvegarde(unsigned int id){
+Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
     json data;
 
     ifstream file("data/sauvegarde.json");
@@ -113,7 +119,7 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int id){
     file >> data;
     file.close();
 
-    if (!data.is_array() || id >= data.size())
+    if (!data.is_array() || index >= data.size())
         throw runtime_error("ID de sauvegarde invalide");
 
     //A initier
@@ -121,6 +127,6 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int id){
     ModeDeJeu mdj ;
     vector<Tuile> pioche ;
     Partie& p = Partie::getInstance();
-    p.chargerDepuisSauvegarde(data[id]["tour"],participants,mdj,pioche);
+    p.chargerDepuisSauvegarde(data[index]["tour"],participants,mdj,pioche);
     return p;
 }

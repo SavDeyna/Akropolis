@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <sstream>
 
 #include "Tuile.h"
 
@@ -42,7 +43,6 @@ void Tuile::afficherTuile() const {
     std::cout << " ===" << std::endl;
 
     std::cout << "Hauteur: " << hauteur 
-              << " | Joueur: " << (nom_joueur.empty() ? "(aucun)" : nom_joueur)
               << " | Nb Hex: " << disposition.size() << std::endl;
 
     for (size_t i = 0; i < disposition.size(); ++i) {
@@ -95,3 +95,119 @@ void Tuile::tournerGauche() {
         h.setS(rs + ps);
     }
 }
+
+void Tuile::changeorientation(){
+    if (orientation ==1) {
+        disposition[0].setR(-1); //r = r-2
+        disposition[0].setQ(1); //q = q+1
+        
+    }
+    if (orientation == 2){
+        disposition[0].setR(0); //r = r+2
+        disposition[0].setQ(1); //q = q-1
+    }
+    if (orientation ==2){
+        orientation--;
+    }
+    else orientation++;
+}
+
+std::string Tuile::ToString() const {
+    std::ostringstream f;
+    std::ostringstream fdispo;
+    const std::map<TypeHexagone, std::string> Conversion = {
+        {TypeHexagone::Carriere,   "Carriere"},
+        {TypeHexagone::Caserne,    "Caserne"},
+        {TypeHexagone::Jardin,     "Jardin"},
+        {TypeHexagone::Temple,     "Temple"},
+        {TypeHexagone::Marche,     "Marche"},
+        {TypeHexagone::Habitation, "Habitation"}
+    };
+
+    // Mise sous forme de la disposition : q,r,typeQuartier,place,q,r,typeQuartier,place,q,r,typeQuartier,place,
+    for (const auto& dispo : disposition){
+        fdispo<<dispo.getQ()<<","<<dispo.getR()<<","<<Conversion.at(dispo.getTypeHexagone())<< ","<<dispo.isPlace()<<",";
+    }
+
+    f << fdispo.str() <<  id_tuile;
+    return f.str();
+}
+
+
+Tuile Tuile::FromString(const std::string& str){
+    const std::map<std::string, TypeHexagone> Conversion = {
+    {"Carriere",   TypeHexagone::Carriere},
+    {"Caserne",    TypeHexagone::Caserne},
+    {"Jardin",     TypeHexagone::Jardin},
+    {"Temple",     TypeHexagone::Temple},
+    {"Marche",     TypeHexagone::Marche},
+    {"Habitation", TypeHexagone::Habitation}
+    };
+
+    std::istringstream f(str);
+
+    
+    
+
+    vector<Hexagone> vecteurHexa;
+
+    for (unsigned int i = 0;i<3 ; i++){
+        //On vérifie la structure et on lit les valeurs
+        char c1, c2, c3, c4;
+        int q, r ;
+        std::string temp;
+        TypeHexagone type;
+        bool place;
+        if (!(f>> q)) {
+            throw std::runtime_error("q invalide: " + str);   
+        // virgule
+        if (!(f >> c1) || c1 != ',') {
+            throw std::runtime_error("virgule manquante: " + str);
+        }
+
+        if (!(f >> r)) {
+            throw std::runtime_error("r invalide: " + str);
+        }
+
+        //virgule
+        if (!(f >> c2) || c2 != ',') {
+            throw std::runtime_error("virgule manquante: " + str);
+        }
+
+        if (!(f >> temp)) {
+            throw std::runtime_error("typeHexagone invalide: " + str);
+        }
+        type = Conversion.at(temp);
+
+        // virgule
+        if (!(f >> c3) || c3 != ',') {
+            throw std::runtime_error("virgule manquante: " + str);
+        }
+
+        if (!(f >> place)) {
+            throw std::runtime_error("place invalide: " + str);
+        }
+
+        // virgule
+        if (!(f >> c4) || c4 != ',') {
+            throw std::runtime_error("virgule manquante: " + str);
+        }
+        vecteurHexa.push_back(Hexagone(q,r,type,place));
+        }
+    }
+    unsigned int id;
+
+    if (!(f >> id)) {
+        throw std::runtime_error("id invalide: " + str);
+    }
+
+
+    
+    Tuile t(id,vecteurHexa);
+    return t;
+}
+std::vector<Hexagone> disposition;
+    int hauteur{1}; // 1er niveau par défaut
+    std::string nom_joueur;
+    int id_tuile;
+    unsigned int orientation {1};
