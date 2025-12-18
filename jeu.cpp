@@ -1,36 +1,73 @@
 #include "jeu.h"
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 
-Jeu::Jeu(QWidget *parent) : QWidget(parent) {
-    // 1. On crée un layout pour organiser la page
+Jeu::Jeu(QWidget *parent) : QWidget(parent), m_joueurActuel(0)
+{
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    // 2. On crée le label qui accueillera toutes les infos
     m_affichageInfos = new QLabel(this);
-    m_affichageInfos->setAlignment(Qt::AlignCenter); // On centre le texte
+    m_affichageInfos->setAlignment(Qt::AlignCenter);
 
-    // On peut lui donner un style par défaut
-    m_affichageInfos->setStyleSheet("font-size: 16px;");
+    m_joueurActuelLabel = new QLabel(this);
+    m_joueurActuelLabel->setAlignment(Qt::AlignCenter);
+    m_joueurActuelLabel->setStyleSheet("font-size: 18px; font-weight: bold;");
+
+    m_pierresLabel = new QLabel("Pierres : 0", this);
+    m_pierresLabel->setAlignment(Qt::AlignCenter);
+
+    m_suivantButton = new QPushButton("Joueur suivant");
 
     layout->addWidget(m_affichageInfos);
+    layout->addSpacing(20);
+    layout->addWidget(m_joueurActuelLabel);
+    layout->addWidget(m_pierresLabel);
+    layout->addWidget(m_suivantButton);
+
+    connect(m_suivantButton, &QPushButton::clicked,
+            this, &Jeu::joueurSuivant);
 }
 
-void Jeu::initialiserAffichage(int nb, QStringList var, QStringList pseudos) {
-    // 3. On construit une chaîne de caractères plus riche
-    QString texte = "<h2>Configuration de la Partie</h2><br>";
+void Jeu::initialiserAffichage(int nb, QStringList var, QStringList pseudos)
+{
+    Q_UNUSED(nb);
+    Q_UNUSED(var);
 
-    texte += QString("<b>Nombre de joueurs :</b> %1<br><br>").arg(nb);
+    m_pseudos = pseudos;
+    m_joueurActuel = 0;
 
-    texte += "<b>Liste des joueurs :</b><br>";
-    texte += pseudos.join(" - ") + "<br><br>"; // "Joueur 1 - Joueur 2..."
+    // Initialise le vecteur des pierres à 0 pour chaque joueur
+    m_pierres.fill(0, m_pseudos.size());
 
-    texte += "<b>Variantes choisies :</b><br>";
-    if (var.isEmpty()) {
-        texte += "Aucune";
-    } else {
-        texte += var.join(", ");
+    // Met à jour les labels
+    if (!m_pseudos.isEmpty()) {
+        m_joueurActuelLabel->setText("Joueur actuel : " + m_pseudos[m_joueurActuel]);
+        m_pierresLabel->setText("Pierres : 0");
     }
+}
 
-    // 4. On applique le texte final (le QLabel comprend le HTML de base)
-    m_affichageInfos->setText(texte);
+void Jeu::piocher()
+{
+    if (m_joueurActuel < m_pierres.size()) {
+        m_pierres[m_joueurActuel]++;
+        m_pierresLabel->setText("Pierres : " + QString::number(m_pierres[m_joueurActuel]));
+    }
+}
+
+void Jeu::joueurSuivant()
+{
+    if (m_pseudos.isEmpty())
+        return;
+
+    m_joueurActuel = (m_joueurActuel + 1) % m_pseudos.size();
+    m_joueurActuelLabel->setText("Joueur actuel : " + m_pseudos[m_joueurActuel]);
+    m_pierresLabel->setText("Pierres : " + QString::number(m_pierres[m_joueurActuel]));
+}
+
+void Jeu::mettreAJourPierres(int nbPierres)
+{
+    if (m_joueurActuel < m_pierres.size()) {
+        m_pierres[m_joueurActuel] = nbPierres;
+        m_pierresLabel->setText("Pierres : " + QString::number(nbPierres));
+    }
 }
