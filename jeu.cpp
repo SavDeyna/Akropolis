@@ -15,7 +15,7 @@ Jeu::Jeu(QWidget *parent) : QWidget(parent) {
     layout->addWidget(m_affichageInfos);
 }
 
-void Jeu::initialiserAffichage(int nb, QStringList var, QStringList pseudos) {
+void Jeu::initialiserAffichage(int nb, int tuiles, QStringList var, QStringList pseudos) {
     // 3. On construit une chaîne de caractères plus riche
     QString texte = "<h2>Configuration de la Partie</h2><br>";
 
@@ -29,6 +29,13 @@ void Jeu::initialiserAffichage(int nb, QStringList var, QStringList pseudos) {
         texte += "Aucune";
     } else {
         texte += var.join(", ");
+    }
+
+    texte += "<br><br><b>Tuiles: </b>";
+        if (tuiles == 0) {
+        texte += "défaut <br>";
+    } else {
+        texte += "aléatoire <br>";
     }
 
     // 4. On applique le texte final (le QLabel comprend le HTML de base)

@@ -1,11 +1,12 @@
 #include "selecjoueurs.h"
 #include <QStringList>
 #include <QLineEdit>
+#include <string>
 
 
 SelecJoueurs::SelecJoueurs(QWidget *parent) : QWidget(parent) {
     QVBoxLayout *layout = new QVBoxLayout(this);
-    m_infoLabel = new QLabel("Configuration actuelle : 2 joueurs.");
+    m_infoLabel = new QLabel("Configuration actuelle : 2 joueurs | tuiles par défaut");
     m_infoLabel->setAlignment(Qt::AlignCenter);
     choixVariantes = new QVBoxLayout();
 
@@ -25,8 +26,16 @@ SelecJoueurs::SelecJoueurs(QWidget *parent) : QWidget(parent) {
     connect(backButton, &QPushButton::clicked, this, &SelecJoueurs::backToMenu);
 }
 
-void SelecJoueurs::updateSetup(int playerCount, QStringList variantes) {
-    m_infoLabel->setText(QString("Prêt à lancer une partie à %1 joueurs.").arg(playerCount));
+void SelecJoueurs::updateSetup(int playerCount, int tuiles, QStringList variantes) {
+    QString stringTuiles = "";
+
+    if (tuiles == 0) {
+        stringTuiles = "tuiles par défaut";
+    } else {
+        stringTuiles = "tuiles aléatoires";
+    }
+
+    m_infoLabel->setText(QString("Prêt à lancer une partie à %1 joueurs | %2").arg(playerCount).arg(stringTuiles));
 
 
     // 1. On vide le layout actuel pour ne pas accumuler les anciens labels
@@ -38,7 +47,6 @@ void SelecJoueurs::updateSetup(int playerCount, QStringList variantes) {
 
     QLayoutItem *item;
     while ((item = m_layoutPseudos->takeAt(0)) != nullptr) {
-        // Si l'item contient un widget (QLabel ou QLineEdit), on le supprime
         if (item->widget()) {
             delete item->widget();
         }

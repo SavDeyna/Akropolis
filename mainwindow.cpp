@@ -75,11 +75,12 @@ void MainWindow::showMenu() {
 }
 
 void MainWindow::showSelecJoueurs() {
-    int joueurs = m_menuScreen->getSelectedPlayerCount(); // <--- NOUVEAU
+    int joueurs = m_menuScreen->getSelectedPlayerCount();
+    int tuiles = m_menuScreen->getTuilesSelected();
     QStringList variantes = m_menuScreen->getSelectedVariantes();
     // Assurez-vous que la méthode de SelecJoueurs prend bien un int et un QStringList
     // (Ajustez le nom de la méthode si nécessaire, exemple : updateSetupInfo)
-    m_selecJoueursScreen->updateSetup(joueurs, variantes);
+    m_selecJoueursScreen->updateSetup(joueurs, tuiles, variantes);
 
     m_stackedWidget->setCurrentIndex(SETUP_PAGE);
     qDebug() << "Affichage de l'écran de confirmation pour " << joueurs << " joueurs.";
@@ -87,11 +88,12 @@ void MainWindow::showSelecJoueurs() {
 
 void MainWindow::showJeu() {
     int nb = m_menuScreen->getSelectedPlayerCount();
+    int tuiles = m_menuScreen->getTuilesSelected();
     QStringList p = m_selecJoueursScreen->getPseudos();
     QStringList v = m_menuScreen->getSelectedVariantes();
 
     // On les donne à l'écran de jeu
-    m_jeuScreen->initialiserAffichage(nb, v, p);
+    m_jeuScreen->initialiserAffichage(nb, tuiles, v, p);
 
     // On affiche l'écran
     m_stackedWidget->setCurrentWidget(m_jeuScreen);

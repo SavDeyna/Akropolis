@@ -18,6 +18,7 @@ public:
     // Méthodes d'accès pour que MainWindow puisse lire les choix faits
     int getSelectedPlayerCount() const;
     QStringList getSelectedVariantes() const;
+    int getTuilesSelected() const; // 0->defaut et 1->aleatoire
 
     // Une petite fonction utilitaire pour ton moteur
     bool estVarianteActive(const QString& nom) const {
@@ -33,13 +34,16 @@ signals:
 private slots:
     // Seul le slot pour stocker le choix du groupe de boutons est nécessaire en interne
     void onNbJoueursChanged(int id);
+    void onTuilesChanged(int id);
 
 private:
     void setupUI(); // Fonction interne pour construire l'interface (appellée par le constructeur)
 
     // Membres UI/Logique de cette page
     QButtonGroup *m_nbJoueursGroup;
+    QButtonGroup *m_tuilesChoixGroup;
     int m_selectedPlayers = 2;
+    bool m_choixTuiles = 0;
     QStringList m_variantesChoisies;
     QCheckBox *m_varHabitations;
     QCheckBox *m_varMarches;
