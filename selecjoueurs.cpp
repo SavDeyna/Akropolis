@@ -36,6 +36,17 @@ void SelecJoueurs::updateSetup(int playerCount, QStringList variantes) {
         delete child;           // Supprime l'item du layout
     }
 
+    QLayoutItem *item;
+    while ((item = m_layoutPseudos->takeAt(0)) != nullptr) {
+        // Si l'item contient un widget (QLabel ou QLineEdit), on le supprime
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
+
+    m_champsPseudos.clear();
+
     // 2. On ajoute un titre unique si la liste n'est pas vide
     if (!variantes.isEmpty()) {
         choixVariantes->addWidget(new QLabel("<b>Variantes activées :</b>"));
