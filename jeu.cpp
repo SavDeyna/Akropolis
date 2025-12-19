@@ -23,6 +23,21 @@ static QColor getColorForType(TypeHexagone type) {
     }
 }
 
+// Fonction utilitaire pour créer un polygone en forme d'étoile
+static QPolygonF createStarPolygon(double cx, double cy, double outerRadius, double innerRadius, int points = 5) {
+    QPolygonF star;
+    double pi = acos(-1.0);
+    double angleStep = pi / points;
+    double startAngle = -pi / 2; // Pointe vers le haut
+    
+    for (int i = 0; i < points * 2; ++i) {
+        double radius = (i % 2 == 0) ? outerRadius : innerRadius;
+        double angle = startAngle + i * angleStep;
+        star << QPointF(cx + radius * cos(angle), cy + radius * sin(angle));
+    }
+    return star;
+}
+
 void MyGraphicsView::mousePressEvent(QMouseEvent *event) {
     QPointF scenePos = mapToScene(event->pos());
     double size = 30.0;
@@ -161,6 +176,20 @@ void Jeu::setupUI() {
 }
 
 void Jeu::initialiserAffichage(int nb, int tuiles, QStringList var, QStringList pseudos) {
+    // 1. Convert QStringList to std::vector<std::string>
+    std::vector<std::string> pseudosStd;
+    for (const QString& p : pseudos) {
+        pseudosStd.push_back(p.toStdString());
+    }
+    std::vector<std::string> variantesStd;
+    for (const QString& v : var) {
+        variantesStd.push_back(v.toStdString());
+    }
+
+    // 2. Initialize the game logic
+    Partie& partie = Partie::getInstance();
+    partie.initializeNewGame(nb, pseudosStd, variantesStd);
+
     // 3. On construit une chaîne de caractères plus riche
     QString texte = "<h2>Configuration de la Partie</h2><br>";
 
@@ -185,6 +214,13 @@ void Jeu::initialiserAffichage(int nb, int tuiles, QStringList var, QStringList 
 
     // 4. On applique le texte final (le QLabel comprend le HTML de base)
     m_affichageInfos->setText(texte);
+
+    // 5. Draw the initial board and tiles
+    Participation& currentPlayer = partie.getCurrentPlayer();
+    drawBoard(currentPlayer.getPlateau());
+    drawTiles();
+    updatePlayerInfo();
+    setPiocheSize(partie.getPioche().size());
 }
 
 void Jeu::drawBoard(const Plateau& plateau) {
@@ -272,14 +308,10 @@ void Jeu::drawBoard(const Plateau& plateau) {
             double x = size * (1.5 * coord.q);
             double y = size * (sqrt(3)/2 * coord.q + sqrt(3) * coord.r);
             
-            QGraphicsTextItem* star = new QGraphicsTextItem("★");
-            star->setDefaultTextColor(Qt::white);
-            QFont font = star->font();
-            font.setPointSize(14);
-            font.setBold(true);
-            star->setFont(font);
-            QRectF bounds = star->boundingRect();
-            star->setPos(x - bounds.width() / 2, y - bounds.height() / 2);
+            QPolygonF starPoly = createStarPolygon(x, y, 12.0, 5.0);
+            QGraphicsPolygonItem* star = new QGraphicsPolygonItem(starPoly);
+            star->setBrush(Qt::white);
+            star->setPen(QPen(Qt::black, 1));
             scene->addItem(star);
         }
     }
@@ -366,14 +398,10 @@ void Jeu::drawTiles() {
             
             // Afficher une étoile sur les places
             if (hex.isPlace()) {
-                QGraphicsTextItem* star = new QGraphicsTextItem("★");
-                star->setDefaultTextColor(Qt::white);
-                QFont starFont = star->font();
-                starFont.setPointSize(8);
-                starFont.setBold(true);
-                star->setFont(starFont);
-                QRectF bounds = star->boundingRect();
-                star->setPos(x - bounds.width() / 2, y - bounds.height() / 2);
+                QPolygonF starPoly = createStarPolygon(x, y, 6.0, 2.5);
+                QGraphicsPolygonItem* star = new QGraphicsPolygonItem(starPoly);
+                star->setBrush(Qt::white);
+                star->setPen(QPen(Qt::black, 0.5));
                 tileScene->addItem(star);
             }
         }
@@ -540,14 +568,10 @@ void Jeu::drawPreview(int q, int r) {
         
         // Afficher une étoile sur les places (en preview aussi)
         if (hex.isPlace()) {
-            QGraphicsTextItem* star = new QGraphicsTextItem("★");
-            star->setDefaultTextColor(Qt::white);
-            QFont starFont = star->font();
-            starFont.setPointSize(14);
-            starFont.setBold(true);
-            star->setFont(starFont);
-            QRectF bounds = star->boundingRect();
-            star->setPos(x - bounds.width() / 2, y - bounds.height() / 2);
+            QPolygonF starPoly = createStarPolygon(x, y, 12.0, 5.0);
+            QGraphicsPolygonItem* star = new QGraphicsPolygonItem(starPoly);
+            star->setBrush(Qt::white);
+            star->setPen(QPen(Qt::black, 1));
             scene->addItem(star);
             previewItems << star;
         }

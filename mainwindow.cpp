@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "selecjoueurs.h"
 #include "menu.h"
+#include "Partie.h"
 #include <QFile>
 #include <QButtonGroup>
 
@@ -95,6 +96,22 @@ void MainWindow::showJeu() {
 }
 
 void MainWindow::showEndScreen() {
+    // Récupérer les scores de tous les joueurs
+    Partie& partie = Partie::getInstance();
+    auto& participants = partie.getParticipants();
+    
+    std::vector<PlayerScore> scores;
+    for (auto& p : participants) {
+        PlayerScore ps;
+        ps.pseudo = QString::fromStdString(p.getParticipant().getPseudo());
+        ps.score = p.getPoints();
+        ps.pierres = p.getPierres();
+        scores.push_back(ps);
+    }
+    
+    // Afficher les scores
+    m_endScreen->afficherScores(scores);
+    
     m_stackedWidget->setCurrentIndex(END_SCREEN_PAGE);
     qDebug() << "Affichage de l'écran de fin.";
 }
