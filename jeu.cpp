@@ -6,8 +6,6 @@
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QPainterPath>
-#include <algorithm>
-#include <unordered_map>
 #include "Partie.h"
 
 // Fonction utilitaire pour convertir TypeHexagone en QColor

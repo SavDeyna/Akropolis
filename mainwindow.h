@@ -19,8 +19,9 @@
 enum Pages {
     MENU_PAGE = 0,
     SETUP_PAGE = 1,
-    JEU_PAGE = 2,
-    END_SCREEN_PAGE = 3
+    SAVE_SELECT_PAGE = 2,
+    JEU_PAGE = 3,
+    END_SCREEN_PAGE = 4
 };
 
 class MainWindow : public QMainWindow
