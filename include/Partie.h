@@ -75,6 +75,8 @@ class Partie{
         int getTour() const { return tour; }
         std::vector<Participation>& getParticipants() { return participants; }
         std::vector<Tuile>& getPioche() { return pioche; }
+        //Accesseur pour la sauvegarde
+        std::vector<Tuile> getPioche() const{ return pioche; }
         unsigned int getNbParticipants() const noexcept { return nbParticipants; }
         vector<Tuile>& getJeu(){return jeu;};
         

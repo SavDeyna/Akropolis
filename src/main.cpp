@@ -1,5 +1,5 @@
 #include "Partie.h"
-
+#include "Sauvegarde.h"
 #include <iostream>
 #include <sstream>
 #ifdef _WIN32
@@ -89,6 +89,18 @@ int main() {
                 partie.getParticipants()[indice].Jouer(partie.getJeu());
             }
             partie.finTour();
+            string choix3;
+            cout<<"Voulez-vous sauvegarder?\nTapez 1 pour sauvegarder\nTapez Autre chose pour ne pas sauvegarder\n";
+            cin>>choix3;
+            if (choix3 == "1"){
+                SauvegardeManager ManagerS;
+                cout<<"Nom de la sauvegarde :\n";
+                string nom ;
+                cin>>nom;
+                ManagerS.enregistrerSauvegarde(Sauvegarde(partie,nom));
+            }
+
+
         }
         //On veut un gagnant :
         cout << "Fin de partie !\nLe gagnant est : "<< partie.getGagnant();

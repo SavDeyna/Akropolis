@@ -22,11 +22,11 @@ std::string VarianteToString(Variante v) {
     return Conversion.at(v);
 }
 
-Sauvegarde::Sauvegarde(const Partie& p, const string& nomsauvegarde) : nom(nomsauvegarde),mdj(p.mdj),nbParticipants(p.nbParticipants),tour(p.getTour()){
+Sauvegarde::Sauvegarde(const Partie& p, const string& nomsauvegarde) : nom(nomsauvegarde),mdj(p.mdj),nbParticipants(p.nbParticipants),tour(p.getTour()),pioche(p.getPioche()){
     
     participants.reserve(p.participants.size());
     for (const auto& part : p.participants) {
-        participants.emplace_back(part.getParticipant(),part.getOrdrePassage());
+        participants.emplace_back(part.getParticipant(),part.getOrdrePassage(),part.getPoints(),part.getPierres(),part.getPlateau());
     }
 }
 void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
