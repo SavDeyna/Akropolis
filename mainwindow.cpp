@@ -14,11 +14,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_menuScreen = new Menu(this);
     m_selecJoueursScreen = new SelecJoueurs(this);
     m_jeuScreen = new Jeu(this);
+    m_endScreen = new EndScreen(this);
 
     // Ajout des pages au Stacked Widget
     m_stackedWidget->addWidget(m_menuScreen);        // Index 0
     m_stackedWidget->addWidget(m_selecJoueursScreen); // Index 1
-    m_stackedWidget->addWidget(m_jeuScreen);
+    m_stackedWidget->addWidget(m_jeuScreen);          // Index 2
+    m_stackedWidget->addWidget(m_endScreen);          // Index 3
 
     // Connexion Jouer (déclenche la fonction qui gère la transmission des données et la transition)
     connect(m_menuScreen, &Menu::playClicked, this, &MainWindow::showSelecJoueurs);
@@ -32,6 +34,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_selecJoueursScreen, &SelecJoueurs::backToMenu, this, &MainWindow::showMenu);
 
     connect(m_selecJoueursScreen, &SelecJoueurs::launchGame, this, &MainWindow::showJeu);
+
+    // Connexion pour la fin de partie et retour au menu
+    connect(m_jeuScreen, &Jeu::gameFinished, this, &MainWindow::showEndScreen);
+    connect(m_endScreen, &EndScreen::retourMenuClicked, this, &MainWindow::showMenu);
 
     // Afficher la page initiale
     m_stackedWidget->setCurrentIndex(MENU_PAGE);
@@ -48,17 +54,6 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     setWindowTitle("Akropolis - Menu");
-}
-// Implémentation des slots d'action
-
-void MainWindow::onPlayClicked() {
-    qDebug("Bouton 'Jouer' cliqué ! Démarrage du jeu...");
-    // Ici, vous ajouterez la logique pour passer à l'écran de jeu.
-}
-
-void MainWindow::onChargerClicked() {
-    qDebug("Bouton 'Charger' cliqué ! Affichage des options...");
-    // Ici, vous ajouterez la logique pour ouvrir la fenêtre des options.
 }
 
 void MainWindow::onQuitClicked() {
@@ -97,4 +92,9 @@ void MainWindow::showJeu() {
 
     // On affiche l'écran
     m_stackedWidget->setCurrentWidget(m_jeuScreen);
+}
+
+void MainWindow::showEndScreen() {
+    m_stackedWidget->setCurrentIndex(END_SCREEN_PAGE);
+    qDebug() << "Affichage de l'écran de fin.";
 }
