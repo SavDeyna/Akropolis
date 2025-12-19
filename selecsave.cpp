@@ -7,6 +7,7 @@ SelecSave::SelecSave(QWidget *parent) : QWidget(parent) {
 
 void SelecSave::setupUI() {
     QVBoxLayout *layout = new QVBoxLayout(this);
+    QHBoxLayout *layoutBoutons = new QHBoxLayout(this);
 
     m_titre = new QLabel("<h2>Choisir une sauvegarde</h2>");
     m_titre->setAlignment(Qt::AlignCenter);
@@ -17,11 +18,18 @@ void SelecSave::setupUI() {
 
     // Bouton de validation
     m_btnCharger = new QPushButton("Charger la partie", this);
-    m_btnCharger->setEnabled(false); // Désactivé tant qu'on n'a rien choisi
+    m_btnCharger->setEnabled(false);
+
+    m_btnSuppr = new QPushButton("Supprimer la sauvegarde", this);
+    m_btnSuppr->setEnabled(false);
 
     layout->addWidget(m_titre);
     layout->addWidget(m_listSaves);
-    layout->addWidget(m_btnCharger);
+
+    layout->addLayout(layoutBoutons);
+
+    layoutBoutons->addWidget(m_btnCharger);
+    layoutBoutons->addWidget(m_btnSuppr);
 
     // Activer le bouton seulement si une ligne est cliquée
     connect(m_listSaves, &QListWidget::itemClicked, [this]() {

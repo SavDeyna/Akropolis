@@ -21,6 +21,7 @@ private:
     void setupUI();
     QListWidget *m_listSaves;
     QPushButton *m_btnCharger;
+    QPushButton *m_btnSuppr;
     QLabel *m_titre;
 };
 
