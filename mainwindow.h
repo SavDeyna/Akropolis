@@ -14,6 +14,7 @@
 #include "selecjoueurs.h"
 #include "menu.h"
 #include "jeu.h"
+#include "selecsave.h"
 
 enum Pages {
     MENU_PAGE = 0,
@@ -30,14 +31,10 @@ public:
     ~MainWindow() = default;
 
 private slots:
-    // Nouveaux slots pour gérer les actions et les transitions
-    void showSelecJoueurs(); // Transition vers la page de configuration
-    void showMenu(); // Revenir au menu
+    void showSelecJoueurs();
+    void showMenu();
     void showJeu();
-
-    // Slots pour gérer les actions reçues par signaux du Menu
-    void onPlayClicked(); // Slot déclenché par le signal playClicked() du Menu
-    void onChargerClicked();
+    void showSelecSave();
     void onQuitClicked();
 
 private:
@@ -45,6 +42,7 @@ private:
     Menu* m_menuScreen;
     SelecJoueurs* m_selecJoueursScreen;
     Jeu* m_jeuScreen;
+    SelecSave* m_selecSaveScreen;
 };
 
 #endif // MAINWINDOW_H
