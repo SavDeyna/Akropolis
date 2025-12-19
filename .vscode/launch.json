@@ -2,17 +2,31 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Akropolis",
+            "name": "Debug Akropolis (Qt6)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Akropolis.exe",
+            "program": "${command:cmake.launchTargetPath}",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "${env:PATH};C:/Qt/6.10.1/mingw_64/bin;C:/Qt/Tools/mingw1310_64/bin"
+                }
+            ],
             "externalConsole": true,
-            "preLaunchTask": "Build Akropolis",
             "MIMode": "gdb",
-            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe"
+            "miDebuggerPath": "C:/Qt/Tools/mingw1310_64/bin/gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "visualizerFile": "${workspaceFolder}/qt6.natvis",
+            "preLaunchTask": "CMake: build"
         }
     ]
 }

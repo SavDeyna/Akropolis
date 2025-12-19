@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -15,11 +14,13 @@
 #include "menu.h"
 #include "jeu.h"
 #include "selecsave.h"
+#include "endscreen.h"
 
 enum Pages {
     MENU_PAGE = 0,
     SETUP_PAGE = 1,
-    JEU_PAGE = 2
+    JEU_PAGE = 2,
+    END_SCREEN_PAGE = 3
 };
 
 class MainWindow : public QMainWindow
@@ -35,6 +36,7 @@ private slots:
     void showMenu();
     void showJeu();
     void showSelecSave();
+    void showEndScreen();
     void onQuitClicked();
 
 private:
@@ -43,6 +45,6 @@ private:
     SelecJoueurs* m_selecJoueursScreen;
     Jeu* m_jeuScreen;
     SelecSave* m_selecSaveScreen;
+    EndScreen* m_endScreen;
 };
 
-#endif // MAINWINDOW_H

@@ -39,7 +39,7 @@ public:
     std::vector<HexagoneCoord> getVoisins(const HexagoneCoord& c) const;
 
     // placer une tuile avec origine (coord absolue du centre ou repère)
-    bool placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres);
+    bool placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres, bool interactive = false);
 
     // affiche la grille
     void afficherPlateau() const;
@@ -55,5 +55,7 @@ public:
 
     // Calcul des points, déplacé de Participation
     unsigned int calculerPoints(const ModeDeJeu& mdj, unsigned int pierres) const;
+
+    const std::map<HexagoneCoord, HexState>& getGrille() const { return grille; }
 
 };

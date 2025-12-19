@@ -2,21 +2,25 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Akropolis",
+            "label": "CMake: build",
             "type": "shell",
-            "command": "mingw32-make",
+            "command": "cmake --build ${workspaceFolder}/build",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": []
+            "problemMatcher": "$gcc"
         },
         {
             "label": "Run Akropolis",
             "type": "shell",
-            "command": "./Akropolis.exe",
-            "group": "none",
-            "dependsOn": ["Build Akropolis"]
+            "command": "${command:cmake.launchTargetPath}",
+            "dependsOn": "CMake: build",
+            "options": {
+                "env": {
+                    "PATH": "${env:PATH};C:/Qt/6.10.1/mingw_64/bin;C:/Qt/Tools/mingw1310_64/bin"
+                }
+            }
         }
     ]
 }

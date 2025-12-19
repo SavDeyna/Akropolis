@@ -63,20 +63,15 @@ public:
 
     //Va changer l'orientation, de droite et bas-droite vers droite haut-droite ou inversement
     void changeorientation(){
-        if (orientation ==1) {
-            disposition[0].setR(-1); //r = r-2
-            disposition[0].setQ(1); //q = q+1
-            
+        if (orientation == 1) {
+            disposition[0].setR(-1);
+            disposition[0].setQ(1);
+            orientation = 2;
+        } else {
+            disposition[0].setR(0);
+            disposition[0].setQ(1);
+            orientation = 1;
         }
-        if (orientation == 2){
-            disposition[0].setR(0); //r = r+2
-            disposition[0].setQ(1); //q = q-1
-        }
-        if (orientation ==2){
-            orientation--;
-        }
-        else orientation++;
-        
     }
     // Rotation
     void tournerDroite(); 
