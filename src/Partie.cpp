@@ -37,20 +37,18 @@ void Partie::ChargerTuiles(){
         dict["jaune"]  = TypeHexagone::Marche;    // quartier jaune
 
         cout << "Nombre de tuiles lues : " << data["tuiles"].size() << endl;
-        for (unsigned int i=0 ; i<61; i++){   
+        for (size_t i = 0; i < data["tuiles"].size(); ++i) {   
             cout<<"Chargement tuile numéro "<<i<<"\n";  
             vector<Hexagone> v ; 
 
-            /* j'ai supprimé le champ "étoiles", j'ai donc légèrement modifié l'ancienne signature : 
+            // Lecture des 3 hexagones avec leur type et si c'est une place (nbEtoiles > 0)
+            int etoiles_a = data["tuiles"][i][0][1];
+            int etoiles_b = data["tuiles"][i][1][1];
+            int etoiles_c = data["tuiles"][i][2][1];
 
-            Hexagone a(0,1,data["tuiles"][i][0][1],dict[data["tuiles"][i][0][0]]) ; 
-            Hexagone b(0,0,data["tuiles"][i][1][1],dict[data["tuiles"][i][1][0]]) ;
-            Hexagone c(1,0,data["tuiles"][i][2][1],dict[data["tuiles"][i][2][0]]) ;
-            */
-
-            Hexagone a(0,1,dict[data["tuiles"][i][0][0]]) ; 
-            Hexagone b(0,0,dict[data["tuiles"][i][1][0]]) ;
-            Hexagone c(1,0,dict[data["tuiles"][i][2][0]]) ;
+            Hexagone a(0, 1, dict[data["tuiles"][i][0][0]], etoiles_a > 0);
+            Hexagone b(0, 0, dict[data["tuiles"][i][1][0]], etoiles_b > 0);
+            Hexagone c(1, 0, dict[data["tuiles"][i][2][0]], etoiles_c > 0);
             v.push_back(a);
             v.push_back(b);
             v.push_back(c);
@@ -58,6 +56,7 @@ void Partie::ChargerTuiles(){
             Tuile t( i,v); 
             pioche.push_back(t);
         }
+        melangePioche();
     }
     else {
         std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
@@ -89,7 +88,7 @@ void Partie::choixMDJ() {
         SetNbParticipants();
     }
     else {
-        std::cout << "Erreur dans l'ouverture du fichier tuiles.json";
+        std::cout << "Erreur dans l'ouverture du fichier mdj.json";
     }
 }
 
@@ -136,6 +135,37 @@ void Partie::calculerScoresFinDePartie() {
     }
 }
 
+void Partie::initializeNewGame(int nbJoueurs, const std::vector<std::string>& pseudos, const std::vector<std::string>& variantes) {
+    // Create mode de jeu
+    ModeDeJeu newMdj("Custom", nbJoueurs, 0, "Custom game");
+    
+    // Activate variants
+    for (const auto& var : variantes) {
+        if (var == "Habitations") newMdj.activerVariante(Variante::Habitations);
+        else if (var == "Marches") newMdj.activerVariante(Variante::Marches);
+        else if (var == "Casernes") newMdj.activerVariante(Variante::Casernes);
+        else if (var == "Temples") newMdj.activerVariante(Variante::Temples);
+        else if (var == "Jardins") newMdj.activerVariante(Variante::Jardins);
+    }
+    
+    SetMdj(newMdj);
+    SetNbParticipants();
+    
+    // Add participants with proper pseudos
+    for (int i = 0; i < nbJoueurs; ++i) {
+        std::string pseudo = (i < static_cast<int>(pseudos.size()) && !pseudos[i].empty()) 
+            ? pseudos[i] 
+            : "Player " + std::to_string(i + 1);
+        addParticipation(pseudo);
+    }
+    
+    // Initialize game
+    randomizePlayerOrder();
+    ChargerTuiles();
+    initializePlayerStones();
+    debutTour();
+}
+
 string Partie::getGagnant() {
     unsigned int max = 0 ;
     for (unsigned int i = 1 ; i<nbParticipants ; i++){
@@ -150,6 +180,10 @@ void Partie::addParticipation(string pseudo) {
     if (participants.size() == 4) {
         throw std::runtime_error("Nombre maximal de participants atteint");
     }
+    // Reserve space to prevent vector reallocation which would invalidate references
+    if (joueurs.capacity() <= joueurs.size()) {
+        joueurs.reserve(joueurs.capacity() == 0 ? 4 : joueurs.capacity() * 2);
+    }
     Joueur j(pseudo);
     joueurs.push_back(std::move(j));
     
@@ -157,20 +191,80 @@ void Partie::addParticipation(string pseudo) {
     participants.emplace_back(joueurs.back(), ordre);
 }
 
+void Partie::initializePlayerStones() {
+    // Give initial stones based on turn order (ordre 1 → 1 stone, ordre 2 → 2 stones, etc.)
+    for (auto& p : participants) {
+        unsigned int ordre = p.getOrdrePassage();
+        p.setPierres(ordre);
+    }
+}
+
+void Partie::randomizePlayerOrder() {
+    // Create a vector of indices to shuffle
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 1; i <= participants.size(); ++i) {
+        indices.push_back(i);
+    }
+    
+    // Shuffle the indices
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(indices.begin(), indices.end(), g);
+    
+    // Assign shuffled indices as new turn order
+    for (size_t i = 0; i < participants.size(); ++i) {
+        participants[i].setOrdrePassage(indices[i]);
+    }
+}
+
 void Partie::SetNbParticipants(){
     //Une fois le mode de jeu choisi, permet de mettre à jour le nb de participant
     nbParticipants= mdj.getNbJoueur()+mdj.getNbIA();
 };
 
-void Partie::debutTour(){
-    //Va permettre de charger la pioche
-
-    //Nombre de pièce dans le jeu (nbJoueur + 1)
-    for (unsigned int i = 0; i < this->getNbParticipants()+1;i++){
+void Partie::refillJeu() {
+    bool wasRefilled = false;
+    
+    // Only add a new card when there's exactly 1 card left
+    if (jeu.size() == 1 && !pioche.empty()) {
+        jeu.push_back(std::move(pioche.back()));
+        pioche.pop_back();
+        wasRefilled = true;
+    }
+    // Continue filling to target size (getNbParticipants() + 2)
+    while (jeu.size() < getNbParticipants() + 2 && !pioche.empty()) {
         jeu.push_back(std::move(pioche.back()));
         pioche.pop_back();
     }
     
+    // When pioche is refilled, rotate the architecte
+    if (wasRefilled) {
+        rotateArchitecte();
+    }
+}
+
+void Partie::debutTour(){
+    // La tuile de départ est déjà placée par le constructeur de Plateau
+    // On remplit simplement le jeu depuis la pioche
+    refillJeu();
+}
+
+Participation& Partie::getCurrentPlayer() {
+    // Find the player with ordre 1 (current turn)
+    for (auto& p : participants) {
+        if (p.getOrdrePassage() == 1) {
+            return p;
+        }
+    }
+    // Fallback to first player
+    return participants[0];
+}
+
+void Partie::rotateArchitecte() {
+    // Rotate the turn order: current architecte becomes last
+    for (auto& p : participants) {
+        p.prochainOrdrePassage(this->getNbParticipants());
+    }
 }
 
 void Partie::finTour(){

@@ -28,13 +28,19 @@ SelecJoueurs::SelecJoueurs(QWidget *parent) : QWidget(parent) {
 void SelecJoueurs::updateSetup(int playerCount, QStringList variantes) {
     m_infoLabel->setText(QString("Prêt à lancer une partie à %1 joueurs.").arg(playerCount));
 
-
-    // 1. On vide le layout actuel pour ne pas accumuler les anciens labels
+    // 1. On vide le layout des variantes pour ne pas accumuler les anciens labels
     QLayoutItem *child;
     while ((child = choixVariantes->takeAt(0)) != nullptr) {
-        delete child->widget(); // Supprime le widget (QLabel)
-        delete child;           // Supprime l'item du layout
+        delete child->widget();
+        delete child;
     }
+
+    // 2. On vide le layout des pseudos et la liste des champs
+    while ((child = m_layoutPseudos->takeAt(0)) != nullptr) {
+        delete child->widget();
+        delete child;
+    }
+    m_champsPseudos.clear();
 
     // 2. On ajoute un titre unique si la liste n'est pas vide
     if (!variantes.isEmpty()) {

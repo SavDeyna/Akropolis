@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -14,11 +13,13 @@
 #include "selecjoueurs.h"
 #include "menu.h"
 #include "jeu.h"
+#include "endscreen.h"
 
 enum Pages {
     MENU_PAGE = 0,
     SETUP_PAGE = 1,
-    JEU_PAGE = 2
+    JEU_PAGE = 2,
+    END_SCREEN_PAGE = 3
 };
 
 class MainWindow : public QMainWindow
@@ -30,14 +31,10 @@ public:
     ~MainWindow() = default;
 
 private slots:
-    // Nouveaux slots pour gérer les actions et les transitions
-    void showSelecJoueurs(); // Transition vers la page de configuration
-    void showMenu(); // Revenir au menu
+    void showSelecJoueurs(); 
+    void showMenu();
     void showJeu();
-
-    // Slots pour gérer les actions reçues par signaux du Menu
-    void onPlayClicked(); // Slot déclenché par le signal playClicked() du Menu
-    void onChargerClicked();
+    void showEndScreen();
     void onQuitClicked();
 
 private:
@@ -45,6 +42,6 @@ private:
     Menu* m_menuScreen;
     SelecJoueurs* m_selecJoueursScreen;
     Jeu* m_jeuScreen;
+    EndScreen* m_endScreen;
 };
 
-#endif // MAINWINDOW_H

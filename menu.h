@@ -19,11 +19,6 @@ public:
     int getSelectedPlayerCount() const;
     QStringList getSelectedVariantes() const;
 
-    // Une petite fonction utilitaire pour ton moteur
-    bool estVarianteActive(const QString& nom) const {
-        return m_variantesChoisies.contains(nom);
-    }
-
 signals:
     // Signaux émis pour notifier le contrôleur (MainWindow)
     void playClicked();
@@ -35,12 +30,9 @@ private slots:
     void onNbJoueursChanged(int id);
 
 private:
-    void setupUI(); // Fonction interne pour construire l'interface (appellée par le constructeur)
-
     // Membres UI/Logique de cette page
     QButtonGroup *m_nbJoueursGroup;
     int m_selectedPlayers = 2;
-    QStringList m_variantesChoisies;
     QCheckBox *m_varHabitations;
     QCheckBox *m_varMarches;
     QCheckBox *m_varCasernes;

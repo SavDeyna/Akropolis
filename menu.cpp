@@ -47,9 +47,9 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
     QLabel *labelIA = new QLabel("Mode 1 Joueur");
     QLabel *labelNbJoueurs = new QLabel("Modes Classiques");
     QRadioButton *IllustreArchitecte = new QRadioButton("Illustre Architecte", this);
-    QRadioButton *deuxJoueur = new QRadioButton("2 Joueuers", this);
-    QRadioButton *troisJoueur = new QRadioButton("3 Joueuers", this);
-    QRadioButton *quatreJoueur = new QRadioButton("4 Joueuers", this);
+    QRadioButton *deuxJoueur = new QRadioButton("2 Joueurs", this);
+    QRadioButton *troisJoueur = new QRadioButton("3 Joueurs", this);
+    QRadioButton *quatreJoueur = new QRadioButton("4 Joueurs", this);
 
     m_nbJoueursGroup->addButton(IllustreArchitecte, 1);
     m_nbJoueursGroup->addButton(deuxJoueur, 2);
@@ -60,8 +60,6 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
 
     // Variantes
     QLabel *labelVar = new QLabel("Variantes");
-    // NOTE: Pour récupérer les choix des variantes, vous devrez les rendre
-    // accessibles ou les stocker dans des QList<QCheckBox*> membres de la classe Menu.
     m_varHabitations = new QCheckBox("Habitations", this);
     m_varMarches = new QCheckBox("Marchés", this);
     m_varCasernes = new QCheckBox("Casernes", this);
@@ -121,7 +119,6 @@ int Menu::getSelectedPlayerCount() const
     return m_selectedPlayers;
 }
 
-// Dans une fonction de ton Menu (ex: getSelectedVariants)
 QStringList Menu::getSelectedVariantes() const {
     QStringList variantes;
 
