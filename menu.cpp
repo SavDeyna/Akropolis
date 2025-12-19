@@ -24,6 +24,8 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
     choixJoueurs->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
     QVBoxLayout *choixVariantes = new QVBoxLayout();
     choixVariantes->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    QVBoxLayout *choixTuiles = new QVBoxLayout();
+    choixTuiles->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
 
     QLabel *titleLabel = new QLabel("Akropolis");
     titleLabel->setObjectName("gameTitleLabel");
@@ -47,9 +49,9 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
     QLabel *labelIA = new QLabel("Mode 1 Joueur");
     QLabel *labelNbJoueurs = new QLabel("Modes Classiques");
     QRadioButton *IllustreArchitecte = new QRadioButton("Illustre Architecte", this);
-    QRadioButton *deuxJoueur = new QRadioButton("2 Joueurs", this);
-    QRadioButton *troisJoueur = new QRadioButton("3 Joueurs", this);
-    QRadioButton *quatreJoueur = new QRadioButton("4 Joueurs", this);
+    QRadioButton *deuxJoueur = new QRadioButton("2 Joueuers", this);
+    QRadioButton *troisJoueur = new QRadioButton("3 Joueuers", this);
+    QRadioButton *quatreJoueur = new QRadioButton("4 Joueuers", this);
 
     m_nbJoueursGroup->addButton(IllustreArchitecte, 1);
     m_nbJoueursGroup->addButton(deuxJoueur, 2);
@@ -60,11 +62,22 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
 
     // Variantes
     QLabel *labelVar = new QLabel("Variantes");
+    // NOTE: Pour récupérer les choix des variantes, vous devrez les rendre
+    // accessibles ou les stocker dans des QList<QCheckBox*> membres de la classe Menu.
     m_varHabitations = new QCheckBox("Habitations", this);
     m_varMarches = new QCheckBox("Marchés", this);
     m_varCasernes = new QCheckBox("Casernes", this);
     m_varTemples = new QCheckBox("Temples", this);
     m_varJardins = new QCheckBox("Jardins", this);
+
+    QLabel *labelTuiles = new QLabel("Tuiles");
+    m_tuilesChoixGroup = new QButtonGroup(this);
+    QRadioButton *tuilesDefaut = new QRadioButton("Tuiles de base", this);
+    tuilesDefaut->setChecked(true);
+    QRadioButton *tuilesRandom = new QRadioButton("Tuiles aléatoire", this);
+    m_tuilesChoixGroup->addButton(tuilesDefaut, 0);
+    m_tuilesChoixGroup->addButton(tuilesRandom, 1);
+    m_choixTuiles = 1;
 
     // Définit une taille uniforme pour les boutons
     QSize buttonSize(300, 70);
@@ -82,6 +95,7 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
     choixModes->addLayout(choixJoueurs, 0);
     choixModes->addSpacing(50);
     choixModes->addLayout(choixVariantes, 1);
+    choixModes->addLayout(choixTuiles, 2);
 
     choixJoueurs->addWidget(labelIA);
     choixJoueurs->addWidget(IllustreArchitecte);
@@ -99,6 +113,11 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
     choixVariantes->addWidget(m_varJardins);
     choixVariantes->addStretch();
 
+    choixTuiles->addWidget(labelTuiles);
+    choixTuiles->addWidget(tuilesDefaut);
+    choixTuiles->addWidget(tuilesRandom);
+    choixTuiles->addStretch();
+
     // Nous connectons le clic du bouton au signal que Menu ÉMET.
     connect(playButton, &QPushButton::clicked, this, &Menu::playClicked);
     connect(chargerButton, &QPushButton::clicked, this, &Menu::chargerClicked);
@@ -106,6 +125,7 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
 
     // Connexion interne pour la logique du nombre de joueurs
     connect(m_nbJoueursGroup, QOverload<int>::of(&QButtonGroup::idClicked), this, &Menu::onNbJoueursChanged);
+    connect(m_tuilesChoixGroup, QOverload<int>::of(&QButtonGroup::idClicked), this, &Menu::onTuilesChanged);
 }
 
 void Menu::onNbJoueursChanged(int id)
@@ -114,11 +134,25 @@ void Menu::onNbJoueursChanged(int id)
     qDebug() << "Menu:: Nombre de joueurs sélectionné : " << m_selectedPlayers;
 }
 
+void Menu::onTuilesChanged(int id) {
+    m_choixTuiles = id;
+    if (m_choixTuiles == 0) {
+        qDebug() << "Menu:: Tuiles par defaut";
+    } else {
+        qDebug() << "Menu:: Tuiles aléatoires";
+    }
+}
+
 int Menu::getSelectedPlayerCount() const
 {
     return m_selectedPlayers;
 }
 
+int Menu::getTuilesSelected() const {
+    return m_choixTuiles;
+}
+
+// Dans une fonction de ton Menu (ex: getSelectedVariants)
 QStringList Menu::getSelectedVariantes() const {
     QStringList variantes;
 

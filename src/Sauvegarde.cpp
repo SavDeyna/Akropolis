@@ -87,6 +87,8 @@ vector<SauvegardeInfo> SauvegardeManager::getListeSauvegardes(){
     }
     return liste;
 }
+
+
 Partie& SauvegardeManager::chargerSauvegarde(unsigned int id){
     json data;
 

@@ -12,7 +12,7 @@ class SelecJoueurs : public QWidget
     Q_OBJECT
 public:
     explicit SelecJoueurs(QWidget *parent = nullptr);
-    void updateSetup(int playerCount, QStringList variantes);
+    void updateSetup(int playerCount, int tuiles, QStringList variantes);
     QStringList getPseudos() const;
 
 signals:
