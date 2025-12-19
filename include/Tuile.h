@@ -81,5 +81,8 @@ public:
     // Rotation
     void tournerDroite(); 
     void tournerGauche();
+
+    // pour l'IllustreArchitecte
+    bool possedePlace() const;
 };
 

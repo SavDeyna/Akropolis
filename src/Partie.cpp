@@ -10,6 +10,62 @@
 using json = nlohmann::json;
 using namespace std ;
 
+
+// IllustreArchitecte
+
+void Partie::donnerPierresArchitecte(unsigned int nb) {
+    if (!estModeSoloArchitecte())
+        return;
+
+    architecte.addPierres(nb);
+}
+
+
+void Partie::jouerTourArchitecte() {
+    if (!mdj.estSoloArchitecte())
+        return;
+
+    if (jeu.empty())
+        return;
+
+    unsigned int indiceChoisi = 0;
+    bool trouvePlace = false;
+
+    // chercher la tuile avec Place la moins chère
+    for (unsigned int i = 0; i < jeu.size(); ++i) {
+        if (jeu[i].possedePlace()) {
+            if (architecte.getPierres() >= i) {
+                indiceChoisi = i;
+                trouvePlace = true;
+                break;
+            }
+        }
+    }
+
+    // sinon prendre la première tuile
+    if (!trouvePlace) {
+        indiceChoisi = 0;
+    }
+
+    unsigned int coutTuile = indiceChoisi;
+
+    // l'architecte paye (si possible)
+    if (architecte.getPierres() >= coutTuile) {
+        architecte.depenserPierres(coutTuile);
+    } else {
+        coutTuile = 0; // il prend gratuitement
+    }
+
+    // l'architecte récupère la tuile pour le score
+    architecte.prendreTuile(std::move(jeu[indiceChoisi]));
+
+    // retirer la tuile du chantier
+    jeu.erase(jeu.begin() + indiceChoisi);
+
+    std::cout << "[Architecte] prend la tuile " << indiceChoisi
+              << " (coût " << coutTuile << " pierres)\n";
+}
+
 //fonction locale de mélange de vecteur. 
 //Méthode trouvée sur un forum : fisher_yates_shuffle (https://stackoverflow.com/questions/6127503/shuffle-array-in-c/6128209#6128209)
 void Partie::melangePioche() {
@@ -85,6 +141,12 @@ void Partie::choixMDJ() {
             std::cin >> a;
         }while(a !="1");
         ModeDeJeu m(data[i]["nom"],data[i]["nbrJoueur"],data[i]["nbrIA"],data[i]["description"]);
+        
+        // activer le mode solo architecte
+        if (data[i]["nom"] == "Solo Architecte") {
+            m.activerSoloArchitecte();
+        }
+        
         this->SetMdj(m);
         SetNbParticipants();
     }

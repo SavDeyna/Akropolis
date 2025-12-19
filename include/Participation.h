@@ -3,6 +3,7 @@
 #include <vector>
 #include "Participant.h"
 #include "Plateau.h"
+#include "Partie.h"
 
 /**
  * Classe représentant la participation d’un joueur (Participant)

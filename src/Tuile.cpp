@@ -8,6 +8,15 @@
 
 using namespace std;
 
+// IllustreArchitecte
+bool Tuile::possedePlace() const {
+    for (const auto& h : disposition) {
+        if (h.isPlace())
+            return true;
+    }
+    return false;
+}
+
  inline std::string typeHexagoneToString(TypeHexagone type) {
         switch (type) {
             case TypeHexagone::Caserne:   return "Caserne";

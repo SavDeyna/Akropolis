@@ -1,5 +1,6 @@
 #pragma once
 #include "Participation.h"
+#include "IllustreArchitecte.h"
 #include <set>
 #include <string>
 
@@ -37,6 +38,10 @@ class ModeDeJeu {
             return variantes;
         }
 
+        // IllustreArchitecte
+        bool estSoloArchitecte() const { return soloArchitecte; }
+        void activerSoloArchitecte() { soloArchitecte = true; }
+        void desactiverSoloArchitecte() { soloArchitecte = false; }
     private:
         string nom;
         unsigned int nbJoueur ;
@@ -45,6 +50,9 @@ class ModeDeJeu {
 
         // Variantes
         std::set<Variante> variantes;
+
+        // IllustreArchitecte
+        bool soloArchitecte{false};
 };
 
 
@@ -96,9 +104,18 @@ class Partie{
         //Met à jour le tour, l'ordre de passage, le score des participations, vide le jeu.
         void finTour();
 
-        
+        // IllustreArchitecte
+    
+        bool estModeSoloArchitecte() const {
+            return mdj.estSoloArchitecte();
+        }
 
+        void Partie::donnerPierresArchitecte(unsigned int nb);
+        void jouerTourArchitecte();
+        
     private:
+        IllustreArchitecte architecte;
+
         void calculerScoresFinDePartie();
         
         //Constructeur pour charger une partie depuis une sauvegarde.
