@@ -10,6 +10,7 @@ using namespace std ;
 HexagoneCoord HexaCfromString(const std::string& str);
 HexState HexaSfromString(const std::string& str);
 Tuile TuileFromString(const std::string& str);
+Variante VarianteFromString(const std::string& str);
 
 std::string VarianteToString(Variante v) {
     static const std::map<Variante, std::string> Conversion = {
@@ -140,7 +141,7 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
     }
     file >> datatemp;
     file.close();
-
+    std::cout<<"\n1\n";
     if (!datatemp.is_array() || index >= datatemp.size())
         throw runtime_error("ID de sauvegarde invalide");
 
@@ -149,9 +150,9 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
     //Création mdj
     ModeDeJeu mdj(data["mdj"]["nom"],data["mdj"]["nbJoueur"],data["mdj"]["nbIA"],data["mdj"]["description"]);
     for (const auto& v : data["mdj"]["variantes"]){
-        mdj.activerVariante(v);
+        mdj.activerVariante(VarianteFromString(v.get<std::string>()));
     }
-    
+    std::cout<<"\n2\n";
     //Création participants
     vector<Participation> participants;
     vector<std::unique_ptr<Participant>> joueurs;
@@ -170,17 +171,17 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
             plateau.placerTuileSauvegarde(hexC,hexS);
         }
 
-        participants.emplace_back(*joueur,data["participants"][i]["ordre"],data["participants"][i]["nbPoints"],data["participants"][i]["pierre"],plateau);
+        participants.emplace_back(*joueur,data["participants"][i]["ordrePassage"],data["participants"][i]["nbPoints"],data["participants"][i]["pierre"],plateau);
         joueurs.push_back(std::move(joueur));
     }
-
+    std::cout<<"\n3\n";
    
 
     vector<Tuile> pioche ;
     for (const auto& tuile : data["pioche"]){
         pioche.push_back(TuileFromString(tuile));
     }
-
+    std::cout<<"\n4\n";
     Partie& p = Partie::getInstance();
     p.chargerDepuisSauvegarde(data["tour"],std::move(participants),mdj,std::move(pioche),std::move(joueurs));
     return p;
@@ -235,25 +236,25 @@ HexState HexaSfromString(const std::string& str){
     TypeHexagone type;
     bool place;
 
-    char c1, c2,c3;
+    char c1, c2;
 
     //On vérifie la structure et on lit les valeurs
-    if (!(f>> typetemp)) {
-        throw std::runtime_error("q invalide: " + str);
+    if (!std::getline(f,typetemp,',')) {
+        throw std::runtime_error("TypeHexagone invalide: " + str);
     }
-    type=Conversion.at(typetemp);
 
-    // virgule
-    if (!(f >> c1) || c1 != ',') {
-        throw std::runtime_error("virgule manquante: " + str);
+    auto it = Conversion.find(typetemp);
+    if (it == Conversion.end()) {
+        throw std::runtime_error("TypeHexagone inconnu: " + typetemp);
     }
+    type = it->second;
 
     if (!(f >> hauteur)) {
         throw std::runtime_error("r invalide: " + str);
     }
 
     //virgule
-    if (!(f >> c2) || c2 != ',') {
+    if (!(f >> c1) || c1 != ',') {
         throw std::runtime_error("virgule manquante: " + str);
     }
 
@@ -261,7 +262,7 @@ HexState HexaSfromString(const std::string& str){
         throw std::runtime_error("s invalide: " + str);
     }
     //virgule
-    if (!(f >> c3) || c3 != ',') {
+    if (!(f >> c2) || c2 != ',') {
         throw std::runtime_error("virgule manquante: " + str);
     }
 
@@ -272,75 +273,101 @@ HexState HexaSfromString(const std::string& str){
     return HexState{type,hauteur,id_tuile,place};
 }
 
-Tuile TuileFromString(const std::string& str){
+Tuile TuileFromString(const std::string& str) {
     const std::map<std::string, TypeHexagone> Conversion = {
-    {"Carriere",   TypeHexagone::Carriere},
-    {"Caserne",    TypeHexagone::Caserne},
-    {"Jardin",     TypeHexagone::Jardin},
-    {"Temple",     TypeHexagone::Temple},
-    {"Marche",     TypeHexagone::Marche},
-    {"Habitation", TypeHexagone::Habitation}
+        {"Carriere",   TypeHexagone::Carriere},
+        {"Caserne",    TypeHexagone::Caserne},
+        {"Jardin",     TypeHexagone::Jardin},
+        {"Temple",     TypeHexagone::Temple},
+        {"Marche",     TypeHexagone::Marche},
+        {"Habitation", TypeHexagone::Habitation}
     };
 
     std::istringstream f(str);
+    std::vector<Hexagone> vecteurHexa;
 
-    
-    
+    for (unsigned int i = 0; i < 3; i++) {
+        std::string tempQ, tempR, tempType, tempPlace;
 
-    vector<Hexagone> vecteurHexa;
+        if (!std::getline(f, tempQ, ',')) throw std::runtime_error("q invalide: " + str);
+        if (!std::getline(f, tempR, ',')) throw std::runtime_error("r invalide: " + str);
+        if (!std::getline(f, tempType, ',')) throw std::runtime_error("typeHexagone invalide: " + str);
+        if (!std::getline(f, tempPlace, ',')) throw std::runtime_error("place invalide: " + str);
+        
+        //Conversion
+        int q = std::stoi(tempQ);
+        int r = std::stoi(tempR);
+        bool place = (tempPlace == "1" || tempPlace == "true");
 
-    for (unsigned int i = 0;i<3 ; i++){
-        //On vérifie la structure et on lit les valeurs
-        char c1, c2, c3, c4;
-        int q, r ;
-        std::string temp;
-        TypeHexagone type;
-        bool place;
-        if (!(f>> q)) {
-            throw std::runtime_error("q invalide: " + str);   
-        // virgule
-        if (!(f >> c1) || c1 != ',') {
-            throw std::runtime_error("virgule manquante: " + str);
-        }
+        auto it = Conversion.find(tempType);
+        if (it == Conversion.end()) throw std::runtime_error("TypeHexagone inconnu: " + tempType);
+        TypeHexagone type = it->second;
 
-        if (!(f >> r)) {
-            throw std::runtime_error("r invalide: " + str);
-        }
-
-        //virgule
-        if (!(f >> c2) || c2 != ',') {
-            throw std::runtime_error("virgule manquante: " + str);
-        }
-
-        if (!(f >> temp)) {
-            throw std::runtime_error("typeHexagone invalide: " + str);
-        }
-        type = Conversion.at(temp);
-
-        // virgule
-        if (!(f >> c3) || c3 != ',') {
-            throw std::runtime_error("virgule manquante: " + str);
-        }
-
-        if (!(f >> place)) {
-            throw std::runtime_error("place invalide: " + str);
-        }
-
-        // virgule
-        if (!(f >> c4) || c4 != ',') {
-            throw std::runtime_error("virgule manquante: " + str);
-        }
-        vecteurHexa.push_back(Hexagone(q,r,type,place));
-        }
-    }
-    unsigned int id;
-
-    if (!(f >> id)) {
-        throw std::runtime_error("id invalide: " + str);
+        vecteurHexa.push_back(Hexagone(q, r, type, place));
     }
 
+    std::string tempId;
+    if (!std::getline(f, tempId)) throw std::runtime_error("id invalide: " + str);
+    unsigned int id = std::stoi(tempId);
 
+    return Tuile(id, vecteurHexa);
+}
+
+
+Variante VarianteFromString(const std::string& str) {
+    const std::map<std::string, Variante> Conversion = {
+        {"Caserne",    Variante::Casernes},
+        {"Jardin",     Variante::Jardins},
+        {"Temple",     Variante::Temples},
+        {"Marche",     Variante::Marches},
+        {"Habitation", Variante::Habitations}
+    };
+
+    std::istringstream f(str);
+    std::string temp;
+
+    if (!(f >> temp)) {
+        throw std::runtime_error("Variante invalide\n");
+    }
+
+    auto it = Conversion.find(temp);
+    if (it == Conversion.end()) {
+        throw std::runtime_error("Variante inconnue\n");
+    }
+
+    return it->second;
+}
+
+void SauvegardeManager::supprimerSauvegarde(unsigned int id){
+    json data;
+
+    //Lecture des sauvegardes
+    ifstream file("data/sauvegarde.json");
+    if (!file.is_open()){
+        throw std::runtime_error("Erreur dans l'ouverture du fichier\n");
+    }
+    file >> data;
+    file.close();
     
-    Tuile t(id,vecteurHexa);
-    return t;
+    
+
+    if (id>= data.size()){
+        throw std::runtime_error("id invalide, > nombre de sauvegarde\n");
+    }
+
+
+    json datanew = json::array();
+    unsigned int i = 0;
+
+    while (i<data.size()){
+        if (i!=id){
+            datanew.push_back(data[i]);
+        }
+        i++;
+    }
+    
+    //Ecriture des sauvegardes
+    ofstream file2("data/sauvegarde.json");
+    file2 << datanew.dump(4);
+    file2.close();
 }

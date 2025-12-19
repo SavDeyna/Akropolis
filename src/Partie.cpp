@@ -39,7 +39,6 @@ void Partie::ChargerTuiles(){
 
         cout << "Nombre de tuiles lues : " << data["tuiles"].size() << endl;
         for (unsigned int i=0 ; i<61; i++){   
-            cout<<"Chargement tuile numéro "<<i<<"\n";  
             vector<Hexagone> v ; 
 
             /* j'ai supprimé le champ "étoiles", j'ai donc légèrement modifié l'ancienne signature : 
@@ -205,25 +204,33 @@ void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&&
 }
 
 
-//Pour la sauvegarde
-std::string ModeDeJeu::ToStringVariente() const{
+// Pour la sauvegarde
+std::string ModeDeJeu::ToStringVariente() const {
     std::ostringstream f;
     bool paspremiertour = false;
-    const std::map<Variante, std::string> Conversion = {
-    {Variante::Casernes,    "Caserne"},
-    {Variante::Jardins,     "Jardin"},
-    {Variante::Temples,     "Temple"},
-    {Variante::Marches,     "Marche"},
-    {Variante::Habitations, "Habitation"}
+
+    static const std::map<Variante, std::string> Conversion = {
+        {Variante::Casernes,    "Caserne"},
+        {Variante::Jardins,     "Jardin"},
+        {Variante::Temples,     "Temple"},
+        {Variante::Marches,     "Marche"},
+        {Variante::Habitations, "Habitation"}
     };
-    
-    for (auto& v : variantes){
-        if (paspremiertour){
-            f<<",";
+
+    for (const auto& v : variantes) {
+        auto it = Conversion.find(v);
+        if (it == Conversion.end()) {
+            throw std::runtime_error("Variante inconnue dans ToStringVariente()");
+        }
+
+        if (paspremiertour) {
+            f << ",";
         }
         paspremiertour = true;
-        f<<Conversion.at(v);
+        f << it->second;
     }
+
     return f.str();
 }
+
 
