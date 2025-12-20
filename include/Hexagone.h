@@ -21,13 +21,18 @@ struct HexagoneCoord {
         if (r != o.r) return r < o.r;
         return s < o.s;
     }
+    //Pour la sauvegarde
+    std::string toString() const ;
 };
 
 struct HexState {
     TypeHexagone type;
     int hauteur;
     int id_tuile;            // l'id de la tuile dont cet hexagone provient
-    bool place; 
+    bool place;
+
+    //Pour la sauvegarde
+    std::string toString() const ;
 };
 
 // L'hexagone d'une tuile, coordonnées relatives, à ne pas confondre avec les coordonnées du plateau

@@ -20,7 +20,6 @@ private:
 protected:
     std::vector<Hexagone> disposition;
     int hauteur{1}; // 1er niveau par défaut
-    std::string nom_joueur;
     int id_tuile;
     unsigned int orientation {1};
 public:
@@ -34,6 +33,8 @@ public:
         if (!is_depart && disposition.size() == 3 && !formeValide())
             throw std::invalid_argument("La forme de la tuile n’est pas valide");
     }
+
+    
 
     // Constructeur pratique pour la tuile de départ
     Tuile(int id, bool tuileDepart) : is_depart(tuileDepart), id_tuile(id)  {
@@ -56,30 +57,19 @@ public:
     const std::vector<Hexagone>& getDisposition() const { return disposition; }
     int getHauteur() const { return hauteur; }
     void setHauteur(int h) { hauteur = h; }
-    std::string getNomJoueur() const { return nom_joueur; }
     bool estTuileDepart() const { return is_depart; }
     int getId() const { return id_tuile; }
     unsigned int getOrientation() const {return orientation;}
 
     //Va changer l'orientation, de droite et bas-droite vers droite haut-droite ou inversement
-    void changeorientation(){
-        if (orientation ==1) {
-            disposition[0].setR(-1); //r = r-2
-            disposition[0].setQ(1); //q = q+1
-            
-        }
-        if (orientation == 2){
-            disposition[0].setR(0); //r = r+2
-            disposition[0].setQ(1); //q = q-1
-        }
-        if (orientation ==2){
-            orientation--;
-        }
-        else orientation++;
-        
-    }
+    void changeorientation();
+
     // Rotation
     void tournerDroite(); 
     void tournerGauche();
+
+    //Pour la sauvegarde
+    std::string ToString() const;
+
 };
 
