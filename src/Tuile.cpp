@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <sstream>
 
 #include "Tuile.h"
 
@@ -51,7 +52,6 @@ void Tuile::afficherTuile() const {
     std::cout << " ===" << std::endl;
 
     std::cout << "Hauteur: " << hauteur 
-              << " | Joueur: " << (nom_joueur.empty() ? "(aucun)" : nom_joueur)
               << " | Nb Hex: " << disposition.size() << std::endl;
 
     for (size_t i = 0; i < disposition.size(); ++i) {
@@ -104,3 +104,42 @@ void Tuile::tournerGauche() {
         h.setS(rs + ps);
     }
 }
+
+void Tuile::changeorientation(){
+    if (orientation ==1) {
+        disposition[0].setR(-1); //r = r-2
+        disposition[0].setQ(1); //q = q+1
+        
+    }
+    if (orientation == 2){
+        disposition[0].setR(0); //r = r+2
+        disposition[0].setQ(1); //q = q-1
+    }
+    if (orientation ==2){
+        orientation--;
+    }
+    else orientation++;
+}
+
+std::string Tuile::ToString() const {
+    std::ostringstream f;
+    std::ostringstream fdispo;
+    const std::map<TypeHexagone, std::string> Conversion = {
+        {TypeHexagone::Carriere,   "Carriere"},
+        {TypeHexagone::Caserne,    "Caserne"},
+        {TypeHexagone::Jardin,     "Jardin"},
+        {TypeHexagone::Temple,     "Temple"},
+        {TypeHexagone::Marche,     "Marche"},
+        {TypeHexagone::Habitation, "Habitation"}
+    };
+
+    // Mise sous forme de la disposition : q,r,typeQuartier,place,q,r,typeQuartier,place,q,r,typeQuartier,place,
+    for (const auto& dispo : disposition){
+        fdispo<<dispo.getQ()<<","<<dispo.getR()<<","<<Conversion.at(dispo.getTypeHexagone())<< ","<<dispo.isPlace()<<",";
+    }
+
+    f << fdispo.str() <<  id_tuile;
+    return f.str();
+}
+
+

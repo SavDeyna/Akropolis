@@ -240,6 +240,10 @@ void Plateau::dessinerPlateau(const int radius) const{
     cout<<"Type Quartier :\nCarriere : C ; Caserne : S ; Jardin : J ; Temple : T ; Marche : M Habitation : H\n";
 }
 
+
+
+
+
 // SECTION CALCUL DES POINTS
 // helper : retourne les 6 coordonnées voisines (indépendamment de l'occupation)
 static std::vector<HexagoneCoord> voisinsCoord(const HexagoneCoord& c) {
@@ -510,3 +514,6 @@ unsigned int Plateau::calculerPoints(const ModeDeJeu& mdj, unsigned int pierres)
     return total;
 }
 
+void Plateau::placerTuileSauvegarde(const HexagoneCoord hexaC, const HexState hexaS){
+    grille[hexaC] = hexaS;
+}

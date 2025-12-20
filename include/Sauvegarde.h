@@ -18,9 +18,11 @@ class SauvegardeManager{
 
         
     public :
+        SauvegardeManager(){};
         vector<SauvegardeInfo> getListeSauvegardes();
         Partie& chargerSauvegarde(unsigned int id);
         void enregistrerSauvegarde(const Sauvegarde& s);
+        void supprimerSauvegarde(unsigned int id);
 };
 
 class Sauvegarde{

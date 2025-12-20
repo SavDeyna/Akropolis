@@ -24,12 +24,18 @@ public:
     Participation(Participant& p, unsigned int ordre)
         : participant(&p), ordrePassage(ordre){}
 
+    // Construction pour la classe sauvegarde
+    Participation(Participant& participant, unsigned int ordre, unsigned int points, unsigned int cailloux , const Plateau& plateau)
+        : participant(&participant), nbPoints(points), ordrePassage(ordre), pierres(cailloux), plateau(plateau){}
     // ----- Getters -----
     Participant& getParticipant() const { return *participant; }
     unsigned int getPoints() const { return nbPoints; }
     unsigned int getPierres() const { return pierres; }
     unsigned getOrdrePassage() const { return ordrePassage; }
     Plateau& getPlateau() { return plateau; }
+
+    //Ce plateau sert à la lecture pour sauvegarder une partie
+    const Plateau& getPlateau() const { return plateau; }
 
     // ----- Setters -----
     void setOrdrePassage(int o) { ordrePassage = o; }
