@@ -2,6 +2,7 @@
 #include "Participation.h"
 #include <set>
 #include <string>
+#include <memory> // visiblement nécessaire pour Renaud
 
 // Les 5 variantes du jeu
 enum class Variante {
