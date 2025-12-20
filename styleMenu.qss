@@ -1,0 +1,34 @@
+QMainWindow {
+    background-color: #2596be;
+}
+
+QPushButton {
+    background-color: rgba(50, 50, 50, 200);
+    color: white;
+    border: 1px solid #CCCCCC;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 16pt;
+}
+
+QPushButton:hover {
+    background-color: rgba(80, 80, 80, 220);
+    border: 1px solid #FFFFFF;
+}
+
+QLabel#gameTitleLabel {
+    color: #FFD700;        /* Or */
+    font-size: 36pt;       /* Grande taille */
+    font-weight: bold;
+    /* Ajoutez une petite ombre textuelle si l'environnement Qt le supporte (non standard mais parfois toléré) */
+    /* text-shadow: 2px 2px black; */
+}
+
+QLabel {
+    /* La couleur de fond est transparente pour tous les labels */
+    background-color: transparent;
+    /* Style par défaut pour les labels de section */
+    color: #FFFFFF;        /* Blanc */
+    font-size: 14pt;       /* Taille de texte normale */
+    font-weight: normal;
+}
