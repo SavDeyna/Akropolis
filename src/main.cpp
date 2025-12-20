@@ -122,8 +122,22 @@ int main() {
                 f << "Joueur " << i+1;
                 partie.addParticipation(f.str());
                 std::cout << "Joueur " << i+1 << " initié : " << partie.getParticipants().back().getParticipant().getPseudo() << "\n";
-                }
             }
+            
+
+            //Ajout des variantes
+            std::cout<<"\nChoississez les variantes à ajouter :\n\n";
+            std::cout<<"Tapez 1 pour l'ajouter\nTapez autre pour ne pas ajouter\n\n";
+            std::string choix8;
+            std::map<Variante,std::string> Variantes = {{Variante::Habitations, "Habitations"},{Variante::Marches,"Marches"},{Variante::Casernes,"Casernes"},{Variante::Temples,"Temples"},{Variante::Jardins,"Jardins"}};
+            for (const auto& [Key,Values] : Variantes){
+                std::cout<<"Voulez vous ajouter cette variante : "<<Values<<"\n";
+                
+                std::cin>>choix8;
+                if (choix8 == "1") partie.getMDJ().activerVariante(Key);
+            }
+        }
+        std::cout<<"Test : "<<partie.getMDJ().getVariantes().size();
 
 
         //Déroulement des tours

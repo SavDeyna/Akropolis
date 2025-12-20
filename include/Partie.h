@@ -61,8 +61,10 @@ class Partie{
         }
         //Partie mode de Jeu
         void choixMDJ(); // l'utilisateur choisit un mode de jeu
-        ModeDeJeu getMDJ() const {return mdj;}
 
+        ModeDeJeu getMDJ() const {return mdj;}
+        ModeDeJeu& getMDJ() {return mdj;}
+        
         void chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j) ;
 
 
