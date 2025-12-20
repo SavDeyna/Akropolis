@@ -28,7 +28,7 @@ void Partie::jouerTourArchitecte() {
 
     if (jeu.empty())
         return;
-
+    donnerPierresArchitecte(participants[0].getPierrePourArchi());
     unsigned int indiceChoisi = 0;
     bool trouvePlace = false;
 

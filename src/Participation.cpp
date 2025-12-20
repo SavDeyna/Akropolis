@@ -120,8 +120,9 @@ void Participation::Jouer(vector<Tuile>& jeu){
                                                     // le joueur paye 
                                                     pierres -= coutTuile;
 
-                                                    // la Partie décide quoi faire des pierres (solo ou non)
-                                                    Partie::getInstance().donnerPierresArchitecte(coutTuile);
+                                                    // Pierre pour donner à l'architecte, que le mode soit actif ou non, écrase l'ancien chiffre
+                                                    pierrespourArchi=coutTuile;
+
                                                     //On enlève la tuile du jeu
                                                     jeu.erase(jeu.begin() +tuileIndice);
                                                 }
