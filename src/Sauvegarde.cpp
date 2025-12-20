@@ -141,7 +141,7 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
     }
     file >> datatemp;
     file.close();
-    std::cout<<"\n1\n";
+
     if (!datatemp.is_array() || index >= datatemp.size())
         throw runtime_error("ID de sauvegarde invalide");
 
@@ -152,7 +152,7 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
     for (const auto& v : data["mdj"]["variantes"]){
         mdj.activerVariante(VarianteFromString(v.get<std::string>()));
     }
-    std::cout<<"\n2\n";
+
     //Création participants
     vector<Participation> participants;
     vector<std::unique_ptr<Participant>> joueurs;
@@ -174,14 +174,13 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
         participants.emplace_back(*joueur,data["participants"][i]["ordrePassage"],data["participants"][i]["nbPoints"],data["participants"][i]["pierre"],plateau);
         joueurs.push_back(std::move(joueur));
     }
-    std::cout<<"\n3\n";
    
 
     vector<Tuile> pioche ;
     for (const auto& tuile : data["pioche"]){
         pioche.push_back(TuileFromString(tuile));
     }
-    std::cout<<"\n4\n";
+    
     Partie& p = Partie::getInstance();
     p.chargerDepuisSauvegarde(data["tour"],std::move(participants),mdj,std::move(pioche),std::move(joueurs));
     return p;
