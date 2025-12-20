@@ -2,14 +2,16 @@
 #include "Hexagone.h"
 #include "Tuile.h"
 #include "Plateau.h"
+#include "Participant.h"
 #include <iostream>
 #include <map>
 
+/* Il vaut mieux importer depuis la classe Participant
 enum class Difficulte { 
     Facile, 
     Moyen, 
     Difficile 
-};
+}; */
 
 struct InfosQuartier {
     unsigned int quartiers = 0;

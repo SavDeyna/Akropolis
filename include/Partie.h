@@ -110,7 +110,7 @@ class Partie{
             return mdj.estSoloArchitecte();
         }
 
-        void Partie::donnerPierresArchitecte(unsigned int nb);
+        void donnerPierresArchitecte(unsigned int nb);
         void jouerTourArchitecte();
         
     private:
