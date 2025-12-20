@@ -32,6 +32,9 @@ qrc_*.cpp
 # On ignore .vscode car il contient vos chemins "C:/Qt/..." personnels
 .vscode/
 
+# --- GitHub Copilot ---
+.github/copilot-instructions.md
+
 # --- Autres ---
 .DS_Store
 *.user

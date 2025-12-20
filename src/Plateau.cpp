@@ -58,7 +58,7 @@ vector<HexagoneCoord> Plateau::getVoisins(const HexagoneCoord& c) const {
     return v;
 }
 
-bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres, bool interactive) {
+bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres) {
     std::vector<HexagoneCoord> coords;
     coords.reserve(3); // pour éviter une surallocation de mémoire
 
@@ -129,20 +129,6 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
     }
     //=========
     return true;
-}
-
-void Plateau::afficherPlateau() const {
-    std::cout << "=== Grille du plateau ===\n";
-    if (grille.empty()) {
-        std::cout << "(vide)\n";
-        return;
-    }
-    for (const auto& [coord, st] : grille) {
-        std::cout << "Hex (" << coord.q << "," << coord.r << "," << coord.s << ")"
-                  << " type=" << static_cast<int>(st.type)
-                  << " hauteur=" << st.hauteur
-                  << " id_tuile=\"" << st.id_tuile << "\"\n";
-    }
 }
 
 void Plateau::dessinerPlateau(const int radius) const{
