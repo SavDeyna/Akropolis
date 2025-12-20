@@ -41,7 +41,6 @@ class ModeDeJeu {
         // IllustreArchitecte
         bool estSoloArchitecte() const { return soloArchitecte; }
         void activerSoloArchitecte() { soloArchitecte = true; }
-        void desactiverSoloArchitecte() { soloArchitecte = false; }
         //Pour la sauvegarde
         std::string ToStringVariente() const;
 
@@ -73,7 +72,7 @@ class Partie{
         ModeDeJeu getMDJ() const {return mdj;}
         ModeDeJeu& getMDJ() {return mdj;}
         
-        void chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j) ;
+        void chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j,IllustreArchitecte archi) ;
 
 
         //Setter
@@ -116,6 +115,8 @@ class Partie{
         bool estModeSoloArchitecte() const {
             return mdj.estSoloArchitecte();
         }
+
+        IllustreArchitecte getArchitecte() const {return architecte;}
 
         void donnerPierresArchitecte(unsigned int nb);
         void jouerTourArchitecte();

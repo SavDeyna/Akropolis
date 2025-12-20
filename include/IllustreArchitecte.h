@@ -26,16 +26,10 @@ private:
 public:
     IllustreArchitecte();
 // pierres
-    unsigned int getPierres() const { 
-        return pierres; 
-    }
-    void addPierres(unsigned int p) { 
-        pierres += p; 
-    }
-    void depenserPierres(unsigned int p) {
-        if (pierres >= p) 
-            pierres -= p;
-    }
+    unsigned int getPierres() const { return pierres;}
+    void addPierres(unsigned int p) { pierres += p;}
+    void SetPierres(unsigned int p) { pierres = p;}
+    void depenserPierres(unsigned int p) {if (pierres >= p) pierres -= p;}
 
 // tuiles
     void prendreTuile(const Tuile& t); 
@@ -73,6 +67,12 @@ public:
             default: return 0;
         }
     }
-
+    
     unsigned int calculerPoints(Difficulte d) const; // retourne des points
+
+    //Copie pour sauvegarde
+    void SetInfo(TypeHexagone TypeHexa, InfosQuartier info){
+        infos[TypeHexa] = info ;
+    }
+    std::map<TypeHexagone, InfosQuartier> getInfos() const {return infos;}
 };

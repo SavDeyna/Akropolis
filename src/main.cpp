@@ -87,6 +87,10 @@ int main() {
         }
         if (sauvegardes.empty()) std::cout<<"Aucune sauvegarde existante, création d'une nouvelle partie";
 
+
+
+        // Création de la partie
+
         Partie& partie = (choix4 == "1" && !sauvegardes.empty()) ? ManagerS.chargerSauvegarde(i) : Partie::getInstance();
 
         if (choix4 !="1" || sauvegardes.empty()){
@@ -115,7 +119,7 @@ int main() {
             
 
             //Chargement des participations :
-            //Donne des tours, les cailloux de départs, l'ordre de passage
+            //Donne des tours, l'ordre de passage
             
             for (unsigned int i = 0; i < partie.getNbParticipants(); i++) {
                 stringstream f;
@@ -165,6 +169,7 @@ int main() {
                 partie.getParticipants()[indice].Jouer(partie.getJeu());
             }
             partie.finTour();
+            
             string choix3;
             std::cout<<"Voulez-vous sauvegarder?\nTapez 1 pour sauvegarder\nTapez Autre chose pour ne pas sauvegarder\n";
             std::cin>>choix3;

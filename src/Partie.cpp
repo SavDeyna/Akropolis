@@ -253,7 +253,7 @@ void Partie::finTour(){
     tour++;
 }
 
-void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j) {
+void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j, IllustreArchitecte archi) {
     tour = t;
 
     joueurs = std::move(j);
@@ -261,6 +261,8 @@ void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&&
 
     mdj = m;
     pioche = std::move(pi);
+
+    architecte = std::move(archi);
     
     SetNbParticipants();
 }

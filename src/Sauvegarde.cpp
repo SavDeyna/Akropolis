@@ -23,7 +23,7 @@ std::string VarianteToString(Variante v) {
     return Conversion.at(v);
 }
 
-Sauvegarde::Sauvegarde(const Partie& p, const string& nomsauvegarde) : nom(nomsauvegarde),mdj(p.mdj),nbParticipants(p.nbParticipants),tour(p.getTour()),pioche(p.getPioche()){
+Sauvegarde::Sauvegarde(const Partie& p, const string& nomsauvegarde) : architecte(p.getArchitecte()),nom(nomsauvegarde),mdj(p.mdj),nbParticipants(p.nbParticipants),tour(p.getTour()),pioche(p.getPioche()){
     
     participants.reserve(p.participants.size());
     for (const auto& part : p.participants) {
@@ -42,8 +42,36 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
         {"nbJoueur", s.mdj.getNbJoueur()},
         {"nbIA", s.mdj.getNbIA()},
         {"description", s.mdj.getDescription()},
-        {"nom", s.mdj.getnomMDJ()}
+        {"nom", s.mdj.getnomMDJ()},
+        {"EstSoloArchitecte", s.mdj.estSoloArchitecte()}
     };
+    if (s.mdj.estSoloArchitecte()){
+        json architecte;
+        architecte["pierres"] = s.architecte.getPierres();
+        const std::map<TypeHexagone, std::string> Conversion = {
+            {TypeHexagone::Carriere,   "Carriere"},
+            {TypeHexagone::Caserne,    "Caserne"},
+            {TypeHexagone::Jardin,     "Jardin"},
+            {TypeHexagone::Temple,     "Temple"},
+            {TypeHexagone::Marche,     "Marche"},
+            {TypeHexagone::Habitation, "Habitation"},
+        };
+
+        json infos ;
+
+        for (const auto& [type, info] : s.architecte.getInfos()) {
+            auto it = Conversion.find(type);
+            if (it != Conversion.end()) {
+                infos[it->second] = {
+                    {"quartiers", info.quartiers},
+                    {"places", info.places}
+                };
+            }
+        }
+
+        architecte["Quartier"] = infos;
+        newSave["Architecte"]=architecte;
+    }
     
     newSave["mdj"]["variantes"] = nlohmann::json::array();
     for (const auto& v : s.mdj.getVariantes()) {
@@ -149,6 +177,40 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
 
     //Création mdj
     ModeDeJeu mdj(data["mdj"]["nom"],data["mdj"]["nbJoueur"],data["mdj"]["nbIA"],data["mdj"]["description"]);
+
+    IllustreArchitecte archi ;
+    //On active le mode Solo Architecte au besoin
+    if (data["mdj"]["nom"]=="Solo Architecte"){
+        mdj.activerSoloArchitecte();
+
+        //On reconstruit l'architecte
+        
+        archi.SetPierres(data["Architecte"]["pierres"]);
+
+        const std::map<std::string, TypeHexagone> Conversion = {
+            {"Carriere",   TypeHexagone::Carriere},
+            {"Caserne",    TypeHexagone::Caserne},
+            {"Jardin",     TypeHexagone::Jardin},
+            {"Temple",     TypeHexagone::Temple},
+            {"Marche",     TypeHexagone::Marche},
+            {"Habitation", TypeHexagone::Habitation}
+        };
+
+        for (const auto& [str, nb] : data["Architecte"]["Quartier"].items()) {
+            InfosQuartier info;
+
+            auto it = Conversion.find(str);
+            if (it != Conversion.end()) {
+                info.quartiers = nb["quartiers"];
+                info.places = nb["places"];
+                archi.SetInfo(it->second,info);
+            }
+        }
+
+    }
+
+    
+
     for (const auto& v : data["mdj"]["variantes"]){
         mdj.activerVariante(VarianteFromString(v.get<std::string>()));
     }
@@ -182,7 +244,7 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
     }
     
     Partie& p = Partie::getInstance();
-    p.chargerDepuisSauvegarde(data["tour"],std::move(participants),mdj,std::move(pioche),std::move(joueurs));
+    p.chargerDepuisSauvegarde(data["tour"],std::move(participants),mdj,std::move(pioche),std::move(joueurs),std::move(archi));
     return p;
 }
 

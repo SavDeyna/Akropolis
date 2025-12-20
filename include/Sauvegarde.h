@@ -33,7 +33,7 @@ class Sauvegarde{
         friend class SauvegardeManager;
 
     private:
-
+        IllustreArchitecte architecte;
         string nom;
         ModeDeJeu mdj;
         vector<Participation> participants;
