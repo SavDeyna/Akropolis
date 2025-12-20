@@ -115,6 +115,13 @@ void Participation::Jouer(vector<Tuile>& jeu){
                                                 }
                                                 else {
                                                     saisieValide=true;
+                                                    unsigned int coutTuile = tuileIndice;
+                                                    // IllustreArchitecte
+                                                    // le joueur paye 
+                                                    pierres -= coutTuile;
+
+                                                    // la Partie décide quoi faire des pierres (solo ou non)
+                                                    Partie::getInstance().donnerPierresArchitecte(coutTuile);
                                                     //On enlève la tuile du jeu
                                                     jeu.erase(jeu.begin() +tuileIndice);
                                                 }
