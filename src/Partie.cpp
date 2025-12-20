@@ -37,8 +37,7 @@ void Partie::ChargerTuiles(){
         dict["vert"]   = TypeHexagone::Jardin;    // quartier vert
         dict["jaune"]  = TypeHexagone::Marche;    // quartier jaune
 
-        cout << "Nombre de tuiles lues : " << data["tuiles"].size() << endl;
-        for (unsigned int i=0 ; i<61; i++){   
+        for (size_t i = 0; i < data["tuiles"].size(); ++i) {   
             vector<Hexagone> v ; 
 
             // Lecture des 3 hexagones avec leur type et si c'est une place (nbEtoiles > 0)

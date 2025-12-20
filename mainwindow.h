@@ -13,13 +13,15 @@
 #include "selecjoueurs.h"
 #include "menu.h"
 #include "jeu.h"
+#include "selecsave.h"
 #include "endscreen.h"
 
 enum Pages {
     MENU_PAGE = 0,
     SETUP_PAGE = 1,
-    JEU_PAGE = 2,
-    END_SCREEN_PAGE = 3
+    SAVE_SELECT_PAGE = 2,
+    JEU_PAGE = 3,
+    END_SCREEN_PAGE = 4
 };
 
 class MainWindow : public QMainWindow
@@ -31,9 +33,10 @@ public:
     ~MainWindow() = default;
 
 private slots:
-    void showSelecJoueurs(); 
+    void showSelecJoueurs();
     void showMenu();
     void showJeu();
+    void showSelecSave();
     void showEndScreen();
     void onQuitClicked();
 
@@ -42,6 +45,7 @@ private:
     Menu* m_menuScreen;
     SelecJoueurs* m_selecJoueursScreen;
     Jeu* m_jeuScreen;
+    SelecSave* m_selecSaveScreen;
     EndScreen* m_endScreen;
 };
 

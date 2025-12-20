@@ -50,7 +50,6 @@ private:
     QCheckBox *m_varCasernes;
     QCheckBox *m_varTemples;
     QCheckBox *m_varJardins;
-    // ... (Déclarez les QRadioButtons, QCheckboxes, et QLabels ici)
 
     // Exemples des widgets que vous devez déclarer pour les utiliser dans setupUI():
     // QPushButton *m_playButton;

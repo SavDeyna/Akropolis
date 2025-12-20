@@ -126,6 +126,8 @@ Menu::Menu(QWidget *parent) : QWidget(parent)
     // Connexion interne pour la logique du nombre de joueurs
     connect(m_nbJoueursGroup, QOverload<int>::of(&QButtonGroup::idClicked), this, &Menu::onNbJoueursChanged);
     connect(m_tuilesChoixGroup, QOverload<int>::of(&QButtonGroup::idClicked), this, &Menu::onTuilesChanged);
+
+    connect(chargerButton, &QPushButton::clicked, this, &Menu::chargerClicked);
 }
 
 void Menu::onNbJoueursChanged(int id)

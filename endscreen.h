@@ -34,4 +34,4 @@ private:
     QPushButton *m_retourMenuButton;
 };
 
-#endif // ENDSCREEN_H
+#endif

@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "selecjoueurs.h"
 #include "menu.h"
+#include "Sauvegarde.h"
+#include "Partie.h"
 #include <QFile>
 #include <QButtonGroup>
 
@@ -14,11 +16,18 @@ MainWindow::MainWindow(QWidget *parent)
     m_menuScreen = new Menu(this);
     m_selecJoueursScreen = new SelecJoueurs(this);
     m_jeuScreen = new Jeu(this);
+    m_selecSaveScreen = new SelecSave(this);
+    m_endScreen = new EndScreen(this);
 
     // Ajout des pages au Stacked Widget
     m_stackedWidget->addWidget(m_menuScreen);        // Index 0
     m_stackedWidget->addWidget(m_selecJoueursScreen); // Index 1
+
     m_stackedWidget->addWidget(m_jeuScreen);
+    m_stackedWidget->addWidget(m_selecSaveScreen);
+
+    m_stackedWidget->addWidget(m_endScreen);          // Index 2
+    m_stackedWidget->addWidget(m_endScreen);          // Index 3
 
     // Connexion Jouer (déclenche la fonction qui gère la transmission des données et la transition)
     connect(m_menuScreen, &Menu::playClicked, this, &MainWindow::showSelecJoueurs);
@@ -26,12 +35,15 @@ MainWindow::MainWindow(QWidget *parent)
     // Connexion Quitter
     connect(m_menuScreen, &Menu::quitClicked, this, &MainWindow::onQuitClicked);
 
-    // [Ajouter la connexion pour Charger si la classe Menu l'émet]
-    // connect(m_menuScreen, &Menu::chargerClicked, this, &MainWindow::onChargerClicked);
+    connect(m_menuScreen, &Menu::chargerClicked, this, &MainWindow::showSelecSave);
 
     connect(m_selecJoueursScreen, &SelecJoueurs::backToMenu, this, &MainWindow::showMenu);
 
     connect(m_selecJoueursScreen, &SelecJoueurs::launchGame, this, &MainWindow::showJeu);
+
+    // Connexion pour la fin de partie et retour au menu
+    connect(m_jeuScreen, &Jeu::gameFinished, this, &MainWindow::showEndScreen);
+    connect(m_endScreen, &EndScreen::retourMenuClicked, this, &MainWindow::showMenu);
 
     // Afficher la page initiale
     m_stackedWidget->setCurrentIndex(MENU_PAGE);
@@ -48,17 +60,6 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     setWindowTitle("Akropolis - Menu");
-}
-// Implémentation des slots d'action
-
-void MainWindow::onPlayClicked() {
-    qDebug("Bouton 'Jouer' cliqué ! Démarrage du jeu...");
-    // Ici, vous ajouterez la logique pour passer à l'écran de jeu.
-}
-
-void MainWindow::onChargerClicked() {
-    qDebug("Bouton 'Charger' cliqué ! Affichage des options...");
-    // Ici, vous ajouterez la logique pour ouvrir la fenêtre des options.
 }
 
 void MainWindow::onQuitClicked() {
@@ -97,4 +98,36 @@ void MainWindow::showJeu() {
 
     // On affiche l'écran
     m_stackedWidget->setCurrentWidget(m_jeuScreen);
+}
+
+void MainWindow::showSelecSave() {
+    if (!m_selecSaveScreen) {
+        qDebug() << "Erreur : m_selecSaveScreen est NULL";
+        return;
+    }
+    SauvegardeManager saveManager;
+    std::vector<SauvegardeInfo> mesSaves = saveManager.getListeSauvegardes();
+    m_selecSaveScreen->initialiserAffichage(mesSaves);
+    m_stackedWidget->setCurrentWidget(m_selecSaveScreen);
+}
+
+void MainWindow::showEndScreen() {
+    // Récupérer les scores de tous les joueurs
+    Partie& partie = Partie::getInstance();
+    auto& participants = partie.getParticipants();
+    
+    std::vector<PlayerScore> scores;
+    for (auto& p : participants) {
+        PlayerScore ps;
+        ps.pseudo = QString::fromStdString(p.getParticipant().getPseudo());
+        ps.score = p.getPoints();
+        ps.pierres = p.getPierres();
+        scores.push_back(ps);
+    }
+    
+    // Afficher les scores
+    m_endScreen->afficherScores(scores);
+    
+    m_stackedWidget->setCurrentIndex(END_SCREEN_PAGE);
+    qDebug() << "Affichage de l'écran de fin.";
 }
