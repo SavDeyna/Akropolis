@@ -3,6 +3,7 @@
 #include <set>
 #include <string>
 #include <random>
+#include <memory> // visiblement nécessaire pour Renaud
 
 // Les 5 variantes du jeu
 enum class Variante {
@@ -19,7 +20,7 @@ class ModeDeJeu {
         unsigned int getNbJoueur() const {return nbJoueur;}
         unsigned int getNbIA() const {return nbIA;}
         const string& getDescription() const {return description;}
-        ModeDeJeu(const string& n, unsigned int j, unsigned int i, const string& d) : nom(n), nbJoueur(j),nbIA(i), description(d) {};
+        ModeDeJeu(const string& nom, unsigned int nbJoueur, unsigned int nbIA, const string& description) : nom(nom), nbJoueur(nbJoueur),nbIA(nbIA), description(description) {};
 
         //Constructeur nécessaire pour initié partie sans aucun mdj
         ModeDeJeu() : nom("Indéfini"), nbJoueur(0), nbIA(0), description("") {}
@@ -37,6 +38,9 @@ class ModeDeJeu {
         const std::set<Variante>& getVariantes() const {
             return variantes;
         }
+
+        //Pour la sauvegarde
+        std::string ToStringVariente() const;
 
     private:
         string nom;
@@ -59,9 +63,11 @@ class Partie{
         }
         //Partie mode de Jeu
         void choixMDJ(); // l'utilisateur choisit un mode de jeu
-        ModeDeJeu getMDJ() const {return mdj;}
 
-        void chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>& p,const ModeDeJeu& m,std::vector<Tuile>& pi) ;
+        ModeDeJeu getMDJ() const {return mdj;}
+        ModeDeJeu& getMDJ() {return mdj;}
+        
+        void chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j) ;
 
 
         //Setter
@@ -73,6 +79,8 @@ class Partie{
         int getTour() const { return tour; }
         std::vector<Participation>& getParticipants() { return participants; }
         std::vector<Tuile>& getPioche() { return pioche; }
+        //Accesseur pour la sauvegarde
+        std::vector<Tuile> getPioche() const{ return pioche; }
         unsigned int getNbParticipants() const noexcept { return nbParticipants; }
         vector<Tuile>& getJeu(){return jeu;};
         
@@ -145,6 +153,6 @@ class Partie{
         vector<Tuile> jeu;
 
         //On stocke également les joueurs pour éviter qu'il soit supprimé après leur création dans le main
-        std::vector<Joueur> joueurs;
+        std::vector<std::unique_ptr<Participant>> joueurs;
 
 };

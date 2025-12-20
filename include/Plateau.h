@@ -24,10 +24,6 @@ private:
     std::map<TypeHexagone,int> compterEtoiles() const;
     void appliquerVariantes(const ModeDeJeu& mdj, std::map<TypeHexagone,int>& valeurs, std::map<TypeHexagone,float>& multiplicateurs) const;
 
-public:
-    friend class Participation;
-
-    Plateau();
     int generateId() {
         return next_id++; // renvoie l'ancienne valeur de next_id, puis l'incrémente
     }
@@ -41,17 +37,25 @@ public:
     // placer une tuile avec origine (coord absolue du centre ou repère)
     bool placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres, bool interactive = false);
 
+    //place une tuile sans aucune vérification, utilisée pour la sauvegarde
+    void placerTuileSauvegarde(const HexagoneCoord hexaC, const HexState hexaS);
+public:
+
+    
+    friend class SauvegardeManager ;
+    friend class Participation;
+
+    Plateau();
+
+    const std::map<HexagoneCoord, HexState>& getGrille() const {return grille;}
+    
+    unsigned int getSize() const {return grille.size();}
+
     // affiche la grille
     void afficherPlateau() const;
 
     // dessine le plateau en ASCII art (version compacte en tuiles collées)
     void dessinerPlateau(const int radius) const;
-
-    bool estVide() const { return grille.empty(); }
-
-    //Verifier que l'on peut poser une tuile de 3 hexagones
-    //CHATGPT
-    bool peutPoserTuile(const Tuile& t, const HexagoneCoord& origin) const;
 
     // Calcul des points, déplacé de Participation
     unsigned int calculerPoints(const ModeDeJeu& mdj, unsigned int pierres) const;
