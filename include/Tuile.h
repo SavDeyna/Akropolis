@@ -66,6 +66,8 @@ public:
 
     // Rotation
     void tourner();
+    void Tuile::tournerDroite() ;
+
 
     // pour l'IllustreArchitecte
     bool possedePlace() const;
