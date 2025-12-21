@@ -18,9 +18,6 @@ Plateau::Plateau() {
     Tuile depart(0, true);
     HexagoneCoord origin{0, 0, 0};
 
-    std::vector<HexagoneCoord> coords;
-    coords.reserve(3); // pour éviter une surallocation de mémoire
-
     for (const auto& h : depart.getDisposition()) {
         HexagoneCoord pos {
             origin.q + h.getQ(),
@@ -85,18 +82,15 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
     bool allPresent = (hex1 && hex2 && hex3);
 
     if (!allEmpty && !allPresent) {
-        std::cout << "1" << endl;
         return false;
     }
     int h = 1;
 
     if (allPresent){
         if (!(hex1->hauteur == hex2->hauteur && hex2->hauteur == hex3->hauteur)) {
-            std::cout << "2" << endl;
             return false;  // les hexa n'ont pas la même hauteur, la tuile ne peut pas être placée
         } 
         if (hex1->id_tuile == hex2->id_tuile && hex2->id_tuile == hex3->id_tuile) {
-            std::cout << "3" << endl;
             return false; // la nouvelle tuile au niveau supérieur n'est pas à cheval sur au moins 2 tuiles différentes
         } 
         h = hex1->hauteur + 1;
@@ -117,7 +111,6 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
                 i++;
             } 
             if (i == 3) {
-                std::cout << "4" << endl;
                 return false; // la nouvelle tuile n'est pas adjacente à une autre tuile de la Cité
             } 
         }
@@ -150,20 +143,6 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
     }
     //=========
     return true;
-}
-
-void Plateau::afficherPlateau() const {
-    std::cout << "=== Grille du plateau ===\n";
-    if (grille.empty()) {
-        std::cout << "(vide)\n";
-        return;
-    }
-    for (const auto& [coord, st] : grille) {
-        std::cout << "Hex (" << coord.q << "," << coord.r << "," << coord.s << ")"
-                  << " type=" << static_cast<int>(st.type)
-                  << " hauteur=" << st.hauteur
-                  << " id_tuile=\"" << st.id_tuile << "\"\n";
-    }
 }
 
 void Plateau::dessinerPlateau(const int radius) const{

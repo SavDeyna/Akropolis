@@ -2,6 +2,7 @@
 #include "Sauvegarde.h"
 #include <iostream>
 #include <sstream>
+
 #ifdef _WIN32
 #ifndef NOMINMAX 
 #define NOMINMAX
@@ -10,8 +11,11 @@
 #include <windows.h>
 #endif
 
+#include "mainwindow.h"
+#include <QApplication>
 
-int main() {
+
+int main(int argc, char *argv[]) {
 
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -193,8 +197,14 @@ int main() {
 
     //Mode graphique
     else if (choix == "2"){
-       
-        
+       QApplication a(argc, argv);
+
+        // C'est ICI que l'on charge le style global si besoin
+        MainWindow w;
+        w.show();
+
+        return a.exec(); // La boucle Qt prend le relais, std::cin ne fonctionnera plus
+            
     }
     return 0; 
 }

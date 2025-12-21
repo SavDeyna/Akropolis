@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ressources/jeudice-gigamic-akropolis-une.jpg</file>
+        <file>styleMenu.qss</file>
+    </qresource>
+</RCC>

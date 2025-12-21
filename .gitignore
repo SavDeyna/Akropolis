@@ -1,1 +1,41 @@
+# --- Dossiers de compilation (Le plus important) ---
 build/
+bin/
+out/
+
+# --- Fichiers générés par CMake ---
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_local.cmake
+Makefile
+*.cmake
+
+# --- Fichiers temporaires de Qt (MOC, UIC, RCC) ---
+*_autogen/
+ui_*.h
+moc_*.cpp
+qrc_*.cpp
+*.qrc.depends
+
+# --- Binaires et bibliothèques (Windows) ---
+*.exe
+*.dll
+*.obj
+*.o
+*.a
+*.lib
+*.pdb
+
+# --- Configuration VS Code ---
+# On ignore .vscode car il contient vos chemins "C:/Qt/..." personnels
+.vscode/
+
+# --- GitHub Copilot ---
+.github/copilot-instructions.md
+
+# --- Autres ---
+.DS_Store
+*.user
+*.bak

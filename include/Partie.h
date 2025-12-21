@@ -3,6 +3,8 @@
 #include "IllustreArchitecte.h"
 #include <set>
 #include <string>
+#include <random>
+#include <memory> // visiblement nécessaire pour Renaud
 
 // Les 5 variantes du jeu
 enum class Variante {
@@ -100,10 +102,20 @@ class Partie{
         //Methodes pour la participation
         void addParticipation(string pseudo);
         
+        // Initialize stones for each player based on their turn order
+        void initializePlayerStones();
+
+        // Randomize initial player turn order
+        void randomizePlayerOrder();
 
         //Retourne le pseudo du gagnant
         string getGagnant();
 
+        // Get current player based on turn order
+        Participation& getCurrentPlayer();
+        
+        // Rotate architect en chef (when pioche is refilled)
+        void rotateArchitecte();
 
         //Prépare le jeu grâce à la pioche
         void debutTour();
@@ -120,11 +132,21 @@ class Partie{
 
         void donnerPierresArchitecte(unsigned int nb);
         void jouerTourArchitecte();
-        
+
+        void refillJeu();
+
+        void SetMdj(const ModeDeJeu& m){mdj=m;} // choisir le mode de jeu
+
+        unsigned int getPiocheSize() const { return pioche.size(); }
+
+        // Calculate final scores
+        void calculerScoresFinDePartie();
+
+        // Initialize a new game with players and variants
+        void initializeNewGame(int nbJoueurs, const std::vector<std::string>& pseudos, const std::vector<std::string>& variantes);
+
     private:
         IllustreArchitecte architecte;
-
-        void calculerScoresFinDePartie();
         
         //Constructeur pour charger une partie depuis une sauvegarde.
         Partie(unsigned int tour, vector<Participation>&& participants , ModeDeJeu mdj, vector<Tuile>&& pioche);
@@ -135,7 +157,6 @@ class Partie{
 
         //Partie mode de jeu
         ModeDeJeu mdj;
-        void SetMdj(const ModeDeJeu& m){mdj=m;} // choisir le mode de jeu
 
         //Partie participants
         std::vector<Participation> participants;

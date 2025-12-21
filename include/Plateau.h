@@ -12,7 +12,6 @@ class ModeDeJeu;     // <-- ajouter cette forward-declaration (toujours selon GP
 class Plateau {
 private:
     std::map<HexagoneCoord, HexState> grille;
-    unsigned int next_id = 1;
 
     // Methodes utilisées pour le calcul des points, ca permet une meilleur lisibilité du code d'avoir tout de séparé comme ca
     int calculValeurHabitations() const;
@@ -24,9 +23,6 @@ private:
     std::map<TypeHexagone,int> compterEtoiles() const;
     void appliquerVariantes(const ModeDeJeu& mdj, std::map<TypeHexagone,int>& valeurs, std::map<TypeHexagone,float>& multiplicateurs) const;
 
-    int generateId() {
-        return next_id++; // renvoie l'ancienne valeur de next_id, puis l'incrémente
-    }
     // accès au hex
     const HexState* getHex(const HexagoneCoord& c) const;
     bool estOccupe(const HexagoneCoord& c) const;
@@ -42,17 +38,13 @@ private:
 public:
 
     
-    friend class SauvegardeManager ;
+    friend class SauvegardeManager;
     friend class Participation;
+    friend class Jeu;
 
     Plateau();
 
     const std::map<HexagoneCoord, HexState>& getGrille() const {return grille;}
-    
-    unsigned int getSize() const {return grille.size();}
-
-    // affiche la grille
-    void afficherPlateau() const;
 
     // dessine le plateau en ASCII art (version compacte en tuiles collées)
     void dessinerPlateau(const int radius) const;
