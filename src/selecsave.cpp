@@ -12,11 +12,9 @@ void SelecSave::setupUI() {
     m_titre = new QLabel("<h2>Choisir une sauvegarde</h2>");
     m_titre->setAlignment(Qt::AlignCenter);
 
-    // La liste des sauvegardes
     m_listSaves = new QListWidget(this);
     m_listSaves->setStyleSheet("QListWidget::item { height: 50px; }");
 
-    // Bouton de validation
     m_btnCharger = new QPushButton("Charger la partie", this);
     m_btnCharger->setEnabled(false);
 
@@ -31,7 +29,7 @@ void SelecSave::setupUI() {
     layoutBoutons->addWidget(m_btnCharger);
     layoutBoutons->addWidget(m_btnSuppr);
 
-    // Activer le bouton seulement si une ligne est cliquée
+    // activer le bouton seulement si une ligne est cliquée
     connect(m_listSaves, &QListWidget::itemClicked, [this]() {
         m_btnCharger->setEnabled(true);
     });
@@ -39,19 +37,16 @@ void SelecSave::setupUI() {
 
 
 void SelecSave::initialiserAffichage(std::vector<SauvegardeInfo> listeSaves) {
-    m_listSaves->clear(); // Vide la liste avant de la remplir
+    m_listSaves->clear(); // vide la liste avant de la remplir
 
     for (const auto& info : listeSaves) {
-        // On construit une chaîne avec tes champs : Nom, Mode et Tour
+        // on construit une chaine avec nom, mode et tour
         QString ligne = QString("%1 | Mode : %2 | Tour : %3").arg(QString::fromStdString(info.nomSauvegarde)).arg(QString::fromStdString(info.nomMDJ)).arg(info.tour);
 
         QListWidgetItem *item = new QListWidgetItem(ligne, m_listSaves);
 
-        // On stocke l'index JSON dans l'item (donnée invisible pour l'utilisateur)
-        // Cela nous permettra de savoir quel élément charger plus tard.
         item->setData(Qt::UserRole, info.index);
 
-        // Un peu de style pour le texte
         item->setFont(QFont("Arial", 10));
     }
 }

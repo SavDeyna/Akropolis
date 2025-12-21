@@ -15,7 +15,7 @@ public:
     void initialiserAffichage(std::vector<SauvegardeInfo> listeSaves);
 
 signals:
-    void saveSelected(int idSave); // Signal pour dire à MainWindow quelle save charger
+    void saveSelected(int idSave); 
 
 private:
     void setupUI();

@@ -3,8 +3,8 @@
 #include <iostream>
 #include <vector>
 
-class Participation; // forward declaration nécessaire pour friend (selon notre ami le GPT)
-class ModeDeJeu;     // <-- ajouter cette forward-declaration (toujours selon GPT je ne sais pas ce que ca fait)
+class Participation; // forward declaration nécessaire pour friend
+class ModeDeJeu;
 
 #include "Hexagone.h"
 #include "Tuile.h"

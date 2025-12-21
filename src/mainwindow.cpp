@@ -10,29 +10,27 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     m_stackedWidget = new QStackedWidget(this);
-    setCentralWidget(m_stackedWidget); // Ceci remplace l'ancien setCentralWidget de setupMenuUI
+    setCentralWidget(m_stackedWidget); 
 
-    // Crée les pages (elles construisent leur UI elles-mêmes dans leur constructeur)
+    // creation des pages
     m_menuScreen = new Menu(this);
     m_selecJoueursScreen = new SelecJoueurs(this);
     m_jeuScreen = new Jeu(this);
     m_selecSaveScreen = new SelecSave(this);
     m_endScreen = new EndScreen(this);
 
-    // Ajout des pages au Stacked Widget
-    m_stackedWidget->addWidget(m_menuScreen);        // Index 0
-    m_stackedWidget->addWidget(m_selecJoueursScreen); // Index 1
+    // ajout des pages au QStackedWidget
+    m_stackedWidget->addWidget(m_menuScreen);  
+    m_stackedWidget->addWidget(m_selecJoueursScreen); 
 
     m_stackedWidget->addWidget(m_jeuScreen);
     m_stackedWidget->addWidget(m_selecSaveScreen);
 
-    m_stackedWidget->addWidget(m_endScreen);          // Index 2
-    m_stackedWidget->addWidget(m_endScreen);          // Index 3
+    m_stackedWidget->addWidget(m_endScreen); 
+    m_stackedWidget->addWidget(m_endScreen);  
 
-    // Connexion Jouer (déclenche la fonction qui gère la transmission des données et la transition)
     connect(m_menuScreen, &Menu::playClicked, this, &MainWindow::showSelecJoueurs);
 
-    // Connexion Quitter
     connect(m_menuScreen, &Menu::quitClicked, this, &MainWindow::onQuitClicked);
 
     connect(m_menuScreen, &Menu::chargerClicked, this, &MainWindow::showSelecSave);
@@ -41,11 +39,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(m_selecJoueursScreen, &SelecJoueurs::launchGame, this, &MainWindow::showJeu);
 
-    // Connexion pour la fin de partie et retour au menu
     connect(m_jeuScreen, &Jeu::gameFinished, this, &MainWindow::showEndScreen);
     connect(m_endScreen, &EndScreen::retourMenuClicked, this, &MainWindow::showMenu);
 
-    // Afficher la page initiale
+    // afficher la page initiale
     m_stackedWidget->setCurrentIndex(MENU_PAGE);
 
     QFile styleFile(":/styleMenu.qss");
@@ -64,12 +61,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::onQuitClicked() {
     qDebug("Bouton 'Quitter' cliqué ! Fermeture de l'application...");
-    // Demande à l'application Qt de se terminer
     QApplication::quit();
 }
 
 void MainWindow::showMenu() {
-    // On demande au gestionnaire de pile d'afficher la page du menu (Index 0)
     m_stackedWidget->setCurrentIndex(MENU_PAGE);
 
     qDebug() << "Retour au menu principal.";
@@ -79,8 +74,6 @@ void MainWindow::showSelecJoueurs() {
     int joueurs = m_menuScreen->getSelectedPlayerCount();
     int tuiles = m_menuScreen->getTuilesSelected();
     QStringList variantes = m_menuScreen->getSelectedVariantes();
-    // Assurez-vous que la méthode de SelecJoueurs prend bien un int et un QStringList
-    // (Ajustez le nom de la méthode si nécessaire, exemple : updateSetupInfo)
     m_selecJoueursScreen->updateSetup(joueurs, tuiles, variantes);
 
     m_stackedWidget->setCurrentIndex(SETUP_PAGE);
@@ -93,10 +86,8 @@ void MainWindow::showJeu() {
     QStringList p = m_selecJoueursScreen->getPseudos();
     QStringList v = m_menuScreen->getSelectedVariantes();
 
-    // On les donne à l'écran de jeu
     m_jeuScreen->initialiserAffichage(nb, tuiles, v, p);
 
-    // On affiche l'écran
     m_stackedWidget->setCurrentWidget(m_jeuScreen);
 }
 
@@ -112,7 +103,6 @@ void MainWindow::showSelecSave() {
 }
 
 void MainWindow::showEndScreen() {
-    // Récupérer les scores de tous les joueurs
     Partie& partie = Partie::getInstance();
     auto& participants = partie.getParticipants();
     
@@ -124,8 +114,7 @@ void MainWindow::showEndScreen() {
         ps.pierres = p.getPierres();
         scores.push_back(ps);
     }
-    
-    // Afficher les scores
+
     m_endScreen->afficherScores(scores);
     
     m_stackedWidget->setCurrentIndex(END_SCREEN_PAGE);

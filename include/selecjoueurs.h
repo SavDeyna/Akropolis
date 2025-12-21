@@ -22,8 +22,8 @@ signals:
 private:
     QLabel *m_infoLabel;
     QVBoxLayout *choixVariantes;
-    QVBoxLayout *m_layoutPseudos; // Le layout où on va afficher les QLineEdit
-    QList<QLineEdit*> m_champsPseudos; // La liste pour stocker les objets
+    QVBoxLayout *m_layoutPseudos;
+    QList<QLineEdit*> m_champsPseudos; 
 };
 
 #endif // SELECJOUEURS_H
