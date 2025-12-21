@@ -74,7 +74,12 @@ public:
         }
     }
     // Rotation
-    void tournerDroite(); 
+    void tourner();
+    void tournerDroite();
     void tournerGauche();
-};
+
+    // pour l'IllustreArchitecte
+    bool possedePlace() const;
+    //Pour la sauvegarde
+    std::string ToString() const;
 

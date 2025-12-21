@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QTimer>
 #include <QFrame>
+#include <QPushButton>
 #include "Plateau.h"
 
 class TileView : public QGraphicsView {
@@ -67,7 +68,8 @@ class Jeu : public QWidget
     Q_OBJECT
 public:
     explicit Jeu(QWidget *parent = nullptr);
-    void initialiserAffichage(int nb, int tuiles, QStringList var, QStringList pseudos); // La fonction de mise à jour
+    void initialiserAffichage(int nb, int tuiles, QStringList var, QStringList pseudos);
+    void chargerDepuisSauvegarde(); // Initialise l'affichage depuis une partie déjà chargée
     void drawBoard(const Plateau& plateau);
     void setCurrentTiles(const QString& text);
     void drawTiles();
@@ -86,11 +88,13 @@ private slots:
     void onEdgeScroll(int dx, int dy);
     void performScroll();
     void clearPreviewSlot();
+    void onSaveClicked(); // Slot pour sauvegarder la partie
 private:
     QLabel *m_affichageInfos;
     QLabel *currentTilesLabel;
     QLabel *piocheLabel;
     QLabel *playerInfoLabel;
+    QPushButton *m_btnSauvegarder;
     QLabel *piocheHeaderLabel;
     QFrame *piocheFrame;
     QGraphicsScene *scene;

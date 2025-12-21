@@ -20,6 +20,7 @@ set(PROJECT_SOURCES
     menu.h menu.cpp
     endscreen.h endscreen.cpp
     include/Hexagone.h src/Hexagone.cpp
+    include/IllustreArchitecte.h src/IllustreArchitecte.cpp
     include/Participant.h src/Participant.cpp
     include/Participation.h src/Participation.cpp
     include/Partie.h src/Partie.cpp

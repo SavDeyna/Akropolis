@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <unordered_map>
 #include "Partie.h"
+#include "Sauvegarde.h"
+#include <QInputDialog>
 
 // Fonction utilitaire pour convertir TypeHexagone en QColor
 static QColor getColorForType(TypeHexagone type) {
@@ -134,12 +136,21 @@ void Jeu::setupUI() {
 
     piocheLabel = new QLabel("Pioche: ");
     playerInfoLabel = new QLabel("Player info");
+    
+    // Bouton sauvegarder
+    m_btnSauvegarder = new QPushButton("Sauvegarder", this);
+    m_btnSauvegarder->setStyleSheet(
+        "QPushButton { background: #3a7d44; color: white; border-radius: 5px; padding: 8px 16px; font-weight: bold; }"
+        "QPushButton:hover { background: #4a9d54; }"
+    );
+    connect(m_btnSauvegarder, &QPushButton::clicked, this, &Jeu::onSaveClicked);
 
     // Top info bar
     QHBoxLayout *infoBar = new QHBoxLayout();
     infoBar->setSpacing(16);
     infoBar->addWidget(piocheLabel);
     infoBar->addStretch();
+    infoBar->addWidget(m_btnSauvegarder);
     infoBar->addWidget(playerInfoLabel);
 
     // Pioche container
@@ -216,6 +227,22 @@ void Jeu::initialiserAffichage(int nb, int tuiles, QStringList var, QStringList 
     m_affichageInfos->setText(texte);
 
     // 5. Draw the initial board and tiles
+    Participation& currentPlayer = partie.getCurrentPlayer();
+    drawBoard(currentPlayer.getPlateau());
+    drawTiles();
+    updatePlayerInfo();
+    setPiocheSize(partie.getPioche().size());
+}
+
+void Jeu::chargerDepuisSauvegarde() {
+    // La partie a déjà été chargée via SauvegardeManager::chargerSauvegarde()
+    // On doit juste initialiser l'affichage
+    Partie& partie = Partie::getInstance();
+    
+    // Préparer le jeu (remplir les tuiles disponibles)
+    partie.debutTour();
+    
+    // Dessiner le plateau du joueur courant
     Participation& currentPlayer = partie.getCurrentPlayer();
     drawBoard(currentPlayer.getPlateau());
     drawTiles();
@@ -637,4 +664,29 @@ void Jeu::performScroll() {
 
 void Jeu::onMousePosUpdated(QPointF scenePos) {
     lastMouseScenePos = scenePos;
+}
+
+void Jeu::onSaveClicked() {
+    // Demander le nom de la sauvegarde via une boîte de dialogue
+    bool ok;
+    QString nomSauvegarde = QInputDialog::getText(this, "Sauvegarder la partie",
+                                                   "Nom de la sauvegarde:",
+                                                   QLineEdit::Normal,
+                                                   "", &ok);
+    
+    if (ok && !nomSauvegarde.isEmpty()) {
+        try {
+            Partie& partie = Partie::getInstance();
+            SauvegardeManager manager;
+            Sauvegarde save(partie, nomSauvegarde.toStdString());
+            manager.enregistrerSauvegarde(save);
+            
+            // Afficher un message de confirmation
+            QMessageBox::information(this, "Sauvegarde",
+                                     "Partie sauvegardée avec succès !");
+        } catch (const std::exception& e) {
+            QMessageBox::warning(this, "Erreur",
+                                QString("Erreur lors de la sauvegarde: %1").arg(e.what()));
+        }
+    }
 }

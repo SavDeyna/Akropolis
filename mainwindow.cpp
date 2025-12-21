@@ -36,6 +36,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(m_selecJoueursScreen, &SelecJoueurs::launchGame, this, &MainWindow::showJeu);
 
+    // Connexions pour la sélection/suppression de sauvegardes
+    connect(m_selecSaveScreen, &SelecSave::saveSelected, this, &MainWindow::onSaveSelected);
+    connect(m_selecSaveScreen, &SelecSave::saveDeleted, this, &MainWindow::onSaveDeleted);
+
     // Connexion pour la fin de partie et retour au menu
     connect(m_jeuScreen, &Jeu::gameFinished, this, &MainWindow::showEndScreen);
     connect(m_endScreen, &EndScreen::retourMenuClicked, this, &MainWindow::showMenu);
@@ -114,4 +118,35 @@ void MainWindow::showEndScreen() {
     
     m_stackedWidget->setCurrentIndex(END_SCREEN_PAGE);
     qDebug() << "Affichage de l'écran de fin.";
+}
+
+void MainWindow::onSaveSelected(int idSave) {
+    try {
+        SauvegardeManager saveManager;
+        saveManager.chargerSauvegarde(idSave);
+        
+        // Initialiser l'affichage du jeu depuis la sauvegarde
+        m_jeuScreen->chargerDepuisSauvegarde();
+        
+        // Afficher l'écran de jeu
+        m_stackedWidget->setCurrentWidget(m_jeuScreen);
+        qDebug() << "Sauvegarde chargée avec succès, ID:" << idSave;
+    } catch (const std::exception& e) {
+        qDebug() << "Erreur lors du chargement de la sauvegarde:" << e.what();
+    }
+}
+
+void MainWindow::onSaveDeleted(int idSave) {
+    try {
+        SauvegardeManager saveManager;
+        saveManager.supprimerSauvegarde(idSave);
+        
+        // Rafraîchir la liste des sauvegardes
+        std::vector<SauvegardeInfo> mesSaves = saveManager.getListeSauvegardes();
+        m_selecSaveScreen->initialiserAffichage(mesSaves);
+        
+        qDebug() << "Sauvegarde supprimée avec succès, ID:" << idSave;
+    } catch (const std::exception& e) {
+        qDebug() << "Erreur lors de la suppression de la sauvegarde:" << e.what();
+    }
 }

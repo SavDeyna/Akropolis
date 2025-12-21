@@ -36,6 +36,8 @@ private slots:
     void showJeu();
     void showEndScreen();
     void onQuitClicked();
+    void onSaveSelected(int idSave);  // Slot pour charger une sauvegarde sélectionnée
+    void onSaveDeleted(int idSave);   // Slot pour supprimer une sauvegarde
 
 private:
     QStackedWidget *m_stackedWidget;
