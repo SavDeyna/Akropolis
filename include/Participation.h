@@ -11,6 +11,7 @@
  *   - le nombre de pierres possédées (copié depuis Participant),
  *   - l’ordre de passage du joueur.
  */
+
 class Participation {
 private:
     Participant* participant;   // Le joueur associé à cette participation
@@ -18,6 +19,8 @@ private:
     unsigned int ordrePassage;        // Ordre de jeu dans la partie
     unsigned int pierres{1};
     Plateau plateau;
+    unsigned int pierrespourArchi{0};
+
 public:
     // ----- Constructeur -----
     Participation(Participant& p, unsigned int ordre)
@@ -32,6 +35,9 @@ public:
     unsigned int getPierres() const { return pierres; }
     unsigned getOrdrePassage() const { return ordrePassage; }
     Plateau& getPlateau() { return plateau; }
+
+    //Pour architecte Illustre
+    unsigned int getPierrePourArchi() const { return pierrespourArchi; }
 
     //Ce plateau sert à la lecture pour sauvegarder une partie
     const Plateau& getPlateau() const { return plateau; }
