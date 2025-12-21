@@ -58,7 +58,7 @@ vector<HexagoneCoord> Plateau::getVoisins(const HexagoneCoord& c) const {
     return v;
 }
 
-bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres) {
+bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres, bool modeConsole) {
     std::vector<HexagoneCoord> coords;
     coords.reserve(3); // pour éviter une surallocation de mémoire
 
@@ -116,6 +116,20 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
         }
     } 
     
+    while (modeConsole) {
+        for (unsigned int i =0; i<3 ; i++){
+        }
+        std::cout << "Rotation de la tuile ? (1 Oui, non = terminer) : ";
+        t.afficherTuile(origin);
+        int choix;
+        std::cin >> choix;
+
+        if (choix == 1) {
+            t.tourner();
+            std::cout << "Coordonnées après rotation :\n";
+        } else  break;
+    }
+
     for (size_t i = 0; i < coords.size(); ++i) {
         const Hexagone& hex10 = t.getDisposition()[i];
         const HexagoneCoord& position = coords[i];
@@ -184,13 +198,13 @@ void Plateau::dessinerPlateau(const int radius) const{
         }
         //affichage de la rangée complète
         for(const auto& line : lignes){
-            cout << line.str() << "\n";
+            std::cout << line.str() << "\n";
         }
     }
-    cout<<"\nLégende : \n";
-    cout<<"Première ligne : Etoilé , Type Quartier , Hauteur\n";
-    cout<<"Deuxième ligne : Coordonnées";
-    cout<<"Type Quartier :\nCarriere : C ; Caserne : S ; Jardin : J ; Temple : T ; Marche : M Habitation : H\n";
+    std::cout<<"\nLégende : \n";
+    std::cout<<"Première ligne : Etoilé , Type Quartier , Hauteur\n";
+    std::cout<<"Deuxième ligne : Coordonnées";
+    std::cout<<"Type Quartier :\nCarriere : C ; Caserne : S ; Jardin : J ; Temple : T ; Marche : M Habitation : H\n";
 }
 
 

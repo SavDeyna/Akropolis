@@ -1,5 +1,6 @@
 #pragma once
 #include "Participation.h"
+#include "IllustreArchitecte.h"
 #include <set>
 #include <string>
 #include <random>
@@ -39,6 +40,9 @@ class ModeDeJeu {
             return variantes;
         }
 
+        // IllustreArchitecte
+        bool estSoloArchitecte() const { return soloArchitecte; }
+        void activerSoloArchitecte() { soloArchitecte = true; }
         //Pour la sauvegarde
         std::string ToStringVariente() const;
 
@@ -50,6 +54,9 @@ class ModeDeJeu {
 
         // Variantes
         std::set<Variante> variantes;
+
+        // IllustreArchitecte
+        bool soloArchitecte{false};
 };
 
 
@@ -67,7 +74,7 @@ class Partie{
         ModeDeJeu getMDJ() const {return mdj;}
         ModeDeJeu& getMDJ() {return mdj;}
         
-        void chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j) ;
+        void chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j,IllustreArchitecte archi) ;
 
 
         //Setter
@@ -115,6 +122,17 @@ class Partie{
         //Met à jour le tour, l'ordre de passage, le score des participations, vide le jeu.
         void finTour();
 
+        // IllustreArchitecte
+    
+        bool estModeSoloArchitecte() const {
+            return mdj.estSoloArchitecte();
+        }
+
+        IllustreArchitecte getArchitecte() const {return architecte;}
+
+        void donnerPierresArchitecte(unsigned int nb);
+        void jouerTourArchitecte();
+
         void refillJeu();
 
         void SetMdj(const ModeDeJeu& m){mdj=m;} // choisir le mode de jeu
@@ -128,6 +146,7 @@ class Partie{
         void initializeNewGame(int nbJoueurs, const std::vector<std::string>& pseudos, const std::vector<std::string>& variantes);
 
     private:
+        IllustreArchitecte architecte;
         
         //Constructeur pour charger une partie depuis une sauvegarde.
         Partie(unsigned int tour, vector<Participation>&& participants , ModeDeJeu mdj, vector<Tuile>&& pioche);

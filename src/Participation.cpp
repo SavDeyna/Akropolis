@@ -101,7 +101,21 @@ void Participation::Jouer(vector<Tuile>& jeu){
                                         a.s=s;
 
                                         //Choix de l'orientation de la tuile
-                                        cout <<"Choisissez l'orientation de la tuile :\n1 : droite + bas-droite\n2 : droite + haut-droite\n";
+                                        //Affichage des 2 possibilités :
+
+                                        cout <<"Choisissez l'orientation de la tuile :\n1 :\n";
+                                        jeu[tuileIndice].afficherTuile({q,r,s});
+
+                                        jeu[tuileIndice].changeorientation();
+                                        cout << "\n2 : \n";
+                                        jeu[tuileIndice].afficherTuile({q,r,s});
+
+                                        jeu[tuileIndice].changeorientation();
+
+                                        
+
+
+
                                         unsigned int orientation ;
                                         if (cin >>orientation){
                                             if (orientation ==1 || orientation == 2){
@@ -110,37 +124,82 @@ void Participation::Jouer(vector<Tuile>& jeu){
                                                     jeu[tuileIndice].changeorientation();
                                                 }
                                                 
-                                                if (!plateau.placerTuile(jeu[tuileIndice],a, pierres)){
+                                                if (!plateau.placerTuile(jeu[tuileIndice],a, pierres,true)){
                                                     cout<<"Placement non valide\n";
                                                 }
                                                 else {
                                                     saisieValide=true;
+                                                    unsigned int coutTuile = tuileIndice;
+                                                    // IllustreArchitecte
+                                                    // le joueur paye 
+                                                    pierres -= coutTuile;
+
+                                                    // Pierre pour donner à l'architecte, que le mode soit actif ou non, écrase l'ancien chiffre
+                                                    pierrespourArchi=coutTuile;
+
                                                     //On enlève la tuile du jeu
                                                     jeu.erase(jeu.begin() +tuileIndice);
                                                 }
                                             }
-                                            else cout << "Il faut choisir entre 1 et 2\n";
+                                            else {        
+                                                cout << "Il faut choisir entre 1 et 2\n";
+                                                cin.clear();
+                                                cin.ignore(52, '\n');
+                                            }
                                         }
-                                        else cout << "Nombre invalide\n";
-                                        
+                                        else {        
+                                            cout << "Nombre invalide\n";
+                                            cin.clear();
+                                            cin.ignore(52, '\n');
+                                        }    
                                     }
-                                    else cout <<"Zone non définie\n";
+                                    else {        
+                                            cout << "Zone non définie\n";
+                                            cin.clear();
+                                            cin.ignore(52, '\n');
+                                        }
                                 }
-                                else cout <<"Nombre invalide\n";
+                                else {        
+                                    cout << "Nombre invalide\n";
+                                    cin.clear();
+                                    cin.ignore(52, '\n');
+                                }    
                             }
-                            else cout <<"Coordonnée invalide\n";
+                            else {
+                                cout << "Coordonnée invalide\n";
+                                cin.clear();
+                                cin.ignore(52, '\n');
+                            }
                         }
-                        else cout <<"Nombre invalide\n";
+                        else {        
+                            cout << "Nombre invalide\n";
+                            cin.clear();
+                            cin.ignore(52, '\n');
+                        }      
                     }
-                    else cout<<"Coordonnée invalide\n";
+                    else {
+                        cout << "Coordonnée invalide\n";
+                        cin.clear();
+                        cin.ignore(52, '\n');
+                    }
                 }
-                else cout<<"Nombre Invalide\n";      
+                else {
+                    cout << "Nombre invalide\n";
+                    cin.clear();
+                    cin.ignore(52, '\n');
+                }      
             }
             else {
                 cout << "Coordonnée invalide\n";
+                cin.clear();
+                cin.ignore(52, '\n');
             }
         }
-        else cout << "Nombre invalide\n";
+        else {
+            cout << "Nombre invalide\n";
+            cin.clear();
+            cin.ignore(52, '\n');
+        }
     }
     plateau.dessinerPlateau(7);
 }

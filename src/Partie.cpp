@@ -11,6 +11,63 @@
 using json = nlohmann::json;
 using namespace std ;
 
+
+// IllustreArchitecte
+
+void Partie::donnerPierresArchitecte(unsigned int nb) {
+    if (!estModeSoloArchitecte())
+        return;
+
+    architecte.addPierres(nb);
+}
+
+
+void Partie::jouerTourArchitecte() {
+    if (!mdj.estSoloArchitecte())
+        return;
+
+    if (jeu.empty())
+        return;
+    donnerPierresArchitecte(participants[0].getPierrePourArchi());
+    unsigned int indiceChoisi = 0;
+    bool trouvePlace = false;
+
+    // chercher la tuile avec Place la moins chère
+    for (unsigned int i = 0; i < jeu.size(); ++i) {
+        if (jeu[i].possedePlace()) {
+            if (architecte.getPierres() >= i) {
+                indiceChoisi = i;
+                trouvePlace = true;
+                break;
+            }
+        }
+    }
+
+    // sinon prendre la première tuile
+    if (!trouvePlace) {
+        indiceChoisi = 0;
+    }
+
+    unsigned int coutTuile = indiceChoisi;
+
+    // l'architecte paye (si possible)
+    if (architecte.getPierres() >= coutTuile) {
+        architecte.depenserPierres(coutTuile);
+    } else {
+        coutTuile = 0; // il prend gratuitement
+    }
+
+    // l'architecte récupère la tuile pour le score
+    architecte.prendreTuile(std::move(jeu[indiceChoisi]));
+
+    // retirer la tuile du chantier
+    jeu.erase(jeu.begin() + indiceChoisi);
+
+    std::cout << "[Architecte] prend la tuile " << indiceChoisi
+              << " (coût " << coutTuile << " pierres)\n"
+              << "Nombre de Points : "<< architecte.calculerPoints()<<"\n";
+}
+
 //fonction locale de mélange de vecteur. 
 //Méthode trouvée sur un forum : fisher_yates_shuffle (https://stackoverflow.com/questions/6127503/shuffle-array-in-c/6128209#6128209)
 void Partie::melangePioche() {
@@ -83,6 +140,23 @@ void Partie::choixMDJ() {
             std::cin >> a;
         }while(a !="1");
         ModeDeJeu m(data[i]["nom"],data[i]["nbrJoueur"],data[i]["nbrIA"],data[i]["description"]);
+        
+        // activer le mode solo architecte
+        if (data[i]["nom"] == "Solo Architecte") {
+            m.activerSoloArchitecte();
+            std::string choix ;
+            std::cout << "Tapez 0 pour facile\nTapez 1 pour moyen\nTapez autre pour Difficile\n";
+            std::cout <<"Choississez la difficulté :";
+            std::cin >> choix;
+            if (choix == "0"){
+                architecte.SetDifficulte(Difficulte::Facile);
+            }
+            else if (choix == "1"){
+                architecte.SetDifficulte(Difficulte::Moyen);
+            }
+            else architecte.SetDifficulte(Difficulte::Difficile);
+        }
+        
         this->SetMdj(m);
         SetNbParticipants();
     }
@@ -238,10 +312,15 @@ void Partie::refillJeu() {
 }
 
 void Partie::debutTour(){
-    // La tuile de départ est déjà placée par le constructeur de Plateau
-    // On remplit simplement le jeu depuis la pioche
-    refillJeu();
+    //Va permettre de charger la pioche
+
+    //Nombre de pièce dans le jeu (nbJoueur + 2 (+ 1 si mode Architecte illustre car l'illustre n'est pas un joueur)
+    for (unsigned int i = 0; i < this->getNbParticipants()+2+ this->estModeSoloArchitecte();i++){
+        jeu.push_back(std::move(pioche.back()));
+        pioche.pop_back();
+    }
 }
+
 
 Participation& Partie::getCurrentPlayer() {
     // Find the player with ordre 1 (current turn)
@@ -262,10 +341,12 @@ void Partie::rotateArchitecte() {
 }
 
 void Partie::finTour(){
-    //Va permettre de vider la pioche, changer l'ordre des participations, tour++, et de mettre à jour le nombre de points
+    //Va permettre de vider le jeu, changer l'ordre des participations, tour++, et de mettre à jour le nombre de points
 
-    //On vide le jeu
+    //On vide le jeu en le remettant dans la pioche
+    //On fait cela pour la sauvegarde qui doit récupérer les tuiles
     while(!jeu.empty()){
+        pioche.push_back(std::move(jeu.back()));
         jeu.pop_back();
     }
 
@@ -280,7 +361,7 @@ void Partie::finTour(){
     tour++;
 }
 
-void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j) {
+void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&& p,const ModeDeJeu& m,std::vector<Tuile>&& pi, std::vector<unique_ptr<Participant>>&& j, IllustreArchitecte archi) {
     tour = t;
 
     joueurs = std::move(j);
@@ -288,6 +369,8 @@ void Partie::chargerDepuisSauvegarde(unsigned int t,std::vector<Participation>&&
 
     mdj = m;
     pioche = std::move(pi);
+
+    architecte = std::move(archi);
     
     SetNbParticipants();
 }

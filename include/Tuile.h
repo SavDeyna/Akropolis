@@ -51,7 +51,7 @@ public:
         hauteur = 0;
     }
 
-    void afficherTuile() const;
+    void afficherTuile(HexagoneCoord Origine = {0,0,0}) const ;
 
     // Accesseurs
     const std::vector<Hexagone>& getDisposition() const { return disposition; }
@@ -65,9 +65,12 @@ public:
     void changeorientation();
 
     // Rotation
-    void tournerDroite(); 
-    void tournerGauche();
+    void tourner();
+    void Tuile::tournerDroite() ;
 
+
+    // pour l'IllustreArchitecte
+    bool possedePlace() const;
     //Pour la sauvegarde
     std::string ToString() const;
 
