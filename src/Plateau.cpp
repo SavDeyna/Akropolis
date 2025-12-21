@@ -85,18 +85,18 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
     bool allPresent = (hex1 && hex2 && hex3);
 
     if (!allEmpty && !allPresent) {
-        cout << "1" << endl;
+        std::cout << "1" << endl;
         return false;
     }
     int h = 1;
 
     if (allPresent){
         if (!(hex1->hauteur == hex2->hauteur && hex2->hauteur == hex3->hauteur)) {
-            cout << "2" << endl;
+            std::cout << "2" << endl;
             return false;  // les hexa n'ont pas la même hauteur, la tuile ne peut pas être placée
         } 
         if (hex1->id_tuile == hex2->id_tuile && hex2->id_tuile == hex3->id_tuile) {
-            cout << "3" << endl;
+            std::cout << "3" << endl;
             return false; // la nouvelle tuile au niveau supérieur n'est pas à cheval sur au moins 2 tuiles différentes
         } 
         h = hex1->hauteur + 1;
@@ -117,7 +117,7 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
                 i++;
             } 
             if (i == 3) {
-                cout << "4" << endl;
+                std::cout << "4" << endl;
                 return false; // la nouvelle tuile n'est pas adjacente à une autre tuile de la Cité
             } 
         }
@@ -126,27 +126,15 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
     while (true) {
         for (unsigned int i =0; i<3 ; i++){
         }
-        cout << "Rotation de la tuile ? (1 = gauche, 2 = droite, 0 = terminer) : ";
+        std::cout << "Rotation de la tuile ? (1 Oui, non = terminer) : ";
+        t.afficherTuile(origin);
         int choix;
-        cin >> choix;
+        std::cin >> choix;
 
         if (choix == 1) {
-            t.tournerGauche();
-            cout << "Coordonnées après rotation gauche :\n";
-        } else if (choix == 2) {
-            t.tournerDroite();
-            cout << "Coordonnées après rotation droite :\n";
-        } else if (choix == 0) {
-            break;
-        }
-        if (choix == 1 || choix == 2) {
-            const auto& disp = t.getDisposition();
-            for (size_t i = 0; i < disp.size(); ++i) {
-                const Hexagone& h = disp[i];
-                cout << "Hex #" << i << " : (" 
-                    << h.getQ() << "," << h.getR() << "," << h.getS() << ")\n";
-            }
-        }
+            t.tourner();
+            std::cout << "Coordonnées après rotation :\n";
+        } else  break;
     }
 
     for (size_t i = 0; i < coords.size(); ++i) {
@@ -231,13 +219,13 @@ void Plateau::dessinerPlateau(const int radius) const{
         }
         //affichage de la rangée complète
         for(const auto& line : lignes){
-            cout << line.str() << "\n";
+            std::cout << line.str() << "\n";
         }
     }
-    cout<<"\nLégende : \n";
-    cout<<"Première ligne : Etoilé , Type Quartier , Hauteur\n";
-    cout<<"Deuxième ligne : Coordonnées";
-    cout<<"Type Quartier :\nCarriere : C ; Caserne : S ; Jardin : J ; Temple : T ; Marche : M Habitation : H\n";
+    std::cout<<"\nLégende : \n";
+    std::cout<<"Première ligne : Etoilé , Type Quartier , Hauteur\n";
+    std::cout<<"Deuxième ligne : Coordonnées";
+    std::cout<<"Type Quartier :\nCarriere : C ; Caserne : S ; Jardin : J ; Temple : T ; Marche : M Habitation : H\n";
 }
 
 
