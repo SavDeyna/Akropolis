@@ -64,7 +64,8 @@ void Partie::jouerTourArchitecte() {
     jeu.erase(jeu.begin() + indiceChoisi);
 
     std::cout << "[Architecte] prend la tuile " << indiceChoisi
-              << " (coût " << coutTuile << " pierres)\n";
+              << " (coût " << coutTuile << " pierres)\n"
+              << "Nombre de Points : "<< architecte.calculerPoints()<<"\n";
 }
 
 //fonction locale de mélange de vecteur. 
@@ -145,6 +146,17 @@ void Partie::choixMDJ() {
         // activer le mode solo architecte
         if (data[i]["nom"] == "Solo Architecte") {
             m.activerSoloArchitecte();
+            std::string choix ;
+            std::cout << "Tapez 0 pour facile\nTapez 1 pour moyen\nTapez autre pour Difficile\n";
+            std::cout <<"Choississez la difficulté :";
+            std::cin >> choix;
+            if (choix == "0"){
+                architecte.SetDifficulte(Difficulte::Facile);
+            }
+            else if (choix == "1"){
+                architecte.SetDifficulte(Difficulte::Moyen);
+            }
+            else architecte.SetDifficulte(Difficulte::Difficile);
         }
         
         this->SetMdj(m);
@@ -226,8 +238,8 @@ void Partie::SetNbParticipants(){
 void Partie::debutTour(){
     //Va permettre de charger la pioche
 
-    //Nombre de pièce dans le jeu (nbJoueur + 1)
-    for (unsigned int i = 0; i < this->getNbParticipants()+1;i++){
+    //Nombre de pièce dans le jeu (nbJoueur + 2 (+ 1 si mode Architecte illustre car l'illustre n'est pas un joueur)
+    for (unsigned int i = 0; i < this->getNbParticipants()+2+ this->estModeSoloArchitecte();i++){
         jeu.push_back(std::move(pioche.back()));
         pioche.pop_back();
     }
@@ -235,10 +247,12 @@ void Partie::debutTour(){
 }
 
 void Partie::finTour(){
-    //Va permettre de vider la pioche, changer l'ordre des participations, tour++, et de mettre à jour le nombre de points
+    //Va permettre de vider le jeu, changer l'ordre des participations, tour++, et de mettre à jour le nombre de points
 
-    //On vide le jeu
+    //On vide le jeu en le remettant dans la pioche
+    //On fait cela pour la sauvegarde qui doit récupérer les tuiles
     while(!jeu.empty()){
+        pioche.push_back(std::move(jeu.back()));
         jeu.pop_back();
     }
 

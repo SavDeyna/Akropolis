@@ -168,6 +168,10 @@ int main() {
                 }
                 partie.getParticipants()[indice].Jouer(partie.getJeu());
             }
+            //Ne va pas se faire si le mode Architecte n'est pas actif
+            partie.jouerTourArchitecte();
+
+            //Vide le jeu et le remet dans la pioche pour la sauvegarde, change les ordres de passage et incremente le tour
             partie.finTour();
             
             string choix3;
