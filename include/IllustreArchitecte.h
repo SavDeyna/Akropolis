@@ -22,6 +22,7 @@ class IllustreArchitecte {
 private:
     unsigned int pierres{2};
     std::map<TypeHexagone, InfosQuartier> infos;
+    Difficulte difficulte{Difficulte::Moyen};
 
 public:
     IllustreArchitecte();
@@ -68,11 +69,14 @@ public:
         }
     }
     
-    unsigned int calculerPoints(Difficulte d) const; // retourne des points
+    unsigned int calculerPoints() const; // retourne des points
 
     //Copie pour sauvegarde
     void SetInfo(TypeHexagone TypeHexa, InfosQuartier info){
         infos[TypeHexa] = info ;
     }
     std::map<TypeHexagone, InfosQuartier> getInfos() const {return infos;}
+
+    Difficulte getDifficulte() const {return difficulte;}
+    void SetDifficulte(Difficulte d) {difficulte = d;}
 };

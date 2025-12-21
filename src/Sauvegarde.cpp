@@ -48,6 +48,19 @@ void SauvegardeManager::enregistrerSauvegarde(const Sauvegarde& s) {
     if (s.mdj.estSoloArchitecte()){
         json architecte;
         architecte["pierres"] = s.architecte.getPierres();
+
+        const std::map<Difficulte,std::string> ConversionStrD = {
+            { Difficulte::Facile,"Facile"},
+            {Difficulte::Moyen,"Moyen"},
+            {Difficulte::Difficile,"Difficile" }
+        };
+
+
+        auto it3 = ConversionStrD.find(s.architecte.getDifficulte());
+        if (it3 != ConversionStrD.end()){
+            architecte["difficulte"] = it3->second;
+        }
+
         const std::map<TypeHexagone, std::string> Conversion = {
             {TypeHexagone::Carriere,   "Carriere"},
             {TypeHexagone::Caserne,    "Caserne"},
@@ -187,6 +200,17 @@ Partie& SauvegardeManager::chargerSauvegarde(unsigned int index){
         
         archi.SetPierres(data["Architecte"]["pierres"]);
 
+        const std::map<std::string, Difficulte> ConversionD ={
+            {"Facile", Difficulte::Facile},
+            {"Moyen", Difficulte::Moyen},
+            {"Difficile", Difficulte::Difficile}
+        };
+        auto it2 = ConversionD.find(data["Architecte"]["difficulte"]);
+        if (it2 != ConversionD.end()){
+            archi.SetDifficulte(it2->second);
+        }
+        
+        
         const std::map<std::string, TypeHexagone> Conversion = {
             {"Carriere",   TypeHexagone::Carriere},
             {"Caserne",    TypeHexagone::Caserne},

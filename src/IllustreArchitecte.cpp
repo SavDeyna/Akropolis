@@ -17,10 +17,10 @@ void IllustreArchitecte::prendreTuile(const Tuile& t) {
     }
 }
 
-unsigned int IllustreArchitecte::calculerPoints(Difficulte d) const {
+unsigned int IllustreArchitecte::calculerPoints() const {
     unsigned int points = 0;
 
-    unsigned int niveau = (d == Difficulte::Difficile) ? 2 : 1;
+    unsigned int niveau = (difficulte == Difficulte::Difficile) ? 2 : 1;
 
     for (const auto& [type, info] : infos) {
         if (type == TypeHexagone::Carriere)
@@ -36,7 +36,7 @@ unsigned int IllustreArchitecte::calculerPoints(Difficulte d) const {
     }
 
     // Bonus Métagénès
-    if (d == Difficulte::Moyen) {
+    if (difficulte == Difficulte::Moyen) {
         auto it = infos.find(TypeHexagone::Carriere);
         if (it != infos.end())
             points += it->second.quartiers * 2;
