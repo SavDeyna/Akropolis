@@ -107,6 +107,7 @@ void Tuile::tourner() {
     disposition[2].setQ(q);
     disposition[2].setR(r);
 }
+
 void Tuile::tournerDroite() {
 
     int pq = disposition[0].getQ();

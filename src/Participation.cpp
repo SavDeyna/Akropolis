@@ -124,7 +124,7 @@ void Participation::Jouer(vector<Tuile>& jeu){
                                                     jeu[tuileIndice].changeorientation();
                                                 }
                                                 
-                                                if (!plateau.placerTuile(jeu[tuileIndice],a, pierres)){
+                                                if (!plateau.placerTuile(jeu[tuileIndice],a, pierres,true)){
                                                     cout<<"Placement non valide\n";
                                                 }
                                                 else {

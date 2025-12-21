@@ -58,7 +58,7 @@ vector<HexagoneCoord> Plateau::getVoisins(const HexagoneCoord& c) const {
     return v;
 }
 
-bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres) {
+bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres, bool modeConsole) {
     std::vector<HexagoneCoord> coords;
     coords.reserve(3); // pour éviter une surallocation de mémoire
 
@@ -116,7 +116,7 @@ bool Plateau::placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& n
         }
     } 
     
-    while (true) {
+    while (modeConsole) {
         for (unsigned int i =0; i<3 ; i++){
         }
         std::cout << "Rotation de la tuile ? (1 Oui, non = terminer) : ";

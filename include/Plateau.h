@@ -31,7 +31,7 @@ private:
     std::vector<HexagoneCoord> getVoisins(const HexagoneCoord& c) const;
 
     // placer une tuile avec origine (coord absolue du centre ou repère)
-    bool placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres);
+    bool placerTuile(Tuile& t, const HexagoneCoord& origin, unsigned int& nbPierres, bool ModeConsole = false);
 
     //place une tuile sans aucune vérification, utilisée pour la sauvegarde
     void placerTuileSauvegarde(const HexagoneCoord hexaC, const HexState hexaS);
